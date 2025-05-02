@@ -10,13 +10,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
-  Calendar,
-  Home,
-  Inbox,
+  ScrollText,
+  LayoutDashboard,
+  Users,
+  Settings,
   MoreVertical,
-  Search,
-    Settings,
-  HelpCircle
+  HelpCircle,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Card } from "../ui/card";
@@ -25,24 +24,19 @@ import { AvatarFallback } from "../ui/avatar";
 
 const items = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/",
-    icon: Home,
+    icon: LayoutDashboard,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Deals",
+    url: "/deals",
+    icon: ScrollText,
   },
   {
-    title: "Calendar",
+    title: "Members",
     url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    icon: Users,
   },
   {
     title: "Settings",
@@ -54,8 +48,8 @@ const items = [
 export default function AppSidebar() {
   const location = useLocation();
   return (
-    <Sidebar className="p-5 bg-[#242325]">
-      <SidebarHeader className="text-3xl text-white bg-[#242325]">
+    <Sidebar className="p-3 bg-[#242325]">
+      <SidebarHeader className="text-3xl font-bold text-white bg-[#242325]">
         FundOS
       </SidebarHeader>
       <SidebarContent className="bg-[#242325] text-white">
@@ -84,16 +78,16 @@ export default function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="bg-[#242325]">
-        <Card className="bg-[#242325] rounded-none border-0 p-5 text-white flex items-start justify-between">
+        <div className="bg-[#242325] rounded-none border-0 p-5 text-white flex items-start justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
-            <HelpCircle className="text-gray-400" />
+              <HelpCircle className="text-gray-400" />
             </div>
             <div>
               <h4 className="font-medium text-gray-400">Support</h4>
             </div>
           </div>
-        </Card>
+        </div>
         <Card className="bg-[#1f1f1f] rounded-none border-0 p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">

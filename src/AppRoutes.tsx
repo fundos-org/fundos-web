@@ -1,13 +1,14 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import Layout from "./components/custom/Layout";
+import Dashboard from "./pages/Dashboard";
+import Deals from "./pages/Deals";
 
 const AppRoutes = () => {
   return (
       <Routes>
-          <Route path="/" element={<Layout><HomePage /></Layout>}/>
-          {/* <Route path="/" element={<Layout showHero><HomePage/></Layout>}/>
-          <Route path="/auth-callback" element={<AuthCallbackPage/>}/>
+          <Route path="/" element={<Layout><Dashboard /></Layout>}/>
+          <Route path="/deals" element={<Layout><Deals/></Layout>}/>
+          {/* <Route path="/auth-callback" element={<AuthCallbackPage/>}/>
           <Route path="/search/:city" element={<Layout showHero={false}><SearchPage/></Layout>}/>
           <Route path="/detail/:restaurantId" element={<Layout showHero={false}><DetailPage/></Layout>}/>
           <Route element={<ProtectedRoute/>}>
