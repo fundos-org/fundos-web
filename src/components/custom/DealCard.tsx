@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
 import { Progress } from "../ui/progress";
 
-export default function DealCard({status}: { status: boolean }) {
+export default function DealCard({ status }: { status: boolean }) {
   return (
     <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
       <CardContent className="p-0">
@@ -14,13 +14,17 @@ export default function DealCard({status}: { status: boolean }) {
             </div>
           </div>
 
-          {status ? <Badge className="bg-[#00fb5745] text-white px-3 py-1 rounded-xs text-sm font-medium">
-            <span className="mr-1 inline-block w-2 h-2 bg-green-400 rounded-full" />
-            <span className="text-green-400">active</span>
-          </Badge> : <Badge className="bg-[#fd888845] text-white px-3 py-1 rounded-xs text-sm font-medium">
-            <span className="mr-1 inline-block w-2 h-2 bg-red-400 rounded-full" />
-            <span className="text-red-400">closed</span>
-          </Badge>}
+          {status ? (
+            <Badge className="bg-[#00fb5745] text-white px-3 py-1 rounded-xs text-sm font-medium">
+              <span className="mr-1 inline-block w-2 h-2 bg-green-400 rounded-full" />
+              <span className="text-green-400">active</span>
+            </Badge>
+          ) : (
+            <Badge className="bg-[#fd888845] text-white px-3 py-1 rounded-xs text-sm font-medium">
+              <span className="mr-1 inline-block w-2 h-2 bg-red-400 rounded-full" />
+              <span className="text-red-400">closed</span>
+            </Badge>
+          )}
         </div>
 
         <h2 className="text-2xl font-bold mt-4">Infotech Pvt. Ltd.</h2>
@@ -47,7 +51,7 @@ export default function DealCard({status}: { status: boolean }) {
             <p className="text-3xl font-bold">$20K</p>
           </div>
         </div>
-
+        <hr className="mt-3" />
         <div className="w-full mt-4 flex justify-between items-center">
           <div>
             <p className="text-sm text-zinc-400 mb-1">10% raised</p>
