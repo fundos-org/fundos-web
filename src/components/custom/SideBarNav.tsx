@@ -35,7 +35,7 @@ const items = [
   },
   {
     title: "Members",
-    url: "#",
+    url: "/members",
     icon: Users,
   },
   {
