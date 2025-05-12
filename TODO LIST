@@ -1,0 +1,6 @@
+Use supabase dropzone/ image input ui library
+use material ui // best
+use primereact // good
+use flowbite ui
+use daisy ui
+use shadcn builder for forms
