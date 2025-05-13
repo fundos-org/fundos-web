@@ -1,4 +1,3 @@
-import { Stages } from "@/components/custom/CreateDealDialog";
 import CustomRadioButtonGroup from "@/components/custom/CustomRadioButtonGroup";
 import CustomToggleGroup from "@/components/custom/CustomToggleGroup";
 import ImageInput from "@/components/custom/ImageUpload";
@@ -16,13 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { businessModels, securities, stages, targetCustomers } from "@/constants/dealsConstant";
 import { Check, CheckCircle } from "lucide-react";
 
 function useCreateDealDialogHook(
-  businessModels: string[],
-  stages: Stages[],
-  targetCustomers: string[],
-  securities: string[],
   companyName: string,
   setCompanyName: React.Dispatch<React.SetStateAction<string>>,
   aboutCompany: string,

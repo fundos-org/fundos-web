@@ -7,69 +7,9 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Step, Stepper } from "react-form-stepper";
-import { StepStyleDTO } from "react-form-stepper/dist/components/Step/StepTypes";
 import createDealDialogHook from "@/hooks/createDealDialogHook";
 import { companyDetailsTrigger, customerSegmentTrigger, industryProblemTrigger, securitiesTrigger, valuationTrigger } from "@/axioscalls/dealApiServices";
-
-export type Stages = {
-  value: string;
-  title: string;
-  description: string;
-};
-
-const targetCustomers = ["b2b", "b2c", "b2b2c", "enterprise"];
-const securities = ["equity", "debt", "hybrid", "derivative"];
-const stepsList = [
-  { label: "Comapany", index: 0 },
-  { label: "Industry", index: 1 },
-  { label: "Customer", index: 2 },
-  { label: "Valuation", index: 3 },
-  { label: "Security", index: 4 },
-];
-const businessModels = [
-  'saas', 'transactional', 'marketplace', 'enterprise', 'subscription', 'usage-based', 'ecommerce', 'advertising'
-];
-const stages: Stages[] = [
-  {
-    value: "ideal",
-    title: "Ideal stage",
-    description: "Brainstorming and validating problem statement",
-  },
-  {
-    value: "pre-seed",
-    title: "Pre-seed stage",
-    description: "Building MVP (Minimum viable product)",
-  },
-  {
-    value: "seed",
-    title: "Seed stage",
-    description: "Building MVP (Minimum viable product)",
-  },
-  {
-    value: "series-a",
-    title: "Series A",
-    description: "Building MVP (Minimum viable product)",
-  },
-  {
-    value: "series-b",
-    title: "Series B",
-    description: "Building MVP (Minimum viable product)",
-  },
-  {
-    value: "series-c",
-    title: "Series C",
-    description: "Building MVP (Minimum viable product)",
-  },
-];
-// , children: "✓"
-
-const styleConfig = {
-  activeBgColor: "#fff",
-  activeTextColor: "#000",
-  inactiveBgColor: "#1a1a1a",
-  completedBgColor: "#2a2a2a",
-  borderRadius: 0,
-} as StepStyleDTO;
+import { stepsList, styleConfig } from "@/constants/dealsConstant";
 
 export default function CreateDealDialog({ dealId }: { dealId: string }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -93,10 +33,6 @@ export default function CreateDealDialog({ dealId }: { dealId: string }) {
   const [isStartup, setIsStartup] = useState(false);
 
   const { switchCaseJsx } = createDealDialogHook(
-    businessModels,
-    stages,
-    targetCustomers,
-    securities,
     companyName,
     setCompanyName,
     aboutCompany,

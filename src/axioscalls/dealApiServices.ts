@@ -68,7 +68,16 @@ export const securitiesTrigger = async (dealId: string, instrumentType: string, 
     return response.data;
 };
 
-// /api/v1/live/deals/mobile/all-deals
-// /api/v1/live/deals/mobile/{deal_id}
+export const allDealsTrigger = async () => {
+    const response = await axios
+        .get(`${baseUrl}mobile/all-deals`);
+    return response.data;
+}
+
+export const dealWithIdTrigger = async (dealId: string) => {
+    const response = await axios
+        .get(`${baseUrl}mobile/${dealId}`);
+    return response.data;
+}
 
 export default createDraftTrigger;
