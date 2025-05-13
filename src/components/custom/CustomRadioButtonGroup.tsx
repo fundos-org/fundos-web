@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Stages } from "./CreateDealDialog";
 
-const CustomRadioButtonGroup = ({ stages }: { stages: Stages[] }) => {
-  const [selectedStage, setSelectedStage] = useState("idea-stage");
+const CustomRadioButtonGroup = ({ stages, value, setValue }: { stages: Stages[], value: string, setValue: React.Dispatch<React.SetStateAction<string>> }) => {
 
   return (
     <RadioGroup
-      value={selectedStage}
-      onValueChange={setSelectedStage}
+      value={value}
+      onValueChange={setValue}
       className="grid grid-cols-2 gap-2 bg-[#1a1a1a] rounded-lg">
       {stages.map((stage) => (
         <div
