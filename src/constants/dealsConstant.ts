@@ -59,3 +59,14 @@ export const styleConfig = {
   completedBgColor: "#2a2a2a",
   borderRadius: 0,
 } as StepStyleDTO;
+
+export type DealType = {
+  company_name: string;
+  about_company: string;
+  status: string;
+  industry: string;
+  logo_url: string;
+  round_size: number | string; // Could be number (e.g., 5000000) or string (e.g., "5M")
+  syndicate_commitment: number | string | null; // Could be number, string, or null if not committed
+  company_stage: string;
+}

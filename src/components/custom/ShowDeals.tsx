@@ -1,7 +1,25 @@
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import DealCard from "./DealCard";
+import { allDealsTrigger } from "@/axioscalls/dealApiServices";
+import { DealType } from "@/constants/dealsConstant";
 
 export default function ShowDeals() {
+  const [deals, setDeals] = useState<DealType[]>([])
+
+  const callApi = async () => {
+    try {
+      const data = await allDealsTrigger();
+      setDeals(data.filter((item: DealType) => item.status == 'open'));
+    } catch (error) {
+      console.error('Error fetching deals:', error);
+    }
+  };
+
+  useEffect(() => {
+    callApi()
+  })
+
   return (
     <Tabs defaultValue="active" className="w-full mt-5">
       <div className="w-full border-b-1 border-gray-600">
@@ -20,13 +38,13 @@ export default function ShowDeals() {
       </div>
 
       <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
-        {Array.from([1, 2, 3, 4]).map((_, index) => (
-          <DealCard status={true} key={index} />
+        {deals.map((deal, index) => (
+          <DealCard deal={deal} key={index} />
         ))}
       </TabsContent>
       <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
-        {Array.from([1, 2]).map((_, index) => (
-          <DealCard status={false} key={index} />
+        {deals.map((deal, index) => (
+          <DealCard deal={deal} key={index} />
         ))}
       </TabsContent>
     </Tabs>
