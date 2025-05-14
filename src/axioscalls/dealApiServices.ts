@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://43.205.36.168/api/v1/live/deals/";
+const baseUrl = "https://43.205.36.168/api/v1/live/deals/";
 
 const createDraftTrigger = async () => {
     const response = await axios
