@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Stages } from "./CreateDealDialog";
+import { Stages } from "@/constants/dealsConstant";
 
 const CustomRadioButtonGroup = ({ stages, value, setValue }: { stages: Stages[], value: string, setValue: React.Dispatch<React.SetStateAction<string>> }) => {
 
