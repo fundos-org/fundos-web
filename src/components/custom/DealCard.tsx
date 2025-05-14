@@ -11,7 +11,7 @@ export default function DealCard({ deal }: { deal: DealType }) {
       <CardContent className="p-0">
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
-            {logo_url ? <img src={logo_url} alt="logo" /> : <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
+            {logo_url ? <img src={logo_url} alt="logo" width="50" /> : <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
               🚀 Startup
             </div>}
           </div>
@@ -45,11 +45,11 @@ export default function DealCard({ deal }: { deal: DealType }) {
 
         <div className="flex justify-between mt-6">
           <div>
-            <p className="text-sm text-zinc-400">Funding round</p>
-            <p className="text-3xl font-bold">{round_size ? round_size : '200K'}</p>
+            <p className="text-sm text-zinc-400">Funding round size</p>
+            <p className="text-3xl font-bold">{round_size ? round_size : '200000'}</p>
           </div>
           <div>
-            <p className="text-sm text-zinc-400">Capital committed</p>
+            <p className="text-sm text-zinc-400">Syndicate committed</p>
             <p className="text-3xl font-bold">{syndicate_commitment ? syndicate_commitment : '200K'}</p>
           </div>
         </div>

@@ -18,7 +18,7 @@ export default function ShowDeals() {
 
   useEffect(() => {
     callApi()
-  })
+  },[])
 
   return (
     <Tabs defaultValue="active" className="w-full mt-5">
