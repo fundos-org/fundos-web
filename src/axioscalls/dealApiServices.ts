@@ -1,14 +1,33 @@
+import { CommonError, Deal, DraftResponse } from "@/constants/dealsConstant";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const baseUrl = "http://43.205.36.168/api/v1/live/deals/";
 
-const createDraftTrigger = async () => {
-    const response = await axios
-        .post(`${baseUrl}web/create/draft`, {
-            fund_manager_id: "9c0e5407-c3f2-402e-891b-0e4f2489e837", // hard coded this for now
+// Create async thunk for creating a draft deal
+export const createDraft = createAsyncThunk<DraftResponse, string | undefined, { rejectValue: CommonError }>(
+  'draft/createDraft',
+    async (fund_manager_id, { rejectWithValue }) => {
+      if (!fund_manager_id) fund_manager_id = "9c0e5407-c3f2-402e-891b-0e4f2489e837";
+    try {
+      const response = await axios.post(`${baseUrl}web/create/draft`, {
+            fund_manager_id, 
         });
-    return response.data;
-};
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as CommonError;
+        if (errorData.isSuccess !== undefined && errorData.message) {
+          return rejectWithValue(errorData);
+        }
+      }
+      return rejectWithValue({
+        isSuccess: false,
+        message: 'Failed to create draft',
+      });
+    }
+  }
+);
 
 export const companyDetailsTrigger = async (dealId: string, companyName: string, aboutCompany: string, companyWebsite: string, logo: File | null) => {
     // console.log(dealId, companyName, aboutCompany, companyWebsite, logo, 'company details trigger');
@@ -68,11 +87,29 @@ export const securitiesTrigger = async (dealId: string, instrumentType: string, 
     return response.data;
 };
 
-export const allDealsTrigger = async () => {
-    const response = await axios
-        .get(`${baseUrl}mobile/all-deals`);
-    return response.data;
-}
+// Create async thunk for fetching all deals
+export const fetchAllDeals = createAsyncThunk<Deal[], void, { rejectValue: CommonError }>(
+    'deals/fetchAllDeals',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await await axios.get(`${baseUrl}mobile/all-deals`);;
+            return response.data;
+        } catch (error: unknown) {
+            // Handle axios or network errors
+            if (axios.isAxiosError(error) && error.response?.data) {
+                const errorData = error.response.data as CommonError;
+                if (errorData.isSuccess !== undefined && errorData.message) {
+                    return rejectWithValue(errorData);
+                }
+            }
+            // Fallback for unexpected errors
+            return rejectWithValue({
+                isSuccess: false,
+                message: 'Failed to fetch deals',
+            });
+        }
+    }
+);
 
 export const dealWithIdTrigger = async (dealId: string) => {
     const response = await axios
@@ -80,4 +117,4 @@ export const dealWithIdTrigger = async (dealId: string) => {
     return response.data;
 }
 
-export default createDraftTrigger;
+export default createDraft;

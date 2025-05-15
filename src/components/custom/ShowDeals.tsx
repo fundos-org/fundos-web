@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
+import { RootState } from "@/app/store";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import DealCard from "./DealCard";
-import { allDealsTrigger } from "@/axioscalls/dealApiServices";
-import { DealType } from "@/constants/dealsConstant";
+import { useAppStateEffect } from "@/app/hooks";
+import { fetchAllDeals } from "@/axioscalls/dealApiServices";
 
 export default function ShowDeals() {
-  const [deals, setDeals] = useState<DealType[]>([])
-
-  const callApi = async () => {
-    try {
-      const data = await allDealsTrigger();
-      setDeals(data.filter((item: DealType) => item.status == 'open'));
-    } catch (error) {
-      console.error('Error fetching deals:', error);
-    }
-  };
-
-  useEffect(() => {
-    callApi()
-  },[])
+  // const dispatch = useAppDispatch();
+  // const deals = useAppSelector((state: RootState) => state.deals.deals);
+  // useEffect(() => {
+  //   dispatch(fetchAllDeals())
+  // },[dispatch])
+  const { deals } = useAppStateEffect(
+    (state: RootState) => state.deals,
+    fetchAllDeals
+  );
 
   return (
     <Tabs defaultValue="active" className="w-full mt-5">

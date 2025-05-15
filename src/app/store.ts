@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import dealCreationReducer from '../features/dealCreationSlice';
+import dealsFeature from '../slices/dealSlice';
 
 const store = configureStore({
   reducer: {
-    dealCreationDetails: dealCreationReducer,
+    deals: dealsFeature
   },
 });
 

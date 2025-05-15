@@ -60,13 +60,40 @@ export const styleConfig = {
   borderRadius: 0,
 } as StepStyleDTO;
 
-export type DealType = {
-  company_name: string;
-  about_company: string;
+export interface CommonError {
+	isSuccess: boolean,
+	message: string
+}
+
+// Define the Deal interface based on API response
+export interface Deal {
+  id: string;
+  title: string;
+  description: string;
   status: string;
-  industry: string;
-  logo_url: string;
-  round_size: number | string; // Could be number (e.g., 5000000) or string (e.g., "5M")
-  syndicate_commitment: number | string | null; // Could be number, string, or null if not committed
-  company_stage: string;
+  fund_manager_id: string;
+  created_at: string;
+  agreed_to_terms: boolean;
+  company_name: string | null;
+  company_website: string | null;
+  about_company: string | null;
+  company_stage: string | null;
+  industry: string | null;
+  target_customer_segment: string | null;
+  problem_statement: string | null;
+  business_model: string | null;
+  current_valuation: number | null;
+  round_size: number | null;
+  syndicate_commitment: number | null;
+  instrument_type: string | null;
+  conversion_terms: string | null;
+  logo_url: string | null;
+  pitch_deck_url: string | null;
+  pitch_video_url: string | null;
+  updated_at: string | null;
+}
+
+export interface DraftResponse {
+  deal_id: string;
+  message: string;
 }

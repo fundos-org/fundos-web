@@ -2,9 +2,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown } from "lucide-react";
 import { Progress } from "../ui/progress";
-import { DealType } from "@/constants/dealsConstant";
+import { Deal } from "@/constants/dealsConstant";
 
-export default function DealCard({ deal }: { deal: DealType }) {
+export default function DealCard({ deal }: { deal: Deal }) {
   const {company_name, about_company, industry, status, company_stage, logo_url, round_size, syndicate_commitment} = deal
   return (
     <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
