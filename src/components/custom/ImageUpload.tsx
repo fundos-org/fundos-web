@@ -39,7 +39,7 @@ const ImageInput = ({
       <>
       <Label
         htmlFor={`${id}-input`}
-        className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-none p-6">
+        className="w-full flex flex-col items-center mt-2 justify-center border-2 border-dashed border-gray-300 rounded-none p-6">
         {image ? (
           previewUrl ? (
             <img

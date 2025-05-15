@@ -1,18 +1,9 @@
-import { useAppStateEvent } from "@/app/hooks";
-import { RootState } from "@/app/store";
-import createDraft from "@/axioscalls/dealApiServices";
 import CreateDealDialog from "@/components/custom/CreateDealDialog";
 import ShowDeals from "@/components/custom/ShowDeals";
 import StatisticCardList from "@/components/custom/StatisticCardList";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 function Deals() {
-  const {
-    dispatchThunk,
-    selected: { dealId, error },
-  } = useAppStateEvent((state: RootState) => state.deals);
-  if (error) return <div>Error creating deal id</div>;
-
   return (
     <>
       <Dialog>
@@ -22,8 +13,7 @@ function Deals() {
           </div>
           <DialogTrigger asChild>
             <button
-              className="bg-white text-black px-4 py-2 rounded-none"
-              onClick={() => dispatchThunk(createDraft)}>
+              className="bg-white text-black px-4 py-2 rounded-none">
               Create New Deal
             </button>
           </DialogTrigger>
@@ -35,7 +25,7 @@ function Deals() {
         </div>
         <StatisticCardList />
         <ShowDeals />
-        <CreateDealDialog dealId={dealId} />
+        <CreateDealDialog />
       </Dialog>
     </>
   );
