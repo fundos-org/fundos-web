@@ -8,28 +8,34 @@ import {
 import { useState } from "react";
 import { Step, Stepper } from "react-form-stepper";
 import createDealDialogHook from "@/hooks/createDealDialogHook";
-import { companyDetailsTrigger, customerSegmentTrigger, industryProblemTrigger, securitiesTrigger, valuationTrigger } from "@/axioscalls/dealApiServices";
+import {
+  companyDetailsTrigger,
+  customerSegmentTrigger,
+  industryProblemTrigger,
+  securitiesTrigger,
+  valuationTrigger,
+} from "@/axioscalls/dealApiServices";
 import { stepsList, styleConfig } from "@/constants/dealsConstant";
 
 export default function CreateDealDialog({ dealId }: { dealId: string }) {
   const [activeStep, setActiveStep] = useState(0);
   const [steps] = useState(stepsList);
-  const [companyName, setCompanyName] = useState('');
-  const [aboutCompany, setAboutCompany] = useState('');
-  const [companyWebsite, setCompanyWebsite] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [problemStatement, setProblemStatement] = useState('');
-  const [businessModel, setBusinessModel] = useState('businessModel');
+  const [companyName, setCompanyName] = useState("");
+  const [aboutCompany, setAboutCompany] = useState("");
+  const [companyWebsite, setCompanyWebsite] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [problemStatement, setProblemStatement] = useState("");
+  const [businessModel, setBusinessModel] = useState("businessModel");
   const [logo, setLogo] = useState<File | null>(null);
-  const [companyStage, setCompanyStage] = useState('');
-  const [targetCustomerSegment, setTargetCustomerSegment] = useState('');
-  const [currentValuation, setCurrentValuation] = useState('');
-  const [roundSize, setRoundSize] = useState('');
-  const [syndicateCommitment, setSyndicateCommitment] = useState('');
+  const [companyStage, setCompanyStage] = useState("");
+  const [targetCustomerSegment, setTargetCustomerSegment] = useState("");
+  const [currentValuation, setCurrentValuation] = useState("");
+  const [roundSize, setRoundSize] = useState("");
+  const [syndicateCommitment, setSyndicateCommitment] = useState("");
   const [pitchDeck, setPitchDeck] = useState<File | null>(null);
   const [pitchVideo, setPitchVideo] = useState<File | null>(null);
-  const [instrumentType, setInstrumentType] = useState('Equity');
-  const [conversionTerms, setConversionTerms] = useState('');
+  const [instrumentType, setInstrumentType] = useState("Equity");
+  const [conversionTerms, setConversionTerms] = useState("");
   const [isStartup, setIsStartup] = useState(false);
 
   const { switchCaseJsx } = createDealDialogHook(
@@ -66,7 +72,7 @@ export default function CreateDealDialog({ dealId }: { dealId: string }) {
     conversionTerms,
     setConversionTerms,
     isStartup,
-    setIsStartup,
+    setIsStartup
   );
 
   const handleNextBtnChange = async () => {
@@ -86,7 +92,7 @@ export default function CreateDealDialog({ dealId }: { dealId: string }) {
           dealId,
           industry,
           problemStatement,
-          businessModel,
+          businessModel
         );
         setActiveStep((prev) => prev + 1);
         break;
@@ -94,7 +100,7 @@ export default function CreateDealDialog({ dealId }: { dealId: string }) {
         await customerSegmentTrigger(
           dealId,
           companyStage,
-          targetCustomerSegment,
+          targetCustomerSegment
         );
         setActiveStep((prev) => prev + 1);
         break;
@@ -105,7 +111,7 @@ export default function CreateDealDialog({ dealId }: { dealId: string }) {
           roundSize,
           syndicateCommitment,
           pitchDeck,
-          pitchVideo,
+          pitchVideo
         );
         setActiveStep((prev) => prev + 1);
         break;
@@ -141,22 +147,26 @@ export default function CreateDealDialog({ dealId }: { dealId: string }) {
       </Stepper>
       <div className="grid gap-4">{switchCaseJsx(activeStep)}</div>
       <DialogFooter>
-        {activeStep < 5 && <div className="w-full flex justify-between items-center">
-          <Button
-            type="button"
-            className="bg-white rounded-none py-5"
-            disabled={activeStep == 0}
-            onClick={() => setActiveStep((prev) => prev - 1)}>
-            <div className="flex gap-2 mx-10 text-black">Back</div>
-          </Button>
-          <Button
-            // disabled={activeStep == 4}
-            type="button"
-            className="bg-white rounded-none py-5"
-            onClick={handleNextBtnChange}>
-            <div className="flex gap-2 mx-10 text-black">{activeStep == 4 ? 'Submit' : 'Next'}</div>
-          </Button>
-        </div>}
+        {activeStep < 5 && (
+          <div className="w-full flex justify-between items-center">
+            <Button
+              type="button"
+              className="bg-white rounded-none py-5 hover:bg-zinc-300"
+              disabled={activeStep == 0}
+              onClick={() => setActiveStep((prev) => prev - 1)}>
+              <div className="flex gap-2 mx-10 text-black">Back</div>
+            </Button>
+            <Button
+              // disabled={activeStep == 4}
+              type="button"
+              className="bg-white rounded-none py-5 hover:bg-zinc-300"
+              onClick={handleNextBtnChange}>
+              <div className="flex gap-2 mx-10 text-black">
+                {activeStep == 4 ? "Submit" : "Next"}
+              </div>
+            </Button>
+          </div>
+        )}
       </DialogFooter>
     </DialogContent>
   );
