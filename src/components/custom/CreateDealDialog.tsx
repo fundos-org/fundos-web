@@ -224,7 +224,7 @@ export default function CreateDealDialog() {
         </DialogTitle>
         <hr />
       </DialogHeader>
-      <Stepper activeStep={activeStep} styleConfig={styleConfig}>
+      <Stepper activeStep={activeStep} styleConfig={styleConfig} style={{padding: 0}}>
         {stepsList.map((step) => (
           <Step key={step.index} label={step.label} index={step.index} />
         ))}
