@@ -5,15 +5,12 @@ import { useAppStateEffect } from "@/app/hooks";
 import { fetchAllDeals } from "@/axioscalls/dealApiServices";
 
 export default function ShowDeals() {
-  // const dispatch = useAppDispatch();
-  // const deals = useAppSelector((state: RootState) => state.deals.deals);
-  // useEffect(() => {
-  //   dispatch(fetchAllDeals())
-  // },[dispatch])
-  const { deals } = useAppStateEffect(
+  const { deals, error } = useAppStateEffect(
     (state: RootState) => state.deals,
     fetchAllDeals
   );
+
+  if(error) return <div>Error While Fetching data</div>
 
   return (
     <Tabs defaultValue="active" className="w-full mt-5">

@@ -1,4 +1,3 @@
-
 import { useAppStateEvent } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import createDraft from "@/axioscalls/dealApiServices";
@@ -8,7 +7,11 @@ import StatisticCardList from "@/components/custom/StatisticCardList";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 function Deals() {
-  const {dispatchThunk, selected} = useAppStateEvent((state: RootState) => state.deals)
+  const {
+    dispatchThunk,
+    selected: { dealId, error },
+  } = useAppStateEvent((state: RootState) => state.deals);
+  if (error) return <div>Error creating deal id</div>;
 
   return (
     <>
@@ -32,7 +35,7 @@ function Deals() {
         </div>
         <StatisticCardList />
         <ShowDeals />
-        <CreateDealDialog dealId={selected.dealId} />
+        <CreateDealDialog dealId={dealId} />
       </Dialog>
     </>
   );
