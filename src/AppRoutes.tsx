@@ -1,12 +1,14 @@
 import { Route, Routes, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Deals = lazy(() => import("./pages/Deals"));
+const Members = lazy(() => import("./pages/Members"));
+const Settings = lazy(() => import("./pages/Settings"));
 import Layout from "./components/custom/Layout";
-import Dashboard from "./pages/Dashboard";
-import Deals from "./pages/Deals";
-import Members from "./pages/Members";
-import Settings from "./pages/Settings";
 
 const AppRoutes = () => {
-  return (
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
       <Routes>
           <Route path="/" element={<Layout><Dashboard /></Layout>}/>
           <Route path="/deals" element={<Layout><Deals/></Layout>}/>
@@ -20,7 +22,8 @@ const AppRoutes = () => {
               <Route path="/order-status" element={<Layout><OrderStatusPage/></Layout>}/>
           </Route> */}
           <Route path="*" element={<Navigate to="/"/>}/>
-      </Routes>
+            </Routes>
+            </Suspense>
   )
 }
 export default AppRoutes;
