@@ -50,9 +50,10 @@ export interface FormData {
 }
 
 export default function CreateDealDialog() {
+  
   const [activeStep, setActiveStep] = useState(0);
   const [submittedData, setSubmittedData] = useState<
-    Partial<Record<number, Partial<FormData>>>
+  Partial<Record<number, Partial<FormData>>>
   >({});
   const methods = useForm<FormData>({
     defaultValues: {

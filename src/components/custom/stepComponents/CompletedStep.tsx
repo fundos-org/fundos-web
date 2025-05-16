@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { CheckCircle, Check } from "lucide-react";
 import { UseFormReset } from "react-hook-form";
+import { useAppDispatch } from "@/app/hooks";
+import { resetDealId } from "@/slices/dealSlice";
 
 export interface FormData {
   companyName: string;
@@ -26,19 +28,27 @@ export interface FormData {
 
 type CompletionStepProps = {
   setActiveStep: Dispatch<SetStateAction<number>>;
-  setSubmittedData: Dispatch<SetStateAction<Partial<Record<number, Partial<FormData>>>>>;
+  setSubmittedData: Dispatch<
+    SetStateAction<Partial<Record<number, Partial<FormData>>>>
+  >;
   reset: UseFormReset<FormData>;
 };
 
 const CompletionStep = ({
   setActiveStep,
   setSubmittedData,
-  reset
+  reset,
 }: CompletionStepProps) => {
+  const dispatch = useAppDispatch();
   const handleClose = () => {
-    setActiveStep(0);
-    setSubmittedData({});
-    reset();
+    try {
+      setActiveStep(0);
+      setSubmittedData({});
+      reset();
+      dispatch(resetDealId());
+    } catch (error) {
+      console.log(error, "completeStep comp try catch handleclose");
+    }
   };
   return (
     <div className="flex items-center justify-center py-15">

@@ -26,11 +26,13 @@ const dealsSlice = createSlice({
     initialState,
     reducers: {
         resetDeals(state) {
-            state.dealId = '';
             state.deals = [];
             state.loading = false;
             state.error = null;
         },
+        resetDealId(state) {
+            state.dealId = ''
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -62,7 +64,7 @@ const dealsSlice = createSlice({
 });
 
 // Export actions
-export const { resetDeals } = dealsSlice.actions;
+export const { resetDeals, resetDealId } = dealsSlice.actions;
 
 // Export reducer
 export default dealsSlice.reducer;
