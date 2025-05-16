@@ -29,7 +29,7 @@ import { useAppDispatch, useAppStateEvent } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import { unwrapResult } from "@reduxjs/toolkit";
 
-interface FormData {
+export interface FormData {
   companyName: string;
   aboutCompany: string;
   companyWebsite: string;
@@ -94,7 +94,7 @@ export default function CreateDealDialog() {
       case 4:
         return <Step5 />;
       case 5:
-        return <CompletionStep />;
+        return <CompletionStep setActiveStep={setActiveStep} setSubmittedData={setSubmittedData} reset={methods.reset} />;
       default:
         return null;
     }

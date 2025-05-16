@@ -23,9 +23,9 @@ const Step2: React.FC = () => {
           </SelectTrigger>
           <SelectContent className="rounded-none text-white bg-[#1a1a1a]">
             <SelectGroup>
-              {businessModels.map((model) => (
-                <SelectItem key={model} value={model}>
-                  {model}
+              {businessModels.map(({name,value}) => (
+                <SelectItem key={name} value={value} className='rounded-none'>
+                  {name}
                 </SelectItem>
               ))}
             </SelectGroup>

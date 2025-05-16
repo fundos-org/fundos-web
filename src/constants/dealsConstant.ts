@@ -6,8 +6,6 @@ export type Stages = {
   description: string;
 };
 
-export const targetCustomers = ["b2b", "b2c", "b2b2c", "enterprise"];
-export const securities = ["equity", "debt", "hybrid", "derivative"];
 export const stepsList = [
   { label: "Comapany", index: 0 },
   { label: "Industry", index: 1 },
@@ -15,8 +13,27 @@ export const stepsList = [
   { label: "Valuation", index: 3 },
   { label: "Security", index: 4 },
 ];
+export const targetCustomers = [
+  { name: "B2B", value: "b2b" },
+  { name: "B2C", value: "b2c" },
+  { name: "B2B2C", value: "b2b2c" },
+  { name: "Enterprise", value: "enterprise" },
+];
+export const securities = [
+  { name: "Equity", value: "equity" },
+  { name: "Debt", value: "debt" },
+  { name: "Hybrid", value: "hybrid" },
+  { name: "Derivative", value: "derivative" },
+];
 export const businessModels = [
-  'saas', 'transactional', 'marketplace', 'enterprise', 'subscription', 'usage-based', 'ecommerce', 'advertising'
+  { name: "SaaS", value: "saas" },
+  { name: "Transactional", value: "transactional" },
+  { name: "Marketplace", value: "marketplace" },
+  { name: "Enterprise", value: "enterprise" },
+  { name: "Subscription", value: "subscription" },
+  { name: "Usage-Based", value: "usage-based" },
+  { name: "Ecommerce", value: "ecommerce" },
+  { name: "Advertising", value: "advertising" },
 ];
 export const stages: Stages[] = [
   {

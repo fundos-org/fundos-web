@@ -1,9 +1,45 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { DialogClose } from '@/components/ui/dialog';
-import { CheckCircle, Check } from 'lucide-react';
+import { Dispatch, SetStateAction } from "react";
+import { Button } from "@/components/ui/button";
+import { DialogClose } from "@/components/ui/dialog";
+import { CheckCircle, Check } from "lucide-react";
+import { UseFormReset } from "react-hook-form";
 
-const CompletionStep: React.FC = () => {
+export interface FormData {
+  companyName: string;
+  aboutCompany: string;
+  companyWebsite: string;
+  industry: string;
+  problemStatement: string;
+  businessModel: string;
+  logo: File | null;
+  companyStage: string;
+  targetCustomerSegment: string;
+  currentValuation: string;
+  roundSize: string;
+  syndicateCommitment: string;
+  pitchDeck: File | null;
+  pitchVideo: File | null;
+  instrumentType: string;
+  conversionTerms: string;
+  isStartup: boolean;
+}
+
+type CompletionStepProps = {
+  setActiveStep: Dispatch<SetStateAction<number>>;
+  setSubmittedData: Dispatch<SetStateAction<Partial<Record<number, Partial<FormData>>>>>;
+  reset: UseFormReset<FormData>;
+};
+
+const CompletionStep = ({
+  setActiveStep,
+  setSubmittedData,
+  reset
+}: CompletionStepProps) => {
+  const handleClose = () => {
+    setActiveStep(0);
+    setSubmittedData({});
+    reset();
+  };
   return (
     <div className="flex items-center justify-center py-15">
       <div className="text-center max-w-md w-full">
@@ -12,7 +48,9 @@ const CompletionStep: React.FC = () => {
           Congratulations, you have created a deal!
         </h1>
         <DialogClose>
-          <Button className="bg-white text-black px-6 py-2 rounded-none hover:bg-zinc-700 transition-colors flex items-center justify-center mx-auto">
+          <Button
+            className="bg-white text-black px-6 py-2 rounded-none hover:bg-zinc-700 transition-colors flex items-center justify-center mx-auto"
+            onClick={handleClose}>
             <Check className="w-5 h-5 mr-2" />
             Okay
           </Button>
