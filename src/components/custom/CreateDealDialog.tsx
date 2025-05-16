@@ -80,7 +80,7 @@ export default function CreateDealDialog() {
 
   useEffect(() => {
     if(!dealId) dispatch(createDraft())
-  },[dispatch])
+  },[dispatch,dealId])
 
   const renderStep = () => {
     switch (activeStep) {
