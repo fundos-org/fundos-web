@@ -243,7 +243,7 @@ export default function CreateDealDialog() {
       <DialogHeader>
         <DialogTitle className="text-3xl text-white flex items-center justify-between">
           Create a new deal
-          <DialogClose asChild className="border-[1px] border-[#383739] bg-[#242325]"><X/></DialogClose>
+          <DialogClose asChild className="border-[1px] border-[#383739] bg-[#242325]"><span className="p-1"><X/></span></DialogClose>
         </DialogTitle>
         <hr />
       </DialogHeader>
