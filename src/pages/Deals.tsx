@@ -12,8 +12,7 @@ function Deals() {
             <h2 className="text-4xl">Deals</h2>
           </div>
           <DialogTrigger asChild>
-            <button
-              className="bg-white text-black px-4 py-2 rounded-none">
+            <button className="bg-white text-black px-4 py-2 rounded-none">
               Create New Deal
             </button>
           </DialogTrigger>

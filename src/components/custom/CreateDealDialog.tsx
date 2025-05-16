@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Step, Stepper } from "react-form-stepper";
 import createDraft, {
   companyDetailsTrigger,
@@ -27,6 +27,7 @@ import Step5 from "./stepComponents/Step5";
 import CompletionStep from "./stepComponents/CompletedStep";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { RootState } from "@/app/store";
+import { toastifyThunk } from "@/lib/toastifyThunk";
 
 export interface FormData {
   companyName: string;
@@ -76,11 +77,31 @@ export default function CreateDealDialog() {
     mode: "onChange",
   });
   const dispatch = useAppDispatch();
-  const { dealId } = useAppSelector((state: RootState) => state.deals);
+  const { draft: {deal_id} } = useAppSelector((state: RootState) => state.deals);
+
+  const callDraftApi = useCallback(async () => {
+    try {
+      await toastifyThunk(
+        createDraft(),
+        dispatch,
+        {
+          loading: 'Fetching deal id...',
+          success: (data) => {
+            const payload = (data as { payload: { message: string } }).payload;
+            return `Fetched user: ${payload.message}`
+          },
+          error: (error) => `Error: ${error}`,
+        }
+      );
+    } catch (error) {
+      // Errors are handled by toast, but you can add additional logic here if needed
+      console.error('Toastified thunk error:', error);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
-    if(!dealId) dispatch(createDraft())
-  },[dispatch,dealId])
+    if(!deal_id) callDraftApi()
+  },[dispatch, deal_id, callDraftApi])
 
   const renderStep = () => {
     switch (activeStep) {
@@ -165,7 +186,7 @@ export default function CreateDealDialog() {
       switch (activeStep) {
         case 0: {
           await companyDetailsTrigger(
-            dealId,
+            deal_id,
             values.companyName,
             values.aboutCompany,
             values.companyWebsite,
@@ -175,7 +196,7 @@ export default function CreateDealDialog() {
         }
         case 1:
           await industryProblemTrigger(
-            dealId,
+            deal_id,
             values.industry,
             values.problemStatement,
             values.businessModel
@@ -183,14 +204,14 @@ export default function CreateDealDialog() {
           break;
         case 2:
           await customerSegmentTrigger(
-            dealId,
+            deal_id,
             values.companyStage,
             values.targetCustomerSegment
           );
           break;
         case 3:
           await valuationTrigger(
-            dealId,
+            deal_id,
             values.currentValuation,
             values.roundSize,
             values.syndicateCommitment,
@@ -200,7 +221,7 @@ export default function CreateDealDialog() {
           break;
         case 4:
           await securitiesTrigger(
-            dealId,
+            deal_id,
             values.instrumentType,
             values.conversionTerms,
             values.isStartup
@@ -216,7 +237,7 @@ export default function CreateDealDialog() {
   };
 
   return (
-    <DialogContent className="border-0 w-[800px] rounded-none bg-[#1a1a1a] text-white">
+    <DialogContent className="border-0 w-[800px] rounded-none bg-[#1a1a1a] text-white" aria-describedby={undefined}>
       <DialogHeader>
         <DialogTitle className="text-3xl text-white">
           Create a new deal

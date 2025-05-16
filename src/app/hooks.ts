@@ -10,7 +10,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 export const useAppStateEffect = <T extends keyof RootState>(
   selector: (state: RootState) => RootState[T],
-  action?: () => ThunkAction<void, RootState, unknown, Action>
+  action: () => ThunkAction<void, RootState, unknown, Action>
 ): RootState[T] => {
   const dispatch = useDispatch<AppDispatch>();
   const selected = useSelector(selector);
@@ -23,6 +23,26 @@ export const useAppStateEffect = <T extends keyof RootState>(
 
   return selected;
 };
+
+// const callDraftApi = useCallback(async () => {
+//     try {
+//       await toastifyThunk(
+//         createDraft(),
+//         dispatch,
+//         {
+//           loading: 'Fetching deal id...',
+//           success: (data) => {
+//             const payload = (data as { payload: { message: string } }).payload;
+//             return `Fetched user: ${payload.message}`
+//           },
+//           error: (error) => `Error: ${error}`,
+//         }
+//       );
+//     } catch (error) {
+//       // Errors are handled by toast, but you can add additional logic here if needed
+//       console.error('Toastified thunk error:', error);
+//     }
+//   }, [dispatch]);
 
 export const useAppStateEvent = <T extends keyof RootState>(
   selector: (state: RootState) => RootState[T]

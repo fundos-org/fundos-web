@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // Define the Deals state
 export interface DealsState {
     deals: Deal[];
-    dealId: string;
+    draft: DraftResponse;
     loading: boolean;
     error: string | null;
 }
@@ -13,7 +13,10 @@ export interface DealsState {
 // Define initial state
 const initialState: DealsState = {
     deals: [],
-    dealId: '',
+    draft: {
+        deal_id: '',
+        message: ''
+    },
     loading: false,
     error: null,
 };
@@ -31,7 +34,7 @@ const dealsSlice = createSlice({
             state.error = null;
         },
         resetDealId(state) {
-            state.dealId = ''
+            state.draft.deal_id = '';
         }
     },
     extraReducers: (builder) => {
@@ -54,7 +57,7 @@ const dealsSlice = createSlice({
             })
             .addCase(createDraft.fulfilled, (state, action: PayloadAction<DraftResponse>) => {
                 state.loading = false;
-                state.dealId = action.payload.deal_id;
+                state.draft = action.payload;
             })
             .addCase(createDraft.rejected, (state, action: PayloadAction<CommonError | undefined>) => {
                 state.loading = false;
