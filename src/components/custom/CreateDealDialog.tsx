@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Step, Stepper } from "react-form-stepper";
 import createDraft, {
   companyDetailsTrigger,
@@ -25,9 +25,8 @@ import Step3 from "./stepComponents/Step3";
 import Step4 from "./stepComponents/Step4";
 import Step5 from "./stepComponents/Step5";
 import CompletionStep from "./stepComponents/CompletedStep";
-import { useAppDispatch, useAppStateEvent } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { RootState } from "@/app/store";
-import { unwrapResult } from "@reduxjs/toolkit";
 
 export interface FormData {
   companyName: string;
@@ -50,7 +49,6 @@ export interface FormData {
 }
 
 export default function CreateDealDialog() {
-  
   const [activeStep, setActiveStep] = useState(0);
   const [submittedData, setSubmittedData] = useState<
   Partial<Record<number, Partial<FormData>>>
@@ -78,9 +76,11 @@ export default function CreateDealDialog() {
     mode: "onChange",
   });
   const dispatch = useAppDispatch();
-  const {
-    selected: { dealId },
-  } = useAppStateEvent((state: RootState) => state.deals);
+  const { dealId } = useAppSelector((state: RootState) => state.deals);
+
+  useEffect(() => {
+    if(!dealId) dispatch(createDraft())
+  },[dispatch])
 
   const renderStep = () => {
     switch (activeStep) {
@@ -164,10 +164,8 @@ export default function CreateDealDialog() {
     try {
       switch (activeStep) {
         case 0: {
-          const resultAction = await dispatch(createDraft());
-          const {deal_id} = unwrapResult(resultAction);
           await companyDetailsTrigger(
-            deal_id,
+            dealId,
             values.companyName,
             values.aboutCompany,
             values.companyWebsite,

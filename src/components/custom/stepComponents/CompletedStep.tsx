@@ -57,7 +57,7 @@ const CompletionStep = ({
         <h1 className="text-2xl font-bold mb-4 text-white">
           Congratulations, you have created a deal!
         </h1>
-        <DialogClose>
+        <DialogClose asChild>
           <Button
             className="bg-white text-black px-6 py-2 rounded-none hover:bg-zinc-700 transition-colors flex items-center justify-center mx-auto"
             onClick={handleClose}>

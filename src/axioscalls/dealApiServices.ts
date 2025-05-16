@@ -30,7 +30,6 @@ export const createDraft = createAsyncThunk<DraftResponse, string | undefined, {
 );
 
 export const companyDetailsTrigger = async (dealId: string, companyName: string, aboutCompany: string, companyWebsite: string, logo: File | null) => {
-    // console.log(dealId, companyName, aboutCompany, companyWebsite, logo, 'company details trigger');
     const formData = new FormData();
     if (logo) {
     formData.append("logo", logo);
@@ -41,7 +40,6 @@ export const companyDetailsTrigger = async (dealId: string, companyName: string,
 };
 
 export const industryProblemTrigger = async (dealId: string, industry: string, problemStatement: string, businessModel: string) => {
-    console.log(dealId, industry, problemStatement, businessModel, 'industry problem trigger');
     const response = await axios
         .post(`${baseUrl}web/industry-problem`, {
             deal_id: dealId,
