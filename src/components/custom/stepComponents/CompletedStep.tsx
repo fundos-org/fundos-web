@@ -5,6 +5,7 @@ import { CheckCircle, Check } from "lucide-react";
 import { UseFormReset } from "react-hook-form";
 import { useAppDispatch } from "@/app/hooks";
 import { resetDealId } from "@/slices/dealSlice";
+import toast from "react-hot-toast";
 
 export interface FormData {
   companyName: string;
@@ -46,8 +47,9 @@ const CompletionStep = ({
       setSubmittedData({});
       reset();
       dispatch(resetDealId());
+      toast.success('Deal created successfully!')
     } catch (error) {
-      console.log(error, "completeStep comp try catch handleclose");
+      toast.error(String(error))
     }
   };
   return (

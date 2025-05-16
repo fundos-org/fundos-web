@@ -6,7 +6,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 function Deals() {
   return (
     <>
-      <Dialog modal={true}>
+      <Dialog >
         <header className="flex justify-between items-center">
           <div>
             <h2 className="text-4xl">Deals</h2>

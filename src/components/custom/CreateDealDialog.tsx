@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -28,6 +29,7 @@ import CompletionStep from "./stepComponents/CompletedStep";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import { toastifyThunk } from "@/lib/toastifyThunk";
+import { X } from "lucide-react";
 
 export interface FormData {
   companyName: string;
@@ -237,10 +239,11 @@ export default function CreateDealDialog() {
   };
 
   return (
-    <DialogContent className="border-0 w-[800px] rounded-none bg-[#1a1a1a] text-white" aria-describedby={undefined}>
+    <DialogContent hideCloseButton={true} className="border-0 w-[800px] rounded-none bg-[#1a1a1a] text-white" aria-describedby={undefined} onInteractOutside={(e) => e.preventDefault()}>
       <DialogHeader>
-        <DialogTitle className="text-3xl text-white">
+        <DialogTitle className="text-3xl text-white flex items-center justify-between">
           Create a new deal
+          <DialogClose asChild className="border-[1px] border-[#383739] bg-[#242325]"><X/></DialogClose>
         </DialogTitle>
         <hr />
       </DialogHeader>
