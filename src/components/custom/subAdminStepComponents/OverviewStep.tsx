@@ -1,68 +1,77 @@
-import { Dispatch, SetStateAction } from "react";
+import { getSubAdminById } from "@/axioscalls/dealApiServices";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
-import { CheckCircle, Check } from "lucide-react";
-import { UseFormReset } from "react-hook-form";
-import { useAppDispatch } from "@/app/hooks";
-import { resetDealId } from "@/slices/dealSlice";
-import toast from "react-hot-toast";
+import { useCallback, useEffect, useState } from "react";
 
-export interface FormData {
-  logo: File | null;
-  subadminname: string;
-  subadminmail: string;
-  subadmincontact: string;
-  about: string;
+interface Response {
+  name: string;
   username: string;
   password: string;
-  reenterpassword: string;
-  appname: string;
-  invitecode: string;
+  invite_code: string;
 }
 
-type CompletionStepProps = {
-  setActiveStep: Dispatch<SetStateAction<number>>;
-  // setSubmittedData: Dispatch<
-  //   SetStateAction<Partial<Record<number, Partial<FormData>>>>
-  // >;
-  reset: UseFormReset<FormData>;
-};
-
-const OverviewStep = ({
-  setActiveStep,
-  // setSubmittedData,
-  reset,
-}: CompletionStepProps) => {
-  const dispatch = useAppDispatch();
-  const handleClose = () => {
+const OverviewStep = ({subAdminId}:{subAdminId: string}) => {
+  const [data, setData] = useState<Response>()
+  
+  const callGetSubAdminById = useCallback(async () => {
     try {
-      setActiveStep(0);
-      // setSubmittedData({});
-      reset();
-      dispatch(resetDealId());
-      toast.success('Deal created successfully!')
+      const response = await getSubAdminById(subAdminId);
+      setData(response);
     } catch (error) {
-      toast.error(String(error))
+      console.error('Error fetching sub-admin data:', error);
     }
-  };
+  }, [subAdminId]);
+
+  useEffect(() => {
+    if (!data) {
+      callGetSubAdminById();
+    }
+  }, [data, callGetSubAdminById]);
+
   return (
-    <div className="flex items-center justify-center py-15">
-      <div className="text-center max-w-md w-full">
-        <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold mb-4 text-white">
-          Congratulations, you have created a deal!
-        </h1>
-        <DialogClose asChild>
-          <Button
-            className="bg-white text-black px-6 py-2 rounded-none hover:bg-zinc-700 transition-colors flex items-center justify-center mx-auto"
-            onClick={handleClose}>
-            <Check className="w-5 h-5 mr-2" />
-            Okay
-          </Button>
-        </DialogClose>
+      <div className="relative text-white w-full max-w-md">
+        <div className="flex items-center gap-3 p-3 mb-4">
+            <img width="50" src="/public/fund.svg" alt="image" />
+          <div>
+            <p className="text-lg font-medium">
+              Congratulations, sub-admin created!
+            </p>
+            <p className="text-sm text-gray-400">
+              An confirmation mail has been sent to {data?.name}
+            </p>
+          </div>
+        </div>
+
+      {data && (<div className="p-5 mb-10 bg-[#1C2526]">
+        <div className="flex gap-4 mb-6 bg-[#1C2526]">
+          <div className="w-16 h-16 bg-white rounded flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-orange-500 rounded"></div>
+          </div>
+          <div className="flex-1">
+            <p className="text-lg font-medium">{data?.name}'s investiee</p>
+            <p className="text-sm text-gray-400">
+              App link:{" "}
+              <a href={appLink} className="underline text-blue-400">
+                {appLink}
+              </a>
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <p className="text-sm text-gray-400">Sub-admin name</p>
+          <p className="text-sm">{data?.name}</p>
+          <p className="text-sm text-gray-400">Username</p>
+          <p className="text-sm">{data?.username}</p>
+          <p className="text-sm text-gray-400">Password</p>
+          <p className="text-sm">{data?.password}</p>
       </div>
-    </div>
+      </div>)}
+        <Button className="w-full bg-white text-black hover:bg-gray-200 rounded-none">
+          Share details
+        </Button>
+      </div>
   );
 };
 
 export default OverviewStep;
+
+const appLink = "www.applink.com/pratyush-investiee";
