@@ -30,7 +30,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   return (
     <div className="relative text-white w-full max-w-md">
       <div className="flex items-center gap-3 p-3 mb-4">
-        <img width="50" src="/public/fund.svg" alt="image" />
+        <img width="50" src="/fund.svg" alt="image" />
         <div>
           <p className="text-lg font-medium">
             Congratulations, sub-admin created!
