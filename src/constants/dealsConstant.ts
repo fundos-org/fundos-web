@@ -13,6 +13,10 @@ export const stepsList = [
   { label: "Valuation", index: 3 },
   { label: "Security", index: 4 },
 ];
+export const subAdminStepsList = [
+  { label: "Details", index: 0 },
+  { label: "Configuration", index: 1 },
+];
 export const targetCustomers = [
   { name: "B2B", value: "b2b" },
   { name: "B2C", value: "b2c" },

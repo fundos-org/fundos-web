@@ -6,7 +6,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 function Deals() {
   return (
     <>
-      <Dialog >
+      <Dialog>
         <header className="flex justify-between items-center">
           <div>
             <h2 className="text-4xl">Deals</h2>

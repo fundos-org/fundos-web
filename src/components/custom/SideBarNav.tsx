@@ -16,6 +16,7 @@ import {
   Settings,
   MoreVertical,
   HelpCircle,
+  UserRoundPen,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Card } from "../ui/card";
@@ -32,6 +33,11 @@ const items = [
     title: "Deals",
     url: "/deals",
     icon: ScrollText,
+  },
+  {
+    title: "Sub Admin",
+    url: "/subadmin",
+    icon: UserRoundPen
   },
   {
     title: "Members",

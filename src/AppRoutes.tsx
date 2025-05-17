@@ -4,6 +4,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Deals = lazy(() => import("./pages/Deals"));
 const Members = lazy(() => import("./pages/Members"));
 const Settings = lazy(() => import("./pages/Settings"));
+const SubAdmin = lazy(() => import("./pages/SubAdmin"));
 import Layout from "./components/custom/Layout";
 
 const AppRoutes = () => {
@@ -14,6 +15,7 @@ const AppRoutes = () => {
           <Route path="/deals" element={<Layout><Deals/></Layout>}/>
            <Route path="/members" element={<Layout><Members/></Layout>}/>
            <Route path="/settings" element={<Layout><Settings/></Layout>}/>
+           <Route path="/subadmin" element={<Layout><SubAdmin/></Layout>}/>
           {/*<Route path="/search/:city" element={<Layout showHero={false}><SearchPage/></Layout>}/>
           <Route path="/detail/:restaurantId" element={<Layout showHero={false}><DetailPage/></Layout>}/>
           <Route element={<ProtectedRoute/>}>
