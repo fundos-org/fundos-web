@@ -14,10 +14,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import OverviewStep from "./subAdminStepComponents/OverviewStep";
 import StepSubAdmin1 from "./subAdminStepComponents/StepSubAdmin1";
 import StepSubAdmin2 from "./subAdminStepComponents/StepSubAdmin2";
-import {
-  createCredentials,
-  createProfile,
-} from "@/axioscalls/dealApiServices";
+import { createCredentials, createProfile } from "@/axioscalls/dealApiServices";
 import toast from "react-hot-toast";
 
 export interface FormData {
@@ -54,12 +51,12 @@ function CreateSubAdminDialog() {
     },
     mode: "onChange",
   });
-    
-    const handleClose = () => {
+
+  const handleClose = () => {
     try {
       setActiveStep(0);
       methods.reset();
-      toast.success("Deal created successfully!");
+      toast.success("Sub Admin created successfully!");
     } catch (error) {
       toast.error(String(error));
     }
@@ -137,7 +134,7 @@ function CreateSubAdminDialog() {
           );
           break;
         default:
-          return null
+          return null;
       }
       // Store the submitted data for this step
       setSubmittedData((prev) => ({ ...prev, [activeStep]: stepData }));
@@ -154,9 +151,7 @@ function CreateSubAdminDialog() {
       case 1:
         return <StepSubAdmin2 />;
       case 2:
-        return (
-          <OverviewStep subAdminId={subAdminId} />
-        );
+        return <OverviewStep subAdminId={subAdminId} />;
       default:
         return null;
     }
@@ -181,14 +176,16 @@ function CreateSubAdminDialog() {
         </DialogTitle>
         <hr />
       </DialogHeader>
-      {activeStep !== 2 && <Stepper
-        activeStep={activeStep}
-        styleConfig={styleConfig}
-        style={{ padding: 0 }}>
-        {subAdminStepsList.map((step) => (
-          <Step key={step.index} label={step.label} index={step.index} />
-        ))}
-      </Stepper>}
+      {activeStep !== 2 && (
+        <Stepper
+          activeStep={activeStep}
+          styleConfig={styleConfig}
+          style={{ padding: 0 }}>
+          {subAdminStepsList.map((step) => (
+            <Step key={step.index} label={step.label} index={step.index} />
+          ))}
+        </Stepper>
+      )}
       <FormProvider {...methods}>
         <div className="grid gap-4">{renderStep()}</div>
       </FormProvider>
