@@ -166,8 +166,8 @@ export const fetchAllSubAdmins = createAsyncThunk<SubadminsResponse, void, { rej
     }
 );
 
-export const loginUser = createAsyncThunk<SignInSubAdminResponse, LoginFormData, { rejectValue: CommonError }>(
-    'subAdmins/loginUser',
+export const loginSubAdmin = createAsyncThunk<SignInSubAdminResponse, LoginFormData, { rejectValue: CommonError }>(
+    'subAdmins/loginSubAdmin',
     async ({username,password}, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${baseUrl}subadmin/signin?username=${username}&password=${password}`);;
@@ -188,5 +188,11 @@ export const loginUser = createAsyncThunk<SignInSubAdminResponse, LoginFormData,
         }
     }
 );
+
+export const loginAdmin = async ({username,password}: LoginFormData) => {
+    const response = await axios
+        .post(`${baseUrl}admin/signin?username=${username}&password=${password}`);
+    return response.data;
+}
 
 export default createDraft;
