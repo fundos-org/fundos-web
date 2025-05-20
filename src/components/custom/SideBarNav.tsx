@@ -77,15 +77,17 @@ export default function AppSidebar() {
   const role = useAppSelector((state: RootState) => state.global.role) as
     | "admin"
     | "subadmin";
-  const { subAdminName, subAdminUsername} = useAppSelector((state: RootState) => state.subAdmin)
-  const items = role == 'subadmin' ? routes.subadmin : routes.admin;
+  const { subAdminName, subAdminUsername } = useAppSelector(
+    (state: RootState) => state.subAdmin
+  );
+  const items = role == "subadmin" ? routes.subadmin : routes.admin;
   const location = useLocation();
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const handleLogOut = () => {
-    dispatch(resetSubadmin())
-    navigate('/')
-  }
+    dispatch(resetSubadmin());
+    navigate("/");
+  };
   return (
     <Sidebar className="p-3 bg-[#242325]">
       <SidebarHeader className="text-3xl font-bold text-white bg-[#242325]">
@@ -130,14 +132,22 @@ export default function AppSidebar() {
           <div className="w-60 flex justify-between items-center gap-4">
             <div className="relative">
               <Avatar>
-                <AvatarImage width="40" src="/favicon/apple-touch-icon.png" alt="fundmanger name" />
+                <AvatarImage
+                  width="40"
+                  src="/favicon/apple-touch-icon.png"
+                  alt="fundmanger name"
+                />
                 <AvatarFallback>BS</AvatarFallback>
               </Avatar>
               <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-[#1f1f1f]" />
             </div>
             <div className="mr-auto">
-              <h4 className="text-white font-medium">{ subAdminName ? subAdminName : 'Ammit' }</h4>
-              <p className="text-sm text-gray-400">{ subAdminUsername ? subAdminUsername : 'ammit@fundos.com' }</p>
+              <h4 className="text-white font-medium">
+                {subAdminName ? subAdminName : "Ammit"}
+              </h4>
+              <p className="text-sm text-gray-400">
+                {subAdminUsername ? subAdminUsername : "ammit@fundos.com"}
+              </p>
             </div>
             <LogOut className="text-gray-400" onClick={handleLogOut} />
           </div>

@@ -31,22 +31,22 @@ export default function SignIn() {
     console.log("Form submitted:", data);
     // Add your login logic here (e.g., API call)
     if (isAdmin) {
-      const success = await loginAdmin(data)
+      const success = await loginAdmin(data);
       if (success) {
-        dispatch(makeAdminPresent())
-        navigate('/subadmin')
+        dispatch(makeAdminPresent());
+        navigate("/subadmin");
       }
     } else {
       await toastifyThunk(loginSubAdmin(data), dispatch, {
-      loading: "Wait, Logging in...",
-      success: (data) => {
-        const payload = (data as { payload: { message: string } }).payload;
-        dispatch(makeSubAdminPresent())
-        navigate("/dashboard");
-        return `Fetched user: ${payload.message}`;
-      },
-      error: (error) => `Error: ${error}`,
-    });
+        loading: "Wait, Logging in...",
+        success: (data) => {
+          const payload = (data as { payload: { message: string } }).payload;
+          dispatch(makeSubAdminPresent());
+          navigate("/dashboard");
+          return `Fetched user: ${payload.message}`;
+        },
+        error: (error) => `Error: ${error}`,
+      });
     }
   };
 
