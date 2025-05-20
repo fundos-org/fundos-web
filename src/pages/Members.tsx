@@ -44,7 +44,7 @@ export default function Members() {
         <StatisticCardList />
       </TabsContent>
         </Tabs>
-      <InvestorsTable />
+      <InvestorsTable headerName="Investor" />
       <AddMemberDialog/>
     </Dialog>
   );

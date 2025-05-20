@@ -121,13 +121,13 @@ export const createProfile = async (name: string, email: string, contact: string
     const formData = new FormData();
     if (logo) formData.append("logo", logo);
     const response = await axios
-        .post(`${baseUrl}admin/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`, formData);
+        .post(`${baseUrl}admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`, formData);
     return response.data;
 };
 
 export const createCredentials = async (subadmin_id: string, username: string, password: string, re_entered_password: string, app_name: string, invite_code: string) => {
     const response = await axios
-        .post(`${baseUrl}admin/create/credentials`, {
+        .post(`${baseUrl}admin/subadmins/create/credentials`, {
             subadmin_id,
             username,
             password,
@@ -140,7 +140,7 @@ export const createCredentials = async (subadmin_id: string, username: string, p
 
 export const getSubAdminById = async (subadmin_id: string) => {
     const response = await axios
-        .get(`${baseUrl}admin/get/${subadmin_id}`);
+        .get(`${baseUrl}admin/subadmins/get/${subadmin_id}`);
     return response.data;
 }
 

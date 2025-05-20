@@ -20,7 +20,7 @@ function SubAdmin() {
             Track how your managers are performing
           </small>
         </div>
-        <InvestorsTable />
+        <InvestorsTable headerName="sub-admin" />
         <CreateSubAdminDialog />
       </Dialog>
   )

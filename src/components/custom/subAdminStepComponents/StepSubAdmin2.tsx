@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { getRandomCode } from "@/lib/randomInviteCodeGenertor";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Copy, RefreshCw } from "lucide-react";
 
 const StepSubAdmin2: React.FC = () => {
   const {
@@ -9,6 +13,27 @@ const StepSubAdmin2: React.FC = () => {
     formState: { errors },
     getValues,
   } = useFormContext();
+
+  const [code, setCode] = useState<string>('');
+
+  // Generate random code on component mount
+  useEffect(() => {
+    setCode(getRandomCode());
+  }, []);
+
+  // Handle generating new code
+  const handleGenerateNewCode = () => {
+    setCode(getRandomCode());
+  };
+
+  // Handle copying code to clipboard
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      toast.success('Code copied to clipboard!');
+    }).catch(() => {
+      toast.error('Failed to copy code.');
+    });
+  };
 
   return (
     <div className="grid gap-4">
@@ -98,21 +123,35 @@ const StepSubAdmin2: React.FC = () => {
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="invitecode" className="text-right text-white">
+      <div className="flex flex-col gap-2 w-full">
+        <Label htmlFor="appname" className="text-right text-white">
           Invite Code
         </Label>
-        <Input
-          id="invitecode"
-          {...register("invitecode", { required: "Invite code is required" })}
-          placeholder="Enter invite code"
-          className="rounded-none text-white"
-        />
-        {errors.invitecode && (
-          <p className="text-red-500 text-sm">
-            {String(errors.invitecode.message)}
-          </p>
-        )}
+        <div className="relative w-64">
+      <Input
+        value={code}
+        disabled
+        className="pr-20 bg-gray-800 text-white rounded-none w-full"
+      />
+      <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleGenerateNewCode}
+          className="h-8 w-8 text-gray-400 rounded-none"
+        >
+          <RefreshCw className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleCopyCode}
+          className="h-8 w-8 text-gray-400 rounded-none"
+        >
+          <Copy className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
       </div>
     </div>
   );
