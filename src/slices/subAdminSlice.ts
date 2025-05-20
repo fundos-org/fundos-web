@@ -1,15 +1,23 @@
-import { fetchAllSubAdmins } from "@/axioscalls/dealApiServices";
-import { CommonError, Subadmin, SubadminsResponse } from "@/constants/dealsConstant";
+import { fetchAllSubAdmins, loginUser } from "@/axioscalls/dealApiServices";
+import { CommonError, SignInSubAdminResponse, Subadmin, SubadminsResponse } from "@/constants/dealsConstant";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface SubAdminState {
     subAdmins: Subadmin[] | null;
+    subAdminId: string | null;
+    subAdminName: string | null;
+    subAdminUsername: string | null;
+    subAdminInviteCode: string | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: SubAdminState = {
     subAdmins: null,
+    subAdminId: null,
+    subAdminName: null,
+    subAdminUsername: null,
+    subAdminInviteCode: null,
     loading: false,
     error: null,
 };
@@ -29,6 +37,20 @@ const subAdminSlice = createSlice({
                 state.subAdmins = action.payload.subadmins;
             })
             .addCase(fetchAllSubAdmins.rejected, (state, action: PayloadAction<CommonError | undefined>) => {
+                state.loading = false;
+                state.error = action.payload?.message || 'Failed to fetch deals';
+            })
+            .addCase(loginUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(loginUser.fulfilled, (state, action: PayloadAction<SignInSubAdminResponse>) => {
+                state.loading = false;
+                state.subAdminId = action.payload.subadmin_id;
+                state.subAdminName = action.payload.name;
+                state.subAdminUsername = action.payload.username
+                state.subAdminInviteCode = action.payload.invite_code
+            })
+            .addCase(loginUser.rejected, (state, action: PayloadAction<CommonError | undefined>) => {
                 state.loading = false;
                 state.error = action.payload?.message || 'Failed to fetch deals';
             })

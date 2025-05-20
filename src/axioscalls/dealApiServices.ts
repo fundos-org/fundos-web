@@ -1,4 +1,4 @@
-import { CommonError, Deal, DraftResponse, SubadminsResponse } from "@/constants/dealsConstant";
+import { CommonError, Deal, DraftResponse, LoginFormData, SignInSubAdminResponse, SubadminsResponse } from "@/constants/dealsConstant";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -147,7 +147,30 @@ export const fetchAllSubAdmins = createAsyncThunk<SubadminsResponse, void, { rej
     'subAdmins/fetchAllDeals',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await await axios.get(`${baseUrl}admin/subadmins`);;
+            const response = await axios.get(`${baseUrl}admin/subadmins`);;
+            return response.data;
+        } catch (error: unknown) {
+            // Handle axios or network errors
+            if (axios.isAxiosError(error) && error.response?.data) {
+                const errorData = error.response.data as CommonError;
+                if (errorData.isSuccess !== undefined && errorData.message) {
+                    return rejectWithValue(errorData);
+                }
+            }
+            // Fallback for unexpected errors
+            return rejectWithValue({
+                isSuccess: false,
+                message: 'Failed to fetch deals',
+            });
+        }
+    }
+);
+
+export const loginUser = createAsyncThunk<SignInSubAdminResponse, LoginFormData, { rejectValue: CommonError }>(
+    'subAdmins/loginUser',
+    async ({username,password}, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${baseUrl}subadmin/signin?username=${username}&password=${password}`);;
             return response.data;
         } catch (error: unknown) {
             // Handle axios or network errors

@@ -6,12 +6,14 @@ const Members = lazy(() => import("./pages/Members"));
 const Settings = lazy(() => import("./pages/Settings"));
 const SubAdmin = lazy(() => import("./pages/SubAdmin"));
 import Layout from "./components/custom/Layout";
+import SignIn from "./pages/SignIn";
 
 const AppRoutes = () => {
     return (
       <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-          <Route path="/" element={<Layout><Dashboard /></Layout>}/>
+          <Route path="/" element={<SignIn />}/>
+          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>}/>
           <Route path="/deals" element={<Layout><Deals/></Layout>}/>
            <Route path="/members" element={<Layout><Members/></Layout>}/>
            <Route path="/settings" element={<Layout><Settings/></Layout>}/>

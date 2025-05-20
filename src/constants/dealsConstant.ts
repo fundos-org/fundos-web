@@ -132,3 +132,18 @@ export interface Subadmin {
 export interface SubadminsResponse {
   subadmins: Subadmin[];
 }
+
+export interface SignInSubAdminResponse {
+  message: string,
+  subadmin_id: string,
+  name: string,
+  username: string,
+  password: string,
+  invite_code: string,
+  success: boolean
+}
+
+export interface LoginFormData {
+  username: string;
+  password: string;
+}
