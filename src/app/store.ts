@@ -1,11 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import dealsFeature from '../slices/dealSlice';
 import subAdminFeature from '../slices/subAdminSlice';
+import adminFeature from '../slices/adminSlice';
+import globalFeature from '../slices/globalSlice';
 
 const store = configureStore({
   reducer: {
+    global: globalFeature,
     deals: dealsFeature,
-    subAdmin: subAdminFeature
+    subAdmin: subAdminFeature,
+    admin: adminFeature
   },
 });
 

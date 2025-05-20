@@ -9,6 +9,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useAppDispatch } from "@/app/hooks";
 import { loginAdmin, loginSubAdmin } from "@/axioscalls/dealApiServices";
 import { useNavigate } from "react-router-dom";
+import { makeAdminPresent, makeSubAdminPresent } from "@/slices/globalSlice";
 
 export default function SignIn() {
   const [isAdmin, setIsAdmin] = useState(true);
@@ -21,8 +22,8 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: "mudit_dua",
-      password: "FundOS",
+      username: "admin",
+      password: "Fundos",
     },
   });
 
@@ -31,12 +32,16 @@ export default function SignIn() {
     // Add your login logic here (e.g., API call)
     if (isAdmin) {
       const success = await loginAdmin(data)
-      if(success) navigate('/subadmin')
+      if (success) {
+        dispatch(makeAdminPresent())
+        navigate('/subadmin')
+      }
     } else {
       await toastifyThunk(loginSubAdmin(data), dispatch, {
       loading: "Wait, Logging in...",
       success: (data) => {
         const payload = (data as { payload: { message: string } }).payload;
+        dispatch(makeSubAdminPresent())
         navigate("/dashboard");
         return `Fetched user: ${payload.message}`;
       },

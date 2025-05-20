@@ -26,6 +26,10 @@ const subAdminSlice = createSlice({
     name: 'subAdmin',
     initialState,
     reducers: {
+        resetSubadmin(state) {
+            state.subAdminName = null
+            state.subAdminUsername = null
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -56,5 +60,7 @@ const subAdminSlice = createSlice({
             })
     },
 });
+
+export const { resetSubadmin } = subAdminSlice.actions
 
 export default subAdminSlice.reducer;
