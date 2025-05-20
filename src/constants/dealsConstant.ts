@@ -118,3 +118,17 @@ export interface DraftResponse {
   deal_id: string;
   message: string;
 }
+
+export interface Subadmin {
+  subadmin_id: string;
+  name: string;
+  email: string;
+  invite_code: string;
+  total_users: number;
+  active_deals: number;
+  onboarding_date: string;
+}
+
+export interface SubadminsResponse {
+  subadmins: Subadmin[];
+}

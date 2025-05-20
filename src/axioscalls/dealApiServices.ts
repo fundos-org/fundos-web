@@ -1,4 +1,4 @@
-import { CommonError, Deal, DraftResponse } from "@/constants/dealsConstant";
+import { CommonError, Deal, DraftResponse, SubadminsResponse } from "@/constants/dealsConstant";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -76,7 +76,6 @@ export const valuationTrigger = async (dealId: string, currentValuation: string,
 };
 
 export const securitiesTrigger = async (dealId: string, instrumentType: string, conversionTerms: string, isStartup: boolean) => {
-
     const response = await axios
         .post(`${baseUrl}deals/web/securities`, {
             deal_id: dealId,
@@ -143,5 +142,28 @@ export const getSubAdminById = async (subadmin_id: string) => {
         .get(`${baseUrl}admin/subadmins/get/${subadmin_id}`);
     return response.data;
 }
+
+export const fetchAllSubAdmins = createAsyncThunk<SubadminsResponse, void, { rejectValue: CommonError }>(
+    'subAdmins/fetchAllDeals',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await await axios.get(`${baseUrl}admin/subadmins`);;
+            return response.data;
+        } catch (error: unknown) {
+            // Handle axios or network errors
+            if (axios.isAxiosError(error) && error.response?.data) {
+                const errorData = error.response.data as CommonError;
+                if (errorData.isSuccess !== undefined && errorData.message) {
+                    return rejectWithValue(errorData);
+                }
+            }
+            // Fallback for unexpected errors
+            return rejectWithValue({
+                isSuccess: false,
+                message: 'Failed to fetch deals',
+            });
+        }
+    }
+);
 
 export default createDraft;

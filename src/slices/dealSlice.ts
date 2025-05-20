@@ -41,7 +41,6 @@ const dealsSlice = createSlice({
         builder
             .addCase(fetchAllDeals.pending, (state) => {
                 state.loading = true;
-                state.error = null;
             })
             .addCase(fetchAllDeals.fulfilled, (state, action: PayloadAction<Deal[]>) => {
                 state.loading = false;

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import dealsFeature from '../slices/dealSlice';
+import subAdminFeature from '../slices/subAdminSlice';
 
 const store = configureStore({
   reducer: {
-    deals: dealsFeature
+    deals: dealsFeature,
+    subAdmin: subAdminFeature
   },
 });
 
