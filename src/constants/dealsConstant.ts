@@ -143,6 +143,23 @@ export interface SignInSubAdminResponse {
   success: boolean
 }
 
+export interface StatisticsResponse {
+  subadmin_id: string,
+  subadmin_name: string,
+  live_deals: number,
+  closed_deals: number,
+  total_capital_raised: number,
+  deals_this_month: number,
+  success: boolean
+}
+
+export interface StatisticsState {
+  liveDeals: number | null;
+  closedDeals: number | null,
+  totalCapitalRaised: number | null,
+  dealsThisMonth: number | null,
+}
+
 export interface LoginFormData {
   username: string;
   password: string;

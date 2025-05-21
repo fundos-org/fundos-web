@@ -1,11 +1,12 @@
-import { createDraft, fetchAllDeals } from '@/axioscalls/dealApiServices';
-import { Deal, CommonError, DraftResponse } from '@/constants/dealsConstant';
+import { createDraft, fetchAllDeals, fetchDealStatistics } from '@/axioscalls/dealApiServices';
+import { Deal, CommonError, DraftResponse, StatisticsState, StatisticsResponse } from '@/constants/dealsConstant';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the Deals state
 export interface DealsState {
     deals: Deal[];
     draft: DraftResponse;
+    statistics?: StatisticsState;
     loading: boolean;
     error: string | null;
 }
@@ -16,6 +17,12 @@ const initialState: DealsState = {
     draft: {
         deal_id: '',
         message: ''
+    },
+    statistics: {
+        liveDeals: null,
+        closedDeals: null,
+        totalCapitalRaised: null,
+        dealsThisMonth: null
     },
     loading: false,
     error: null,
@@ -59,6 +66,23 @@ const dealsSlice = createSlice({
                 state.draft = action.payload;
             })
             .addCase(createDraft.rejected, (state, action: PayloadAction<CommonError | undefined>) => {
+                state.loading = false;
+                state.error = action.payload?.message || 'Failed to create draft';
+            })
+            .addCase(fetchDealStatistics.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchDealStatistics.fulfilled, (state, action: PayloadAction<StatisticsResponse>) => {
+                state.loading = false;
+                if (state.statistics) {
+                    state.statistics.liveDeals = action.payload.live_deals;
+                    state.statistics.closedDeals = action.payload.closed_deals;
+                    state.statistics.dealsThisMonth = action.payload.deals_this_month;
+                    state.statistics.totalCapitalRaised = action.payload.total_capital_raised;
+                }
+            })
+            .addCase(fetchDealStatistics.rejected, (state, action: PayloadAction<CommonError | undefined>) => {
                 state.loading = false;
                 state.error = action.payload?.message || 'Failed to create draft';
             });

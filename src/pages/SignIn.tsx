@@ -42,8 +42,10 @@ export default function SignIn() {
         success: (data) => {
           const payload = (data as { payload: { message: string } }).payload;
           dispatch(makeSubAdminPresent());
+          const { message, ...rest } = payload;
+          sessionStorage.setItem('subadmindetails', JSON.stringify(rest))
           navigate("/dashboard");
-          return `Fetched user: ${payload.message}`;
+          return `Fetched user: ${message}`;
         },
         error: (error) => `Error: ${error}`,
       });
