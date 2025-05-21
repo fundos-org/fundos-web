@@ -87,32 +87,32 @@ export interface CommonError {
 }
 
 // Define the Deal interface based on API response
-export interface Deal {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-  fund_manager_id: string;
-  created_at: string;
-  agreed_to_terms: boolean;
-  company_name: string | null;
-  company_website: string | null;
-  about_company: string | null;
-  company_stage: string | null;
-  industry: string | null;
-  target_customer_segment: string | null;
-  problem_statement: string | null;
-  business_model: string | null;
-  current_valuation: number | null;
-  round_size: number | null;
-  syndicate_commitment: number | null;
-  instrument_type: string | null;
-  conversion_terms: string | null;
-  logo_url: string | null;
-  pitch_deck_url: string | null;
-  pitch_video_url: string | null;
-  updated_at: string | null;
-}
+// export interface Deal {
+//   id: string;
+//   title: string;
+//   description: string;
+//   status: string;
+//   fund_manager_id: string;
+//   created_at: string;
+//   agreed_to_terms: boolean;
+//   company_name: string | null;
+//   company_website: string | null;
+//   about_company: string | null;
+//   company_stage: string | null;
+//   industry: string | null;
+//   target_customer_segment: string | null;
+//   problem_statement: string | null;
+//   business_model: string | null;
+//   current_valuation: number | null;
+//   round_size: number | null;
+//   syndicate_commitment: number | null;
+//   instrument_type: string | null;
+//   conversion_terms: string | null;
+//   logo_url: string | null;
+//   pitch_deck_url: string | null;
+//   pitch_video_url: string | null;
+//   updated_at: string | null;
+// }
 
 export interface DraftResponse {
   deal_id: string;
@@ -163,4 +163,20 @@ export interface StatisticsState {
 export interface LoginFormData {
   username: string;
   password: string;
+}
+
+export interface DealCard {
+  deal_id: string;
+  company_name: string;
+  status: 'OPEN' | 'ON_HOLD' | 'CLOSED';
+  round_size: number;
+  created_at: string;
+}
+
+export interface AllDealsResponse {
+  subadmin_id: string;
+  subadmin_name: string;
+  active_deals: DealCard[];
+  closed_deals: DealCard[];
+  success: boolean;
 }

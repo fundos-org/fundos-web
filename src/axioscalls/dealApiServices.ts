@@ -1,4 +1,4 @@
-import { CommonError, Deal, DraftResponse, LoginFormData, SignInSubAdminResponse, StatisticsResponse, SubadminsResponse } from "@/constants/dealsConstant";
+import { AllDealsResponse, CommonError, DraftResponse, LoginFormData, SignInSubAdminResponse, StatisticsResponse, SubadminsResponse } from "@/constants/dealsConstant";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -87,11 +87,12 @@ export const securitiesTrigger = async (dealId: string, instrumentType: string, 
 };
 
 // Create async thunk for fetching all deals
-export const fetchAllDeals = createAsyncThunk<Deal[], void, { rejectValue: CommonError }>(
+export const fetchAllDeals = createAsyncThunk<AllDealsResponse, void, { rejectValue: CommonError }>(
     'deals/fetchAllDeals',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await await axios.get(`${baseUrl}deals/mobile/all-deals`);;
+            const {subadmin_id} = JSON.parse(sessionStorage.getItem('subadmindetails') as string)
+            const response = await await axios.get(`${baseUrl}subadmin/deals/overview/${subadmin_id}`);;
             return response.data;
         } catch (error: unknown) {
             // Handle axios or network errors
@@ -171,7 +172,7 @@ export const fetchDealStatistics = createAsyncThunk<StatisticsResponse, void, { 
     async (_, { rejectWithValue }) => {
         try {
             const {subadmin_id} = JSON.parse(sessionStorage.getItem('subadmindetails') as string)
-            const response = await axios.get(`${baseUrl}subadmin/deals/statistics/${subadmin_id}`);;
+            const response = await axios.get(`${baseUrl}subadmin/deals/statistics/${subadmin_id}`);
             return response.data;
         } catch (error: unknown) {
             // Handle axios or network errors

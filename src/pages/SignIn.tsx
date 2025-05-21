@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { makeAdminPresent, makeSubAdminPresent } from "@/slices/globalSlice";
 
 export default function SignIn() {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -22,8 +22,8 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: "admin",
-      password: "Fundos",
+      username: "mudit_dua",
+      password: "FundOS",
     },
   });
 

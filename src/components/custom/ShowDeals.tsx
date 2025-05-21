@@ -1,37 +1,34 @@
 import { RootState } from "@/app/store";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import DealCard from "./DealCard";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import CardDeal from "./DealCard";
+import { useAppStateEffect } from "@/app/hooks";
 import { fetchAllDeals } from "@/axioscalls/dealApiServices";
-import { useCallback, useEffect } from "react";
-import { toastifyThunk } from "@/lib/toastifyThunk";
+import { DealCard } from "@/constants/dealsConstant";
 
 export default function ShowDeals() {
-  const dispatch = useAppDispatch()
-  const { deals } = useAppSelector(
-    (state: RootState) => state.deals
+  // const dispatch = useAppDispatch();
+  const { activeDeals, closedDeals } = useAppStateEffect(
+    (state: RootState) => state.deals.allDeals || { activeDeals: [], closedDeals: [] },
+    fetchAllDeals
   );
-  const callAllDealsApi = useCallback(async () => {
-    try {
-      await toastifyThunk(
-        fetchAllDeals(),
-        dispatch,
-        {
-          loading: 'Fetching all deals...',
-          success: () => {
-            return `Fetched user: All deals fetched!`
-          },
-          error: (error) => `Error: ${error}`,
-        }
-      );
-    } catch (error) {
-      // Errors are handled by toast, but you can add additional logic here if needed
-      console.error('Toastified thunk error:', error);
-    }
-  }, [dispatch]);
-  useEffect(() => {
-    if (deals.length === 0) callAllDealsApi()
-  },[deals, dispatch,callAllDealsApi])
+  // const callAllDealsApi = useCallback(async () => {
+  //   try {
+  //     await toastifyThunk(fetchAllDeals(), dispatch, {
+  //       loading: "Fetching all deals...",
+  //       success: () => {
+  //         return `Fetched user: All deals fetched!`;
+  //       },
+  //       error: (error) => `Error: ${error}`,
+  //     });
+  //   } catch (error) {
+  //     // Errors are handled by toast, but you can add additional logic here if needed
+  //     console.error("Toastified thunk error:", error);
+  //   }
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (!activeDeals || !closedDeals) callAllDealsApi();
+  // }, [dispatch, callAllDealsApi, activeDeals, closedDeals]);
   return (
     <Tabs defaultValue="active" className="w-full mt-5">
       <div className="w-full border-b-1 border-gray-600">
@@ -50,13 +47,13 @@ export default function ShowDeals() {
       </div>
 
       <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
-        {deals.map((deal, index) => (
-          <DealCard deal={deal} key={index} />
+        {activeDeals?.map((deal: DealCard, index: number) => (
+          <CardDeal deal={deal} key={index} />
         ))}
       </TabsContent>
       <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
-        {deals.map((deal, index) => (
-          <DealCard deal={deal} key={index} />
+        {closedDeals?.map((deal: DealCard, index: number) => (
+          <CardDeal deal={deal} key={index} />
         ))}
       </TabsContent>
     </Tabs>

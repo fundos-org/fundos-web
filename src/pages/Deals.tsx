@@ -1,6 +1,6 @@
 import CreateDealDialog from "@/components/custom/CreateDealDialog";
+import DealsStatisticCardList from "@/components/custom/DealsStatisticsCardList";
 import ShowDeals from "@/components/custom/ShowDeals";
-import StatisticCardList from "@/components/custom/StatisticCardList";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 function Deals() {
@@ -22,7 +22,7 @@ function Deals() {
             Track how your deals are performing and manage your portfolio
           </small>
         </div>
-        <StatisticCardList />
+        <DealsStatisticCardList />
         <ShowDeals />
         <CreateDealDialog />
       </Dialog>
