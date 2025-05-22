@@ -1,3 +1,4 @@
+import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
   CommonError,
@@ -269,6 +270,64 @@ export const fetchMembersStatistics = createAsyncThunk<
     );
     const response = await axios.get(
       `${baseUrl}subadmin/members/statistics/${subadmin_id}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    // Handle axios or network errors
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data as CommonError;
+      if (errorData.isSuccess !== undefined && errorData.message) {
+        return rejectWithValue(errorData);
+      }
+    }
+    // Fallback for unexpected errors
+    return rejectWithValue({
+      isSuccess: false,
+      message: 'Failed to fetch deals',
+    });
+  }
+});
+
+export const fetchTransactionList = createAsyncThunk<
+  MemberApiResponse,
+  void,
+  { rejectValue: CommonError }
+>('members/fetchTransactionList', async (_, { rejectWithValue }) => {
+  try {
+    const { subadmin_id } = JSON.parse(
+      sessionStorage.getItem('subadmindetails') as string
+    );
+    const response = await axios.get(
+      `${baseUrl}subadmin/dashboard/transactions/${subadmin_id}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    // Handle axios or network errors
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data as CommonError;
+      if (errorData.isSuccess !== undefined && errorData.message) {
+        return rejectWithValue(errorData);
+      }
+    }
+    // Fallback for unexpected errors
+    return rejectWithValue({
+      isSuccess: false,
+      message: 'Failed to fetch deals',
+    });
+  }
+});
+
+export const fetchDashboardStatistics = createAsyncThunk<
+  DashboardStatisticsResponse,
+  void,
+  { rejectValue: CommonError }
+>('members/fetchDashboardStatistics', async (_, { rejectWithValue }) => {
+  try {
+    const { subadmin_id } = JSON.parse(
+      sessionStorage.getItem('subadmindetails') as string
+    );
+    const response = await axios.get(
+      `${baseUrl}subadmin/dashboard/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
