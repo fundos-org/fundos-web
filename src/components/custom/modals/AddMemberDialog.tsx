@@ -1,4 +1,4 @@
-import { DialogContent } from "../ui/dialog";
+import { DialogContent } from "@/components/ui/dialog";
 import { useState } from "react";
 
 export default function AddMemberDialog() {

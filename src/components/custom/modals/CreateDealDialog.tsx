@@ -19,13 +19,13 @@ import {
   stepsList,
   styleConfig,
 } from "@/constants/dealsConstant";
-import Step1 from "./stepComponents/Step1";
+import Step1 from "../stepComponents/Step1";
 import { FormProvider, useForm } from "react-hook-form";
-import Step2 from "./stepComponents/Step2";
-import Step3 from "./stepComponents/Step3";
-import Step4 from "./stepComponents/Step4";
-import Step5 from "./stepComponents/Step5";
-import CompletionStep from "./stepComponents/CompletedStep";
+import Step2 from "../stepComponents/Step2";
+import Step3 from "../stepComponents/Step3";
+import Step4 from "../stepComponents/Step4";
+import Step5 from "../stepComponents/Step5";
+import CompletionStep from "../stepComponents/CompletedStep";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import { toastifyThunk } from "@/lib/toastifyThunk";

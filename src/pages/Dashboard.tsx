@@ -1,7 +1,7 @@
 import ActivitesList from "@/components/custom/ActivitesList";
 import OverViewChart from "@/components/custom/OverViewChart";
 import StatisticCardList from "@/components/custom/StatisticCardList";
-import TransactionDetailsTable from "@/components/custom/TransactionDetailsTable";
+import TransactionDetailsTable from "@/components/custom/tables/TransactionDetailsTable";
 
 const stats = {
   liveDeals: 5,

@@ -5,15 +5,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { Step, Stepper } from "react-form-stepper";
 import { styleConfig, subAdminStepsList } from "@/constants/dealsConstant";
 import { FormProvider, useForm } from "react-hook-form";
-import OverviewStep from "./subAdminStepComponents/OverviewStep";
-import StepSubAdmin1 from "./subAdminStepComponents/StepSubAdmin1";
-import StepSubAdmin2 from "./subAdminStepComponents/StepSubAdmin2";
+import OverviewStep from "../subAdminStepComponents/OverviewStep";
+import StepSubAdmin1 from "../subAdminStepComponents/StepSubAdmin1";
+import StepSubAdmin2 from "../subAdminStepComponents/StepSubAdmin2";
 import { createCredentials, createProfile } from "@/axioscalls/dealApiServices";
 import toast from "react-hot-toast";
 

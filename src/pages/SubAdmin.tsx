@@ -1,8 +1,8 @@
 import { useAppStateEffect } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import { fetchAllSubAdmins } from "@/axioscalls/dealApiServices";
-import CreateSubAdminDialog from "@/components/custom/CreateSubAdminDialog";
-import { SubAdminTable } from "@/components/custom/SubAdminTable";
+import CreateSubAdminDialog from "@/components/custom/modals/CreateSubAdminDialog";
+import { SubAdminTable } from "@/components/custom/tables/SubAdminTable";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 

@@ -14,7 +14,7 @@ import {
   PaginationLink,
   PaginationEllipsis,
   PaginationNext,
-} from "../ui/pagination";
+} from "../../ui/pagination";
 
 const invoices = [
   {

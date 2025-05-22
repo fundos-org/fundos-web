@@ -1,9 +1,9 @@
 import { useAppStateEffect } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import { fetchMembersStatistics } from "@/axioscalls/dealApiServices";
-import AddMemberDialog from "@/components/custom/AddMemberDialog";
-import InvestorTable from "@/components/custom/InvestorTable";
+import AddMemberDialog from "@/components/custom/modals/AddMemberDialog";
 import StatisticCardList from "@/components/custom/StatisticCardList";
+import InvestorTable from "@/components/custom/tables/InvestorTable";
 import { DialogTrigger, Dialog } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 

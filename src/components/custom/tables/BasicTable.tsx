@@ -34,7 +34,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { data, Investor } from "@/constants/investorsConstant";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 export const columns: ColumnDef<Investor>[] = [
   {
