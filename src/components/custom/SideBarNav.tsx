@@ -25,7 +25,12 @@ import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { AvatarFallback } from '../ui/avatar';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { RootState } from '@/app/store';
-import { ForwardRefExoticComponent, RefAttributes, useEffect, useState } from 'react';
+import {
+  ForwardRefExoticComponent,
+  RefAttributes,
+  useEffect,
+  useState,
+} from 'react';
 import { resetSubadmin } from '@/slices/subAdminSlice';
 
 interface Route {

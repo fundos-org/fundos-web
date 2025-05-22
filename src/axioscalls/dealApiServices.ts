@@ -376,10 +376,14 @@ export const loginSubAdmin = createAsyncThunk<
 );
 
 export const loginAdmin = async ({ username, password }: LoginFormData) => {
-  const response = await axios.post(
-    `${baseUrl}admin/signin?username=${username}&password=${password}`
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      `${baseUrl}admin/signin?username=${username}&password=${password}`
+    );
+    return response.data;
+  } catch {
+    return { success: false };
+  }
 };
 
 export default createDraft;

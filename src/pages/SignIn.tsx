@@ -10,6 +10,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
 import { useNavigate } from 'react-router-dom';
 import { makeAdminPresent, makeSubAdminPresent } from '@/slices/globalSlice';
+import toast from 'react-hot-toast';
 
 export default function SignIn() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,10 +32,16 @@ export default function SignIn() {
 
   const onSubmit = async (data: LoginFormData) => {
     if (isAdmin) {
-      const success = await loginAdmin(data);
+      const { success } = await loginAdmin(data);
       if (success) {
         dispatch(makeAdminPresent());
         navigate('/subadmin');
+      } else {
+        toast.error('Unable to login. Please check once again!', {
+          style: {
+            borderRadius: 0,
+          },
+        });
       }
     } else {
       await toastifyThunk(loginSubAdmin(data), dispatch, {
