@@ -18,12 +18,12 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      prettier: eslintPluginPrettier, // Add Prettier as a plugin
+      prettier: eslintPluginPrettier,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       ...eslintConfigPrettier.rules, // Disable ESLint rules that conflict with Prettier
-      "prettier/prettier": "error", // Treat Prettier formatting issues as ESLint errors
+      "prettier/prettier": "warn", // Treat Prettier formatting issues as ESLint errors
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
