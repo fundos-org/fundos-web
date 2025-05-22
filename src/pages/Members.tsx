@@ -2,14 +2,16 @@ import { useAppStateEffect } from "@/app/hooks";
 import { RootState } from "@/app/store";
 import { fetchMembersStatistics } from "@/axioscalls/dealApiServices";
 import AddMemberDialog from "@/components/custom/AddMemberDialog";
-import { InvestorsTable } from "@/components/custom/InvestorsTable";
+import InvestorTable from "@/components/custom/InvestorTable";
 import StatisticCardList from "@/components/custom/StatisticCardList";
 import { DialogTrigger, Dialog } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Members() {
-  const data = useAppStateEffect((state: RootState) => state.member, fetchMembersStatistics)
-  console.log(data);
+  const {inviteCode, subAdminId, statistics, members} = useAppStateEffect((state: RootState) => state.member, fetchMembersStatistics);
+  const investors_statistics = statistics?.investors_statistics;
+  const startups_statistics = statistics?.startups_statistics;
+  console.log(inviteCode, subAdminId, investors_statistics, startups_statistics, members);
   
   return (
     <Dialog>
@@ -44,13 +46,14 @@ export default function Members() {
         </TabsList>
         </div>
         <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
-        <StatisticCardList />
+          <StatisticCardList stats={investors_statistics} />
+          <InvestorTable header="Investors" users={members?.investors || []} />
       </TabsContent>
       <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
-        <StatisticCardList />
+        <StatisticCardList stats={startups_statistics} />
+      <InvestorTable header="Startups" users={members?.investors || []} />
       </TabsContent>
         </Tabs>
-      <InvestorsTable headerName="Investor" />
       <AddMemberDialog/>
     </Dialog>
   );

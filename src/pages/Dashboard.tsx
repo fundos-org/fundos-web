@@ -3,6 +3,13 @@ import OverViewChart from "@/components/custom/OverViewChart";
 import StatisticCardList from "@/components/custom/StatisticCardList";
 import TransactionDetailsTable from "@/components/custom/TransactionDetailsTable";
 
+const stats = {
+  liveDeals: 5,
+  closedDeals: 3,
+  totalCapitalRaised: 8000000,
+  dealsThisMonth: 2
+};
+
 function Dashboard() {
   return (
     <>
@@ -12,7 +19,7 @@ function Dashboard() {
             Measure your advertising ROI and report website traffic
           </small>
           </div>
-      <StatisticCardList />
+      <StatisticCardList stats={stats} />
       <div className="w-full flex gap-5 mb-5">
         <OverViewChart />
         <ActivitesList />
