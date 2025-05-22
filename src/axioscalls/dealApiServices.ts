@@ -6,14 +6,14 @@ import axios from "axios";
 const baseUrl = "http://43.205.36.168/api/v1/live/";
 
 // Create async thunk for creating a draft deal
-export const createDraft = createAsyncThunk<DraftResponse, string | undefined, { rejectValue: CommonError }>(
+export const createDraft = createAsyncThunk<DraftResponse, void, { rejectValue: CommonError }>(
     'draft/createDraft',
-    async (fund_manager_id, { rejectWithValue }) => {
-        if (!fund_manager_id) fund_manager_id = "9c0e5407-c3f2-402e-891b-0e4f2489e837";
+    async (_, { rejectWithValue }) => {
+        const {subadmin_id} = JSON.parse(sessionStorage.getItem('subadmindetails') as string)
         await new Promise((r) => setTimeout(r, 2000));
         try {
             const response = await axios.post(`${baseUrl}deals/web/create/draft`, {
-                fund_manager_id,
+                fund_manager_id: subadmin_id,
             });
             return response.data;
         } catch (error: unknown) {
