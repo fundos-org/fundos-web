@@ -1,6 +1,6 @@
-import { getSubAdminById } from "@/axioscalls/dealApiServices";
-import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
+import { getSubAdminById } from '@/axioscalls/dealApiServices';
+import { Button } from '@/components/ui/button';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Response {
   name: string;
@@ -17,7 +17,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
       const response = await getSubAdminById(subAdminId);
       setData(response);
     } catch (error) {
-      console.error("Error fetching sub-admin data:", error);
+      console.error('Error fetching sub-admin data:', error);
     }
   }, [subAdminId]);
 
@@ -50,7 +50,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
             <div className="flex-1">
               <p className="text-lg font-medium">{data?.name}'s investiee</p>
               <p className="text-sm text-gray-400">
-                App link:{" "}
+                App link:{' '}
                 <a href={appLink} className="underline text-blue-400">
                   {appLink}
                 </a>
@@ -76,4 +76,4 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
 
 export default OverviewStep;
 
-const appLink = "www.applink.com/pratyush-investiee";
+const appLink = 'www.applink.com/pratyush-investiee';

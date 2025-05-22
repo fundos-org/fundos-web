@@ -1,18 +1,19 @@
-import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { LoginFormData } from "@/constants/dealsConstant";
-import { toastifyThunk } from "@/lib/toastifyThunk";
-import { Dispatch, SetStateAction, useState } from "react";
-import { useAppDispatch } from "@/app/hooks";
-import { loginAdmin, loginSubAdmin } from "@/axioscalls/dealApiServices";
-import { useNavigate } from "react-router-dom";
-import { makeAdminPresent, makeSubAdminPresent } from "@/slices/globalSlice";
+import { useForm } from 'react-hook-form';
+import { Eye, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { LoginFormData } from '@/constants/dealsConstant';
+import { toastifyThunk } from '@/lib/toastifyThunk';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useAppDispatch } from '@/app/hooks';
+import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
+import { useNavigate } from 'react-router-dom';
+import { makeAdminPresent, makeSubAdminPresent } from '@/slices/globalSlice';
+import toast from 'react-hot-toast';
 
 export default function SignIn() {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -22,31 +23,39 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: "admin",
-      password: "Fundos",
+      username: 'mudit_dua',
+      password: 'FundOS',
     },
   });
 
+  useEffect(() => sessionStorage.clear(), []);
+
   const onSubmit = async (data: LoginFormData) => {
-    console.log("Form submitted:", data);
-    // Add your login logic here (e.g., API call)
     if (isAdmin) {
-      const success = await loginAdmin(data)
+      const { success } = await loginAdmin(data);
       if (success) {
-        dispatch(makeAdminPresent())
-        navigate('/subadmin')
+        dispatch(makeAdminPresent());
+        navigate('/subadmin');
+      } else {
+        toast.error('Unable to login. Please check once again!', {
+          style: {
+            borderRadius: 0,
+          },
+        });
       }
     } else {
       await toastifyThunk(loginSubAdmin(data), dispatch, {
-      loading: "Wait, Logging in...",
-      success: (data) => {
-        const payload = (data as { payload: { message: string } }).payload;
-        dispatch(makeSubAdminPresent())
-        navigate("/dashboard");
-        return `Fetched user: ${payload.message}`;
-      },
-      error: (error) => `Error: ${error}`,
-    });
+        loading: 'Wait, Logging in...',
+        success: data => {
+          const payload = (data as { payload: { message: string } }).payload;
+          dispatch(makeSubAdminPresent());
+          const { message, ...rest } = payload;
+          sessionStorage.setItem('subadmindetails', JSON.stringify(rest));
+          navigate('/dashboard');
+          return `Fetched user: ${message}`;
+        },
+        error: error => `Error: ${error}`,
+      });
     }
   };
 
@@ -84,14 +93,15 @@ export default function SignIn() {
             <div className="space-y-2">
               <Label
                 htmlFor="username"
-                className="text-gray-400 text-sm uppercase">
+                className="text-gray-400 text-sm uppercase"
+              >
                 Username
               </Label>
               <Input
                 id="username"
                 placeholder="Enter username"
                 className="bg-gray-800 text-white rounded-none border-gray-600 placeholder-gray-500 focus:ring-2 focus:ring-gray-500"
-                {...register("username", { required: "Username is required" })}
+                {...register('username', { required: 'Username is required' })}
               />
               {errors.username && (
                 <p className="text-red-500 text-sm">
@@ -104,23 +114,25 @@ export default function SignIn() {
             <div className="space-y-2 relative">
               <Label
                 htmlFor="password"
-                className="text-gray-400 text-sm uppercase">
+                className="text-gray-400 text-sm uppercase"
+              >
                 Password
               </Label>
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Enter password"
                   className="bg-gray-800 text-white rounded-none border-gray-600 placeholder-gray-500 focus:ring-2 focus:ring-gray-500 pr-10"
-                  {...register("password", {
-                    required: "Password is required",
+                  {...register('password', {
+                    required: 'Password is required',
                   })}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200">
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+                >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
@@ -134,7 +146,8 @@ export default function SignIn() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full mt-4 bg-white rounded-none text-black hover:bg-gray-200 font-semibold py-3">
+              className="w-full mt-4 bg-white rounded-none text-black hover:bg-gray-200 font-semibold py-3"
+            >
               Login
             </Button>
           </form>
@@ -155,23 +168,25 @@ export function AdminToggle({
     <div className="flex items-center justify-center absolute top-10 right-10">
       <div
         className="relative w-48 h-14 bg-gray-900/40 backdrop-blur-lg rounded-none flex items-center p-1 cursor-pointer border border-gray-700/50"
-        onClick={() => setIsAdmin(!isAdmin)}>
+        onClick={() => setIsAdmin(!isAdmin)}
+      >
         {/* Sliding background with starry gradient */}
         <div
           className={`absolute w-[calc(50%-0.5rem)] h-[2.5rem] bg-gradient-to-r from-gray-700 to-zinc-600 rounded-none transition-transform duration-300 ease-in-out shadow-md ${
-            isAdmin ? "translate-x-1" : "translate-x-[calc(100%+0.5rem)]"
-          }`}>
+            isAdmin ? 'translate-x-1' : 'translate-x-[calc(100%+0.5rem)]'
+          }`}
+        >
           {/* Tiny stars inside the sliding background */}
           <div
             className={`absolute w-1 h-1 bg-white rounded-full top-2 left-2 ${
-              isAdmin ? "animate-twinkle" : "animate-twinkle-fast"
+              isAdmin ? 'animate-twinkle' : 'animate-twinkle-fast'
             }`}
           />
           <div
             className={`absolute w-1 h-1 bg-white rounded-full bottom-2 right-2 ${
               isAdmin
-                ? "animate-twinkle delay-500"
-                : "animate-twinkle-fast delay-300"
+                ? 'animate-twinkle delay-500'
+                : 'animate-twinkle-fast delay-300'
             }`}
           />
         </div>
@@ -180,14 +195,16 @@ export function AdminToggle({
         <div className="relative flex w-full text-center text-sm font-semibold rounded-none">
           <span
             className={`w-1/2 z-10 transition-colors rounded-none duration-300 ${
-              isAdmin ? "text-white" : "text-gray-400"
-            }`}>
+              isAdmin ? 'text-white' : 'text-gray-400'
+            }`}
+          >
             Admin
           </span>
           <span
             className={`w-1/2 z-10 transition-colors rounded-none duration-300 ${
-              !isAdmin ? "text-white" : "text-gray-400"
-            }`}>
+              !isAdmin ? 'text-white' : 'text-gray-400'
+            }`}
+          >
             Subadmin
           </span>
         </div>

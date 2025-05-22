@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction } from "react";
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
-import { CheckCircle, Check } from "lucide-react";
-import { UseFormReset } from "react-hook-form";
-import { useAppDispatch } from "@/app/hooks";
-import { resetDealId } from "@/slices/dealSlice";
-import toast from "react-hot-toast";
+import { Dispatch, SetStateAction } from 'react';
+import { Button } from '@/components/ui/button';
+import { DialogClose } from '@/components/ui/dialog';
+import { CheckCircle, Check } from 'lucide-react';
+import { UseFormReset } from 'react-hook-form';
+import { useAppDispatch } from '@/app/hooks';
+import { resetDealId } from '@/slices/dealSlice';
+import toast from 'react-hot-toast';
 
 export interface FormData {
   companyName: string;
@@ -47,9 +47,9 @@ const CompletionStep = ({
       setSubmittedData({});
       reset();
       dispatch(resetDealId());
-      toast.success('Deal created successfully!')
+      toast.success('Deal created successfully!');
     } catch (error) {
-      toast.error(String(error))
+      toast.error(String(error));
     }
   };
   return (
@@ -62,7 +62,8 @@ const CompletionStep = ({
         <DialogClose asChild>
           <Button
             className="bg-white text-black px-6 py-2 rounded-none hover:bg-zinc-700 transition-colors flex items-center justify-center mx-auto"
-            onClick={handleClose}>
+            onClick={handleClose}
+          >
             <Check className="w-5 h-5 mr-2" />
             Okay
           </Button>

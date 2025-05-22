@@ -1,9 +1,16 @@
-import CreateDealDialog from "@/components/custom/CreateDealDialog";
-import ShowDeals from "@/components/custom/ShowDeals";
-import StatisticCardList from "@/components/custom/StatisticCardList";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useAppStateEffect } from '@/app/hooks';
+import { RootState } from '@/app/store';
+import { fetchDealStatistics } from '@/axioscalls/dealApiServices';
+import CreateDealDialog from '@/components/custom/modals/CreateDealDialog';
+import ShowDeals from '@/components/custom/ShowDeals';
+import StatisticCardList from '@/components/custom/StatisticCardList';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 function Deals() {
+  const stats = useAppStateEffect(
+    (state: RootState) => state.deals.statistics,
+    fetchDealStatistics
+  );
   return (
     <>
       <Dialog>
@@ -22,7 +29,9 @@ function Deals() {
             Track how your deals are performing and manage your portfolio
           </small>
         </div>
-        <StatisticCardList />
+        <StatisticCardList
+          stats={stats as Record<string, string | number> | undefined}
+        />
         <ShowDeals />
         <CreateDealDialog />
       </Dialog>

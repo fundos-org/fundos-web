@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Upload } from "lucide-react";
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Upload } from 'lucide-react';
 
 const ImageInput = ({
   image,
-    setImage,
-  id
+  setImage,
+  id,
 }: {
   image: File | null;
-        setImage: React.Dispatch<React.SetStateAction<File | null>>;
-    id: string;
+  setImage: React.Dispatch<React.SetStateAction<File | null>>;
+  id: string;
 }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,10 +36,11 @@ const ImageInput = ({
   }, [previewUrl]);
 
   return (
-      <>
+    <>
       <Label
         htmlFor={`${id}-input`}
-        className="w-full flex flex-col items-center mt-2 justify-center border-2 border-dashed border-gray-300 rounded-none p-6">
+        className="w-full flex flex-col items-center mt-2 justify-center border-2 border-dashed border-gray-300 rounded-none p-6"
+      >
         {image ? (
           previewUrl ? (
             <img

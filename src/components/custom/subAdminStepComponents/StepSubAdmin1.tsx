@@ -1,9 +1,9 @@
-import React from "react";
-import { useFormContext } from "react-hook-form";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import ImageInput from "../ImageUpload";
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import ImageInput from '../ImageUpload';
 
 const StepSubAdmin1: React.FC = () => {
   const {
@@ -12,7 +12,7 @@ const StepSubAdmin1: React.FC = () => {
     setValue,
     watch,
   } = useFormContext();
-  const logo = watch("logo");
+  const logo = watch('logo');
 
   return (
     <div className="grid gap-4">
@@ -23,7 +23,7 @@ const StepSubAdmin1: React.FC = () => {
         <ImageInput
           image={logo}
           id="logo"
-          setImage={(file) => setValue("logo", file, { shouldValidate: true })}
+          setImage={file => setValue('logo', file, { shouldValidate: true })}
         />
         {errors.logo && (
           <p className="text-red-500 text-sm">{String(errors.logo.message)}</p>
@@ -35,8 +35,8 @@ const StepSubAdmin1: React.FC = () => {
         </Label>
         <Input
           id="subadminname"
-          {...register("subadminname", {
-            required: "Subadmin name is required",
+          {...register('subadminname', {
+            required: 'Subadmin name is required',
           })}
           placeholder="Enter subadmin name"
           className="rounded-none text-white"
@@ -55,11 +55,11 @@ const StepSubAdmin1: React.FC = () => {
         <Input
           id="subadminmail"
           type="email"
-          {...register("subadminmail", {
-            required: "Email is required",
+          {...register('subadminmail', {
+            required: 'Email is required',
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: "Invalid email address",
+              message: 'Invalid email address',
             },
           })}
           placeholder="Enter subadmin email"
@@ -78,11 +78,11 @@ const StepSubAdmin1: React.FC = () => {
         </Label>
         <Input
           id="subadmincontact"
-          {...register("subadmincontact", {
-            required: "Contact is required",
+          {...register('subadmincontact', {
+            required: 'Contact is required',
             pattern: {
               value: /^\+?[\d\s-]{10,}$/,
-              message: "Invalid contact number",
+              message: 'Invalid contact number',
             },
           })}
           placeholder="Enter contact number"
@@ -101,7 +101,7 @@ const StepSubAdmin1: React.FC = () => {
         </Label>
         <Textarea
           id="about"
-          {...register("about", { required: "About is required" })}
+          {...register('about', { required: 'About is required' })}
           placeholder="Enter about subadmin"
           className="rounded-none text-white"
         />

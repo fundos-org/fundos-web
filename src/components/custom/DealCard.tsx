@@ -1,22 +1,23 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ChevronDown } from "lucide-react";
-import { Progress } from "../ui/progress";
-import { Deal } from "@/constants/dealsConstant";
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ChevronDown } from 'lucide-react';
+import { Progress } from '../ui/progress';
+import { DealCard } from '@/constants/dealsConstant';
 
-export default function DealCard({ deal }: { deal: Deal }) {
-  const {company_name, about_company, industry, status, company_stage, logo_url, round_size, syndicate_commitment} = deal
+export default function CardDeal({ deal }: { deal: DealCard }) {
+  const { company_name, status, round_size, created_at } = deal;
   return (
     <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
       <CardContent className="p-0">
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
-            {logo_url ? <img src={logo_url} alt="logo" width="50" /> : <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
+            {/* <img src="./fundos.svg" alt="logo" width="50" /> : */}
+            <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
               🚀 Startup
-            </div>}
+            </div>
           </div>
 
-          {status == 'open' ? (
+          {status !== 'CLOSED' ? (
             <Badge className="bg-[#00fb5745] text-white px-3 py-1 rounded-xs text-sm font-medium">
               <span className="mr-1 inline-block w-2 h-2 bg-green-400 rounded-full" />
               <span className="text-green-400">active</span>
@@ -29,28 +30,32 @@ export default function DealCard({ deal }: { deal: Deal }) {
           )}
         </div>
 
-        <h2 className="text-2xl font-bold mt-4">{company_name ? company_name : 'Infotech Pvt. Ltd.'}</h2>
+        <h2 className="text-2xl font-bold mt-4">
+          {company_name ? company_name : 'Infotech Pvt. Ltd.'}
+        </h2>
         <p className="text-zinc-400 mt-1">
-          {about_company? about_company :'We are an Ed-tech company building CRM for local institutes'}
+          We are an Ed-tech company building CRM for local institutes
         </p>
 
         <div className="flex gap-2 mt-3">
           <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
-            {industry ? industry : 'Ed-tech'}
+            Ed-tech
           </span>
           <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
-            {company_stage ? company_stage : 'Pre-seed'}
+            Pre-seed
           </span>
         </div>
 
         <div className="flex justify-between mt-6">
           <div>
             <p className="text-sm text-zinc-400">Funding round size</p>
-            <p className="text-3xl font-bold">{round_size ? round_size : '200000'}</p>
+            <p className="text-3xl font-bold">
+              {round_size ? round_size : '200000'}
+            </p>
           </div>
           <div>
-            <p className="text-sm text-zinc-400">Syndicate committed</p>
-            <p className="text-3xl font-bold">{syndicate_commitment ? syndicate_commitment : '200K'}</p>
+            <p className="text-sm text-zinc-400">Created At</p>
+            <p className="text-3xl font-bold">{created_at.split('T')[0]}</p>
           </div>
         </div>
         <hr className="mt-3" />
