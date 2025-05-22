@@ -25,7 +25,7 @@ import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { AvatarFallback } from '../ui/avatar';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { RootState } from '@/app/store';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { ForwardRefExoticComponent, RefAttributes, useEffect, useState } from 'react';
 import { resetSubadmin } from '@/slices/subAdminSlice';
 
 interface Route {
@@ -74,18 +74,24 @@ const routes: Routes = {
 };
 
 export default function AppSidebar() {
-  const role = useAppSelector((state: RootState) => state.global.role) as
-    | 'admin'
-    | 'subadmin';
+  const role = useAppSelector((state: RootState) => state.global.role);
   const { subAdminName, subAdminUsername } = useAppSelector(
     (state: RootState) => state.subAdmin
   );
-  const items = role == 'subadmin' ? routes.subadmin : routes.admin;
+  const [items, setItems] = useState<Route[]>([]);
+  const sessionRole = sessionStorage.getItem('role');
+  useEffect(() => {
+    if (sessionRole === 'subadmin') setItems(routes['subadmin']);
+    else if (sessionRole === 'admin') setItems(routes['admin']);
+    else setItems([]);
+  }, [role, sessionRole]);
+
   const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleLogOut = () => {
     dispatch(resetSubadmin());
+    sessionStorage.clear();
     navigate('/');
   };
   return (
@@ -97,7 +103,7 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map(item => (
+              {items?.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild

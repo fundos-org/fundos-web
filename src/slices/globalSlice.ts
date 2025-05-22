@@ -17,9 +17,11 @@ const globalSlice = createSlice({
   initialState,
   reducers: {
     makeAdminPresent(state) {
+      sessionStorage.setItem('role', 'admin');
       state.role = 'admin';
     },
     makeSubAdminPresent(state) {
+      sessionStorage.setItem('role', 'subadmin');
       state.role = 'subadmin';
     },
   },

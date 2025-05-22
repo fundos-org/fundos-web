@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LoginFormData } from '@/constants/dealsConstant';
 import { toastifyThunk } from '@/lib/toastifyThunk';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,8 @@ export default function SignIn() {
       password: 'FundOS',
     },
   });
+
+  useEffect(() => sessionStorage.clear(), []);
 
   const onSubmit = async (data: LoginFormData) => {
     if (isAdmin) {
