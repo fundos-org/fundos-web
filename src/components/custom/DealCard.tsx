@@ -1,11 +1,11 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ChevronDown } from "lucide-react";
-import { Progress } from "../ui/progress";
-import { DealCard } from "@/constants/dealsConstant";
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ChevronDown } from 'lucide-react';
+import { Progress } from '../ui/progress';
+import { DealCard } from '@/constants/dealsConstant';
 
 export default function CardDeal({ deal }: { deal: DealCard }) {
-  const {company_name, status, round_size, created_at} = deal
+  const { company_name, status, round_size, created_at } = deal;
   return (
     <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
       <CardContent className="p-0">
@@ -30,7 +30,9 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
           )}
         </div>
 
-        <h2 className="text-2xl font-bold mt-4">{company_name ? company_name : 'Infotech Pvt. Ltd.'}</h2>
+        <h2 className="text-2xl font-bold mt-4">
+          {company_name ? company_name : 'Infotech Pvt. Ltd.'}
+        </h2>
         <p className="text-zinc-400 mt-1">
           We are an Ed-tech company building CRM for local institutes
         </p>
@@ -47,7 +49,9 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
         <div className="flex justify-between mt-6">
           <div>
             <p className="text-sm text-zinc-400">Funding round size</p>
-            <p className="text-3xl font-bold">{round_size ? round_size : '200000'}</p>
+            <p className="text-3xl font-bold">
+              {round_size ? round_size : '200000'}
+            </p>
           </div>
           <div>
             <p className="text-sm text-zinc-400">Created At</p>

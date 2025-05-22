@@ -1,21 +1,21 @@
-import { X } from "lucide-react";
+import { X } from 'lucide-react';
 import {
   DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Step, Stepper } from "react-form-stepper";
-import { styleConfig, subAdminStepsList } from "@/constants/dealsConstant";
-import { FormProvider, useForm } from "react-hook-form";
-import OverviewStep from "../subAdminStepComponents/OverviewStep";
-import StepSubAdmin1 from "../subAdminStepComponents/StepSubAdmin1";
-import StepSubAdmin2 from "../subAdminStepComponents/StepSubAdmin2";
-import { createCredentials, createProfile } from "@/axioscalls/dealApiServices";
-import toast from "react-hot-toast";
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Step, Stepper } from 'react-form-stepper';
+import { styleConfig, subAdminStepsList } from '@/constants/dealsConstant';
+import { FormProvider, useForm } from 'react-hook-form';
+import OverviewStep from '../subAdminStepComponents/OverviewStep';
+import StepSubAdmin1 from '../subAdminStepComponents/StepSubAdmin1';
+import StepSubAdmin2 from '../subAdminStepComponents/StepSubAdmin2';
+import { createCredentials, createProfile } from '@/axioscalls/dealApiServices';
+import toast from 'react-hot-toast';
 
 export interface FormData {
   logo: File | null;
@@ -32,31 +32,31 @@ export interface FormData {
 
 function CreateSubAdminDialog() {
   const [activeStep, setActiveStep] = useState(0);
-  const [subAdminId, setSubAdminId] = useState("");
+  const [subAdminId, setSubAdminId] = useState('');
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
   const methods = useForm<FormData>({
     defaultValues: {
       logo: null,
-      subadminname: "",
-      subadminmail: "",
-      subadmincontact: "",
-      about: "",
-      username: "",
-      password: "",
-      reenterpassword: "",
-      appname: "",
-      invitecode: "",
+      subadminname: '',
+      subadminmail: '',
+      subadmincontact: '',
+      about: '',
+      username: '',
+      password: '',
+      reenterpassword: '',
+      appname: '',
+      invitecode: '',
     },
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const handleClose = () => {
     try {
       setActiveStep(0);
       methods.reset();
-      toast.success("Sub Admin created successfully!");
+      toast.success('Sub Admin created successfully!');
     } catch (error) {
       toast.error(String(error));
     }
@@ -72,7 +72,7 @@ function CreateSubAdminDialog() {
     const lastSubmitted = submittedData[step];
     if (!lastSubmitted) return true; // No previous submission, treat as changed
 
-    return Object.keys(currentValues).some((key) => {
+    return Object.keys(currentValues).some(key => {
       const current = currentValues[key as keyof FormData];
       const last = lastSubmitted[key as keyof FormData];
       return current !== last;
@@ -106,7 +106,7 @@ function CreateSubAdminDialog() {
 
     // Skip API call if data hasn't changed
     if (stepData && !hasDataChanged(stepData, activeStep)) {
-      setActiveStep((prev) => prev + 1);
+      setActiveStep(prev => prev + 1);
       return;
     }
 
@@ -137,10 +137,10 @@ function CreateSubAdminDialog() {
           return null;
       }
       // Store the submitted data for this step
-      setSubmittedData((prev) => ({ ...prev, [activeStep]: stepData }));
-      setActiveStep((prev) => prev + 1);
+      setSubmittedData(prev => ({ ...prev, [activeStep]: stepData }));
+      setActiveStep(prev => prev + 1);
     } catch (error) {
-      console.error("Error submitting step:", error);
+      console.error('Error submitting step:', error);
     }
   };
 
@@ -162,13 +162,15 @@ function CreateSubAdminDialog() {
       hideCloseButton={true}
       className="w-[800px] rounded-none bg-[#1a1a1a] text-white border-none"
       aria-describedby={undefined}
-      onInteractOutside={(e) => e.preventDefault()}>
+      onInteractOutside={e => e.preventDefault()}
+    >
       <DialogHeader>
         <DialogTitle className="text-3xl text-white flex items-center justify-between">
           Create a Sub-Admin
           <DialogClose
             asChild
-            className="border-[1px] border-[#383739] bg-[#242325]">
+            className="border-[1px] border-[#383739] bg-[#242325]"
+          >
             <span className="p-1" onClick={handleClose}>
               <X />
             </span>
@@ -180,8 +182,9 @@ function CreateSubAdminDialog() {
         <Stepper
           activeStep={activeStep}
           styleConfig={styleConfig}
-          style={{ padding: 0 }}>
-          {subAdminStepsList.map((step) => (
+          style={{ padding: 0 }}
+        >
+          {subAdminStepsList.map(step => (
             <Step key={step.index} label={step.label} index={step.index} />
           ))}
         </Stepper>
@@ -196,13 +199,15 @@ function CreateSubAdminDialog() {
               type="button"
               className="bg-white rounded-none py-5"
               disabled={activeStep === 0}
-              onClick={() => setActiveStep((prev) => prev - 1)}>
+              onClick={() => setActiveStep(prev => prev - 1)}
+            >
               <div className="flex gap-2 mx-10 text-black">Back</div>
             </Button>
             <Button
               type="button"
               className="bg-white rounded-none py-5 hover:bg-zinc-300"
-              onClick={handleNext}>
+              onClick={handleNext}
+            >
               <div className="flex gap-2 mx-10 text-black">
                 {/* {activeStep === 1 ? "Submit" : "Next"} */}
                 Next

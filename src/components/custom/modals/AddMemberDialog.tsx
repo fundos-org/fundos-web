@@ -1,10 +1,10 @@
-import { DialogContent } from "@/components/ui/dialog";
-import { useState } from "react";
+import { DialogContent } from '@/components/ui/dialog';
+import { useState } from 'react';
 
 export default function AddMemberDialog() {
-  const [emails, setEmails] = useState("");
+  const [emails, setEmails] = useState('');
   const [copied, setCopied] = useState(false);
-  const inviteCode = "TY7664774";
+  const inviteCode = 'TY7664774';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteCode);
@@ -27,7 +27,7 @@ export default function AddMemberDialog() {
               type="text"
               placeholder="Enter emails"
               value={emails}
-              onChange={(e) => setEmails(e.target.value)}
+              onChange={e => setEmails(e.target.value)}
               className="flex-1 bg-transparent border border-zinc-700 text-white p-2 outline-none"
             />
             <button className="bg-gray-500 text-black px-4 ml-2 font-semibold">
@@ -49,52 +49,12 @@ export default function AddMemberDialog() {
           </div>
           <button
             onClick={handleCopy}
-            className="bg-white text-black px-4 py-2 font-medium transition hover:bg-zinc-200">
-            {copied ? "Copied!" : "Copy"}
+            className="bg-white text-black px-4 py-2 font-medium transition hover:bg-zinc-200"
+          >
+            {copied ? 'Copied!' : 'Copy'}
           </button>
         </div>
       </div>
-      {/* <DialogHeader>
-          <DialogTitle className="text-3xl text-white">
-            Create a new deal
-          </DialogTitle>
-          <hr />
-        </DialogHeader>
-        <div className="grid gap-4">
-          <div className="w-full mt-3 flex justify-between items-center">
-            <div className="w-full bg-zinc-800">
-              <div className="bg-white text-xs font-medium text-black text-center leading-none w-45">
-                45%
-              </div>
-            </div>
-          </div>
-          <FileUploadBox />
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="companyname" className="text-right text-white">
-              Company Name
-            </Label>
-            <Input id="companyname" className="rounded-none text-white" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="aboutcompany" className="text-right text-white">
-              About Company
-            </Label>
-            <Textarea id="aboutcompany" className="rounded-none text-white" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="companywebsite" className="text-right text-white">
-              Company Website
-            </Label>
-            <Input id="companywebsite" className="rounded-none text-white" />
-          </div>
-        </div>
-        <DialogFooter className="w-[330px] flex justify-center mt-5">
-          <Button type="submit" className="bg-white rounded-none py-5">
-            <div className="flex gap-2 mx-10 text-black">
-              Next <MoveRight />
-            </div>
-          </Button>
-        </DialogFooter> */}
     </DialogContent>
   );
 }

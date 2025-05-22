@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,11 +10,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
+} from '@tanstack/react-table';
+import { ChevronDown, MoreHorizontal } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -23,8 +23,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -32,8 +32,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+} from '@/components/ui/table';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 // Define the type for the subadmin data
 interface Subadmin {
@@ -54,21 +62,21 @@ interface SubAdminTableProps {
 // Define the columns based on the API response
 export const columns: ColumnDef<Subadmin>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={value => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
     ),
@@ -76,39 +84,39 @@ export const columns: ColumnDef<Subadmin>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("name")}</div>
+      <div className="font-medium">{row.getValue('name')}</div>
     ),
   },
   {
-    accessorKey: "email",
-    header: "Mail",
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    accessorKey: 'email',
+    header: 'Mail',
+    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
   },
   {
-    accessorKey: "invite_code",
-    header: "Invite Code",
-    cell: ({ row }) => <div>{row.getValue("invite_code")}</div>,
+    accessorKey: 'invite_code',
+    header: 'Invite Code',
+    cell: ({ row }) => <div>{row.getValue('invite_code')}</div>,
   },
   {
-    accessorKey: "total_users",
-    header: "Total Users",
-    cell: ({ row }) => <div>{row.getValue("total_users")}</div>,
+    accessorKey: 'total_users',
+    header: 'Total Users',
+    cell: ({ row }) => <div>{row.getValue('total_users')}</div>,
   },
   {
-    accessorKey: "active_deals",
-    header: "Active Deals",
-    cell: ({ row }) => <div>{row.getValue("active_deals")}</div>,
+    accessorKey: 'active_deals',
+    header: 'Active Deals',
+    cell: ({ row }) => <div>{row.getValue('active_deals')}</div>,
   },
   {
-    accessorKey: "onboarding_date",
-    header: "Onboarding Date",
-    cell: ({ row }) => <div>{row.getValue("onboarding_date")}</div>,
+    accessorKey: 'onboarding_date',
+    header: 'Onboarding Date',
+    cell: ({ row }) => <div>{row.getValue('onboarding_date')}</div>,
   },
   {
-    id: "actions",
+    id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
       const subadmin = row.original;
@@ -139,8 +147,11 @@ export const columns: ColumnDef<Subadmin>[] = [
 
 export function SubAdminTable({ subadmins }: SubAdminTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -168,9 +179,9 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
         <h1 className="text-2xl text-zinc-400 py-5">SUB-ADMIN ONBOARDED</h1>
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+          onChange={event =>
+            table.getColumn('email')?.setFilterValue(event.target.value)
           }
           className="max-w-sm ml-auto rounded-none"
         />
@@ -183,16 +194,14 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
           <DropdownMenuContent align="end" className="rounded-none">
             {table
               .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
+              .filter(column => column.getCanHide())
+              .map(column => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
+                    onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
@@ -204,9 +213,9 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
       <div className="px-5 bg-[#242325]">
         <Table className="rounded-none px-5">
           <TableHeader className="text-white">
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id} className="text-zinc-400">
                       {header.isPlaceholder
@@ -223,21 +232,27 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
           </TableHeader>
           <TableBody className="bg-[#242325] text-white">
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>

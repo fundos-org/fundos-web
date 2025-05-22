@@ -1,10 +1,10 @@
-import { useAppStateEffect } from "@/app/hooks";
-import { RootState } from "@/app/store";
-import { fetchAllSubAdmins } from "@/axioscalls/dealApiServices";
-import CreateSubAdminDialog from "@/components/custom/modals/CreateSubAdminDialog";
-import { SubAdminTable } from "@/components/custom/tables/SubAdminTable";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import toast from "react-hot-toast";
+import { useAppStateEffect } from '@/app/hooks';
+import { RootState } from '@/app/store';
+import { fetchAllSubAdmins } from '@/axioscalls/dealApiServices';
+import CreateSubAdminDialog from '@/components/custom/modals/CreateSubAdminDialog';
+import { SubAdminTable } from '@/components/custom/tables/SubAdminTable';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import toast from 'react-hot-toast';
 
 function SubAdmin() {
   const subAdmins = useAppStateEffect(
@@ -12,7 +12,7 @@ function SubAdmin() {
     fetchAllSubAdmins
   );
   if (subAdmins)
-    toast.success("Successfully fetch the sub admin list!", {
+    toast.success('Successfully fetch the sub admin list!', {
       style: {
         border: 0,
         borderRadius: 0,

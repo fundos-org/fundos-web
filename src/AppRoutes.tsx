@@ -1,12 +1,12 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import { Suspense, lazy } from "react";
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Deals = lazy(() => import("./pages/Deals"));
-const Members = lazy(() => import("./pages/Members"));
-const Settings = lazy(() => import("./pages/Settings"));
-const SubAdmin = lazy(() => import("./pages/SubAdmin"));
-const SignIn = lazy(() => import("./pages/SignIn"));
-const Layout = lazy(() => import("./components/custom/Layout"));
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Deals = lazy(() => import('./pages/Deals'));
+const Members = lazy(() => import('./pages/Members'));
+const Settings = lazy(() => import('./pages/Settings'));
+const SubAdmin = lazy(() => import('./pages/SubAdmin'));
+const SignIn = lazy(() => import('./pages/SignIn'));
+const Layout = lazy(() => import('./components/custom/Layout'));
 
 const AppRoutes = () => {
   return (

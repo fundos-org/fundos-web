@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Pagination,
   PaginationContent,
@@ -14,64 +14,64 @@ import {
   PaginationLink,
   PaginationEllipsis,
   PaginationNext,
-} from "../../ui/pagination";
+} from '../../ui/pagination';
 
 const invoices = [
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
   {
-    investorId: "#356449",
-    investorName: "Pratyush Kumar",
-    investedIn: "Infotech Pvt ltd",
-    capitalCommitted: "₹ 30,00,000",
-    transactionDate: "02/04/2025",
+    investorId: '#356449',
+    investorName: 'Pratyush Kumar',
+    investedIn: 'Infotech Pvt ltd',
+    capitalCommitted: '₹ 30,00,000',
+    transactionDate: '02/04/2025',
   },
 ];
 
@@ -83,7 +83,7 @@ export default function TransactionDetailsTable() {
         <Table className="w-full text-white rounded-none border-0">
           <TableHeader className="bg-muted-foreground">
             <TableRow>
-              {Object.keys(invoices[0]).map((key) => (
+              {Object.keys(invoices[0]).map(key => (
                 <TableHead key={key} className="py-5 px-7 uppercase">
                   {key}
                 </TableHead>
@@ -91,9 +91,9 @@ export default function TransactionDetailsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoices.map((invoice) => (
+            {invoices.map(invoice => (
               <TableRow key={invoice.investorId}>
-                {Object.keys(invoice).map((key) => (
+                {Object.keys(invoice).map(key => (
                   <TableCell key={key} className="py-5 px-7">
                     {invoice[key as keyof typeof invoice]}
                   </TableCell>

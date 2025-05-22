@@ -1,4 +1,4 @@
-import { StepStyleDTO } from "react-form-stepper/dist/components/Step/StepTypes";
+import { StepStyleDTO } from 'react-form-stepper/dist/components/Step/StepTypes';
 
 export type Stages = {
   value: string;
@@ -7,83 +7,83 @@ export type Stages = {
 };
 
 export const stepsList = [
-  { label: "Comapany", index: 0 },
-  { label: "Industry", index: 1 },
-  { label: "Customer", index: 2 },
-  { label: "Valuation", index: 3 },
-  { label: "Security", index: 4 },
+  { label: 'Comapany', index: 0 },
+  { label: 'Industry', index: 1 },
+  { label: 'Customer', index: 2 },
+  { label: 'Valuation', index: 3 },
+  { label: 'Security', index: 4 },
 ];
 export const subAdminStepsList = [
-  { label: "Details", index: 0 },
-  { label: "Configuration", index: 1 },
+  { label: 'Details', index: 0 },
+  { label: 'Configuration', index: 1 },
 ];
 export const targetCustomers = [
-  { name: "B2B", value: "b2b" },
-  { name: "B2C", value: "b2c" },
-  { name: "B2B2C", value: "b2b2c" },
-  { name: "Enterprise", value: "enterprise" },
+  { name: 'B2B', value: 'b2b' },
+  { name: 'B2C', value: 'b2c' },
+  { name: 'B2B2C', value: 'b2b2c' },
+  { name: 'Enterprise', value: 'enterprise' },
 ];
 export const securities = [
-  { name: "Equity", value: "equity" },
-  { name: "Debt", value: "debt" },
-  { name: "Hybrid", value: "hybrid" },
-  { name: "Derivative", value: "derivative" },
+  { name: 'Equity', value: 'equity' },
+  { name: 'Debt', value: 'debt' },
+  { name: 'Hybrid', value: 'hybrid' },
+  { name: 'Derivative', value: 'derivative' },
 ];
 export const businessModels = [
-  { name: "SaaS", value: "saas" },
-  { name: "Transactional", value: "transactional" },
-  { name: "Marketplace", value: "marketplace" },
-  { name: "Enterprise", value: "enterprise" },
-  { name: "Subscription", value: "subscription" },
-  { name: "Usage-Based", value: "usage-based" },
-  { name: "Ecommerce", value: "ecommerce" },
-  { name: "Advertising", value: "advertising" },
+  { name: 'SaaS', value: 'saas' },
+  { name: 'Transactional', value: 'transactional' },
+  { name: 'Marketplace', value: 'marketplace' },
+  { name: 'Enterprise', value: 'enterprise' },
+  { name: 'Subscription', value: 'subscription' },
+  { name: 'Usage-Based', value: 'usage-based' },
+  { name: 'Ecommerce', value: 'ecommerce' },
+  { name: 'Advertising', value: 'advertising' },
 ];
 export const stages: Stages[] = [
   {
-    value: "ideal",
-    title: "Ideal stage",
-    description: "Brainstorming and validating problem statement",
+    value: 'ideal',
+    title: 'Ideal stage',
+    description: 'Brainstorming and validating problem statement',
   },
   {
-    value: "pre-seed",
-    title: "Pre-seed stage",
-    description: "Building MVP (Minimum viable product)",
+    value: 'pre-seed',
+    title: 'Pre-seed stage',
+    description: 'Building MVP (Minimum viable product)',
   },
   {
-    value: "seed",
-    title: "Seed stage",
-    description: "Building MVP (Minimum viable product)",
+    value: 'seed',
+    title: 'Seed stage',
+    description: 'Building MVP (Minimum viable product)',
   },
   {
-    value: "series-a",
-    title: "Series A",
-    description: "Building MVP (Minimum viable product)",
+    value: 'series-a',
+    title: 'Series A',
+    description: 'Building MVP (Minimum viable product)',
   },
   {
-    value: "series-b",
-    title: "Series B",
-    description: "Building MVP (Minimum viable product)",
+    value: 'series-b',
+    title: 'Series B',
+    description: 'Building MVP (Minimum viable product)',
   },
   {
-    value: "series-c",
-    title: "Series C",
-    description: "Building MVP (Minimum viable product)",
+    value: 'series-c',
+    title: 'Series C',
+    description: 'Building MVP (Minimum viable product)',
   },
 ];
 // , children: "✓"
 
 export const styleConfig = {
-  activeBgColor: "#fff",
-  activeTextColor: "#000",
-  inactiveBgColor: "#1a1a1a",
-  completedBgColor: "#2a2a2a",
+  activeBgColor: '#fff',
+  activeTextColor: '#000',
+  inactiveBgColor: '#1a1a1a',
+  completedBgColor: '#2a2a2a',
   borderRadius: 0,
 } as StepStyleDTO;
 
 export interface CommonError {
-	isSuccess: boolean,
-	message: string
+  isSuccess: boolean;
+  message: string;
 }
 
 // Define the Deal interface based on API response
@@ -134,30 +134,30 @@ export interface SubadminsResponse {
 }
 
 export interface SignInSubAdminResponse {
-  message: string,
-  subadmin_id: string,
-  name: string,
-  username: string,
-  password: string,
-  invite_code: string,
-  success: boolean
+  message: string;
+  subadmin_id: string;
+  name: string;
+  username: string;
+  password: string;
+  invite_code: string;
+  success: boolean;
 }
 
 export interface StatisticsResponse {
-  subadmin_id: string,
-  subadmin_name: string,
-  live_deals: number,
-  closed_deals: number,
-  total_capital_raised: number,
-  deals_this_month: number,
-  success: boolean
+  subadmin_id: string;
+  subadmin_name: string;
+  live_deals: number;
+  closed_deals: number;
+  total_capital_raised: number;
+  deals_this_month: number;
+  success: boolean;
 }
 
 export interface StatisticsState {
   liveDeals: number | null;
-  closedDeals: number | null,
-  totalCapitalRaised: number | null,
-  dealsThisMonth: number | null,
+  closedDeals: number | null;
+  totalCapitalRaised: number | null;
+  dealsThisMonth: number | null;
 }
 
 export interface LoginFormData {

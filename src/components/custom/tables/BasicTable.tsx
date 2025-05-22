@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,11 +10,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
+} from '@tanstack/react-table';
+import { ChevronDown, MoreHorizontal } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -23,8 +23,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -32,27 +32,35 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { data, Investor } from "@/constants/investorsConstant";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+} from '@/components/ui/table';
+import { data, Investor } from '@/constants/investorsConstant';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 export const columns: ColumnDef<Investor>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={value => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
     ),
@@ -60,44 +68,45 @@ export const columns: ColumnDef<Investor>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("name")}</div>
+      <div className="font-medium">{row.getValue('name')}</div>
     ),
   },
   {
-    accessorKey: "email",
-    header: "Mail",
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    accessorKey: 'email',
+    header: 'Mail',
+    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
   },
   {
-    accessorKey: "capitalCommitted",
-    header: "Capital committed",
-    cell: ({ row }) => <div>{row.getValue("capitalCommitted")}</div>,
+    accessorKey: 'capitalCommitted',
+    header: 'Capital committed',
+    cell: ({ row }) => <div>{row.getValue('capitalCommitted')}</div>,
   },
   {
-    accessorKey: "kycStatus",
-    header: "KYC status",
+    accessorKey: 'kycStatus',
+    header: 'KYC status',
     cell: ({ row }) => {
-      const status = row.getValue("kycStatus") as string;
+      const status = row.getValue('kycStatus') as string;
 
-      let colorClass = "bg-yellow-700/30 text-yellow-400";
-      if (status === "KYC COMPLETED")
-        colorClass = "bg-green-700/30 text-green-400";
-      else if (status === "BANK DETAILS PENDING")
-        colorClass = "bg-red-700/30 text-red-400";
+      let colorClass = 'bg-yellow-700/30 text-yellow-400';
+      if (status === 'KYC COMPLETED')
+        colorClass = 'bg-green-700/30 text-green-400';
+      else if (status === 'BANK DETAILS PENDING')
+        colorClass = 'bg-red-700/30 text-red-400';
 
       return (
         <div
-          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded ${colorClass}`}>
+          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded ${colorClass}`}
+        >
           {status}
         </div>
       );
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
       const investor = row.original;
@@ -113,7 +122,8 @@ export const columns: ColumnDef<Investor>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(investor.email)}>
+              onClick={() => navigator.clipboard.writeText(investor.email)}
+            >
               Copy email
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -125,9 +135,11 @@ export const columns: ColumnDef<Investor>[] = [
   },
 ];
 
-export function InvestorsTable({headerName}: {headerName: string}) {
+export function InvestorsTable({ headerName }: { headerName: string }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -154,12 +166,14 @@ export function InvestorsTable({headerName}: {headerName: string}) {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center py-4 bg-[#2A2A2B] px-5">
-        <h1 className="text-2xl text-zinc-400 py-5">{headerName.toUpperCase()} ONBOARDED</h1>
+        <h1 className="text-2xl text-zinc-400 py-5">
+          {headerName.toUpperCase()} ONBOARDED
+        </h1>
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
+          onChange={event =>
+            table.getColumn('email')?.setFilterValue(event.target.value)
           }
           className="max-w-sm ml-auto rounded-none"
         />
@@ -172,16 +186,15 @@ export function InvestorsTable({headerName}: {headerName: string}) {
           <DropdownMenuContent align="end" className="rounded-none">
             {table
               .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
+              .filter(column => column.getCanHide())
+              .map(column => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }>
+                    onCheckedChange={value => column.toggleVisibility(!!value)}
+                  >
                     {column.id}
                   </DropdownMenuCheckboxItem>
                 );
@@ -190,84 +203,87 @@ export function InvestorsTable({headerName}: {headerName: string}) {
         </DropdownMenu>
       </div>
       <div className="px-5 bg-[#242325]">
-      <Table className="rounded-none px-5">
-        <TableHeader className="text-white">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="text-zinc-400">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="bg-[#242325] text-white">
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+        <Table className="rounded-none px-5">
+          <TableHeader className="text-white">
+            {table.getHeaderGroups().map(headerGroup => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <TableHead key={header.id} className="text-zinc-400">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
+            ))}
+          </TableHeader>
+          <TableBody className="bg-[#242325] text-white">
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map(row => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </div>
       <Pagination className="bg-[#2A2A2B] p-4">
-          <PaginationContent className="w-full flex justify-between items-center">
+        <PaginationContent className="w-full flex justify-between items-center">
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <div className="flex gap-2">
             <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <div className="flex gap-2">
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive className="text-black">
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
+              <PaginationLink href="#">1</PaginationLink>
             </PaginationItem>
             <PaginationItem>
-                <PaginationLink href="#">
-                  12
-                </PaginationLink>
+              <PaginationLink href="#" isActive className="text-black">
+                2
+              </PaginationLink>
             </PaginationItem>
             <PaginationItem>
-                <PaginationLink href="#">
-                  13
-                </PaginationLink>
-              </PaginationItem>
-            </div>
-            <PaginationItem>
-              <PaginationNext href="#" />
+              <PaginationLink href="#">3</PaginationLink>
             </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">12</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">13</PaginationLink>
+            </PaginationItem>
+          </div>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

@@ -1,6 +1,6 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ScrollArea } from "../ui/scroll-area";
+import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { ScrollArea } from '../ui/scroll-area';
 
 const tags = Array.from({ length: 10 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`

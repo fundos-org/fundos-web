@@ -8,7 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 import {
   ScrollText,
   LayoutDashboard,
@@ -18,21 +18,21 @@ import {
   UserRoundPen,
   LucideProps,
   LogOut,
-} from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Card } from "../ui/card";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { AvatarFallback } from "../ui/avatar";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { RootState } from "@/app/store";
-import { ForwardRefExoticComponent, RefAttributes } from "react";
-import { resetSubadmin } from "@/slices/subAdminSlice";
+} from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Card } from '../ui/card';
+import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
+import { AvatarFallback } from '../ui/avatar';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { RootState } from '@/app/store';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { resetSubadmin } from '@/slices/subAdminSlice';
 
 interface Route {
   title: string;
   url: string;
   icon: ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
   >;
 }
 
@@ -44,30 +44,30 @@ interface Routes {
 const routes: Routes = {
   subadmin: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
+      title: 'Dashboard',
+      url: '/dashboard',
       icon: LayoutDashboard,
     },
     {
-      title: "Deals",
-      url: "/deals",
+      title: 'Deals',
+      url: '/deals',
       icon: ScrollText,
     },
     {
-      title: "Members",
-      url: "/members",
+      title: 'Members',
+      url: '/members',
       icon: Users,
     },
     {
-      title: "Settings",
-      url: "/settings",
+      title: 'Settings',
+      url: '/settings',
       icon: Settings,
     },
   ],
   admin: [
     {
-      title: "Sub Admin",
-      url: "/subadmin",
+      title: 'Sub Admin',
+      url: '/subadmin',
       icon: UserRoundPen,
     },
   ],
@@ -75,18 +75,18 @@ const routes: Routes = {
 
 export default function AppSidebar() {
   const role = useAppSelector((state: RootState) => state.global.role) as
-    | "admin"
-    | "subadmin";
+    | 'admin'
+    | 'subadmin';
   const { subAdminName, subAdminUsername } = useAppSelector(
     (state: RootState) => state.subAdmin
   );
-  const items = role == "subadmin" ? routes.subadmin : routes.admin;
+  const items = role == 'subadmin' ? routes.subadmin : routes.admin;
   const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleLogOut = () => {
     dispatch(resetSubadmin());
-    navigate("/");
+    navigate('/');
   };
   return (
     <Sidebar className="p-3 bg-[#242325]">
@@ -97,15 +97,16 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {items.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     className={`text-black ${
                       location.pathname === item.url
-                        ? "bg-white text-black"
-                        : "text-white"
-                    } rounded-none p-5 hover:bg-yellow-50`}>
+                        ? 'bg-white text-black'
+                        : 'text-white'
+                    } rounded-none p-5 hover:bg-yellow-50`}
+                  >
                     <Link to={item.url} className="text-xl py-6 px-4 gap-4">
                       <item.icon />
                       <span>{item.title}</span>
@@ -143,10 +144,10 @@ export default function AppSidebar() {
             </div>
             <div className="mr-auto">
               <h4 className="text-white font-medium">
-                {subAdminName ? subAdminName : "Ammit"}
+                {subAdminName ? subAdminName : 'Ammit'}
               </h4>
               <p className="text-sm text-gray-400">
-                {subAdminUsername ? subAdminUsername : "ammit@fundos.com"}
+                {subAdminUsername ? subAdminUsername : 'ammit@fundos.com'}
               </p>
             </div>
             <LogOut className="text-gray-400" onClick={handleLogOut} />
