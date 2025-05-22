@@ -3,13 +3,15 @@ import dealsFeature from '../slices/dealSlice';
 import subAdminFeature from '../slices/subAdminSlice';
 import adminFeature from '../slices/adminSlice';
 import globalFeature from '../slices/globalSlice';
+import memberFeature from '../slices/memberSlice';
 
 const store = configureStore({
   reducer: {
     global: globalFeature,
     deals: dealsFeature,
     subAdmin: subAdminFeature,
-    admin: adminFeature
+    admin: adminFeature,
+    member: memberFeature
   },
 });
 

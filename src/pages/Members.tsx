@@ -1,3 +1,6 @@
+import { useAppStateEffect } from "@/app/hooks";
+import { RootState } from "@/app/store";
+import { fetchMembersStatistics } from "@/axioscalls/dealApiServices";
 import AddMemberDialog from "@/components/custom/AddMemberDialog";
 import { InvestorsTable } from "@/components/custom/InvestorsTable";
 import StatisticCardList from "@/components/custom/StatisticCardList";
@@ -5,6 +8,9 @@ import { DialogTrigger, Dialog } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Members() {
+  const data = useAppStateEffect((state: RootState) => state.member, fetchMembersStatistics)
+  console.log(data);
+  
   return (
     <Dialog>
       <header className="flex justify-between items-center">

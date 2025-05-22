@@ -28,8 +28,6 @@ export default function SignIn() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log("Form submitted:", data);
-    // Add your login logic here (e.g., API call)
     if (isAdmin) {
       const success = await loginAdmin(data);
       if (success) {
