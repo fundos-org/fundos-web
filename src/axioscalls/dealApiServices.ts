@@ -200,9 +200,7 @@ export const createCredentials = async (
 };
 
 export const getSubAdminById = async (subadmin_id: string) => {
-  const response = await axios.get(
-    `${baseUrl}admin/subadmins/get/${subadmin_id}`
-  );
+  const response = await axios.get(`${baseUrl}admin/subadmins/${subadmin_id}`);
   return response.data;
 };
 

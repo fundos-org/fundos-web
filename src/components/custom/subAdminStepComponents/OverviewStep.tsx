@@ -13,6 +13,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   const [data, setData] = useState<Response>();
 
   const callGetSubAdminById = useCallback(async () => {
+    new Promise(r => setTimeout(() => r, 3000));
     try {
       const response = await getSubAdminById(subAdminId);
       setData(response);
@@ -25,7 +26,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
     if (!data) {
       callGetSubAdminById();
     }
-  }, [data, callGetSubAdminById]);
+  }, [subAdminId]);
 
   return (
     <div className="relative text-white w-full max-w-md">
@@ -64,10 +65,15 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
             <p className="text-sm">{data?.username}</p>
             <p className="text-sm text-gray-400">Password</p>
             <p className="text-sm">{data?.password}</p>
+            <p className="text-sm text-gray-400">Invite Code</p>
+            <p className="text-sm">{data?.invite_code}</p>
           </div>
         </div>
       )}
-      <Button className="w-full bg-white text-black hover:bg-gray-200 rounded-none">
+      <Button
+        className="w-full bg-white text-black hover:bg-gray-200 rounded-none"
+        onClick={callGetSubAdminById}
+      >
         Share details
       </Button>
     </div>

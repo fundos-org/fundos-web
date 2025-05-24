@@ -33,6 +33,7 @@ export interface FormData {
 function CreateSubAdminDialog() {
   const [activeStep, setActiveStep] = useState(0);
   const [subAdminId, setSubAdminId] = useState('');
+  // const [transferToOverview, setTransferToOverview] = useState();
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
@@ -208,10 +209,7 @@ function CreateSubAdminDialog() {
               className="bg-white rounded-none py-5 hover:bg-zinc-300"
               onClick={handleNext}
             >
-              <div className="flex gap-2 mx-10 text-black">
-                {/* {activeStep === 1 ? "Submit" : "Next"} */}
-                Next
-              </div>
+              <div className="flex gap-2 mx-10 text-black">Next</div>
             </Button>
           </div>
         </DialogFooter>

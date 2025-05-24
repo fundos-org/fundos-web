@@ -12,18 +12,23 @@ const StepSubAdmin2: React.FC = () => {
     register,
     formState: { errors },
     getValues,
+    setValue,
   } = useFormContext();
 
   const [code, setCode] = useState<string>('');
 
   // Generate random code on component mount
   useEffect(() => {
-    setCode(getRandomCode());
-  }, []);
+    const newCode = getRandomCode();
+    setCode(newCode);
+    setValue('invitecode', newCode, { shouldValidate: true });
+  }, [setValue]);
 
   // Handle generating new code
   const handleGenerateNewCode = () => {
-    setCode(getRandomCode());
+    const newCode = getRandomCode();
+    setCode(newCode);
+    setValue('invitecode', newCode, { shouldValidate: true });
   };
 
   // Handle copying code to clipboard
@@ -127,13 +132,15 @@ const StepSubAdmin2: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-2 w-full">
-        <Label htmlFor="appname" className="text-right text-white">
+        <Label htmlFor="invitecode" className="text-right text-white">
           Invite Code
         </Label>
-        <div className="relative w-64">
+        <div className="relative w-full">
           <Input
             value={code}
             disabled
+            id="invitecode"
+            {...register('invitecode', { required: 'Invite code is required' })}
             className="pr-20 bg-gray-800 text-white rounded-none w-full"
           />
           <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex gap-1">
