@@ -24,23 +24,3 @@ export const useAppStateEffect = <Selected>(
 
   return selected;
 };
-
-export const useAppStateEvent = <T extends keyof RootState>(
-  selector: (state: RootState) => RootState[T]
-): {
-  dispatchThunk: (
-    action?: () => ThunkAction<void, RootState, unknown, Action>
-  ) => void;
-  selected: RootState[T];
-} => {
-  const dispatch = useDispatch<AppDispatch>();
-  const selected = useSelector(selector);
-
-  const dispatchThunk = (
-    action?: () => ThunkAction<void, RootState, unknown, Action>
-  ) => {
-    if (action) dispatch(action());
-  };
-
-  return { dispatchThunk, selected };
-};

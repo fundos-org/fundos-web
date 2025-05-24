@@ -3,13 +3,12 @@ import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { LoginFormData } from '@/constants/dealsConstant';
-import { toastifyThunk } from '@/lib/toastifyThunk';
+import { CommonError, LoginFormData } from '@/constants/dealsConstant';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
 import { useNavigate } from 'react-router-dom';
-import { makeAdminPresent, makeSubAdminPresent } from '@/slices/globalSlice';
+import { makeAdminPresent } from '@/slices/globalSlice';
 import toast from 'react-hot-toast';
 
 export default function SignIn() {
@@ -44,18 +43,27 @@ export default function SignIn() {
         });
       }
     } else {
-      await toastifyThunk(loginSubAdmin(data), dispatch, {
-        loading: 'Wait, Logging in...',
-        success: data => {
-          const payload = (data as { payload: { message: string } }).payload;
-          dispatch(makeSubAdminPresent());
-          const { message, ...rest } = payload;
-          sessionStorage.setItem('subadmindetails', JSON.stringify(rest));
+      dispatch(loginSubAdmin(data))
+        .unwrap()
+        .then(response => {
+          toast.success(response.message || 'Login successful!');
           navigate('/dashboard');
-          return `Fetched user: ${message}`;
-        },
-        error: error => `Error: ${error}`,
-      });
+        })
+        .catch((error: CommonError) => {
+          toast.error(error.message || 'Login failed.');
+        });
+      // await toastifyThunk(loginSubAdmin(data), dispatch, {
+      //   loading: 'Wait, Logging in...',
+      //   success: data => {
+      //     const payload = (data as { payload: { message: string } }).payload;
+      //     dispatch(makeSubAdminPresent());
+      //     const { message, ...rest } = payload;
+      //     sessionStorage.setItem('subadmindetails', JSON.stringify(rest));
+      //     navigate('/dashboard');
+      //     return `Fetched user: ${message}`;
+      //   },
+      //   error: error => `Error: ${error}`,
+      // });
     }
   };
 
