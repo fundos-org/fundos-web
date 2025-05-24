@@ -21,10 +21,8 @@ import {
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
-import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
-import { AvatarFallback } from '../ui/avatar';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { RootState } from '@/app/store';
+import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
+import { useAppDispatch } from '@/app/hooks';
 import {
   ForwardRefExoticComponent,
   RefAttributes,
@@ -32,6 +30,20 @@ import {
   useState,
 } from 'react';
 import { resetSubadmin } from '@/slices/subAdminSlice';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
+
+// Define role type for better type safety
+type Role = 'admin' | 'subadmin';
 
 interface Route {
   title: string;
@@ -46,79 +58,78 @@ interface Routes {
   subadmin: Route[];
 }
 
+interface SessionData {
+  name: string;
+  invite_code: string;
+  role: Role;
+}
+
 const routes: Routes = {
   subadmin: [
-    {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: LayoutDashboard,
-    },
-    {
-      title: 'Deals',
-      url: '/deals',
-      icon: ScrollText,
-    },
-    {
-      title: 'Members',
-      url: '/members',
-      icon: Users,
-    },
-    {
-      title: 'Settings',
-      url: '/settings',
-      icon: Settings,
-    },
+    { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
+    { title: 'Deals', url: '/deals', icon: ScrollText },
+    { title: 'Members', url: '/members', icon: Users },
+    { title: 'Settings', url: '/settings', icon: Settings },
   ],
-  admin: [
-    {
-      title: 'Sub Admin',
-      url: '/subadmin',
-      icon: UserRoundPen,
-    },
-  ],
+  admin: [{ title: 'Sub Admin', url: '/subadmin', icon: UserRoundPen }],
 };
 
 export default function AppSidebar() {
-  const role = useAppSelector((state: RootState) => state.global.role);
-  const { subAdminName, subAdminUsername } = useAppSelector(
-    (state: RootState) => state.subAdmin
-  );
+  const [sessionData, setSessionData] = useState<SessionData | null>(null);
   const [items, setItems] = useState<Route[]>([]);
-  const sessionRole = sessionStorage.getItem('role');
-  useEffect(() => {
-    if (sessionRole === 'subadmin') setItems(routes['subadmin']);
-    else if (sessionRole === 'admin') setItems(routes['admin']);
-    else setItems([]);
-  }, [role, sessionRole]);
-
   const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      const storedData = sessionStorage.getItem('subadmindetails');
+      if (storedData) {
+        const parsedData: SessionData = JSON.parse(storedData);
+        if (['admin', 'subadmin'].includes(parsedData.role)) {
+          setSessionData(parsedData);
+          setItems(routes[parsedData.role as Role]);
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing session data:', error);
+      setSessionData(null);
+      setItems([]);
+    }
+  }, []);
+
   const handleLogOut = () => {
     dispatch(resetSubadmin());
     sessionStorage.clear();
     navigate('/');
   };
+
   return (
-    <Sidebar className="p-3 bg-[#242325]">
-      <SidebarHeader className="text-3xl font-bold text-white bg-[#242325]">
+    <Sidebar className="p-3 bg-gray-900">
+      <SidebarHeader className="text-3xl font-bold text-white bg-gray-900">
         FundOS
       </SidebarHeader>
-      <SidebarContent className="bg-[#242325] text-white">
+      <SidebarContent className="bg-gray-900 text-white">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items?.map(item => (
+              {items.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={`text-black ${
+                    className={`${
                       location.pathname === item.url
                         ? 'bg-white text-black'
-                        : 'text-white'
-                    } rounded-none p-5 hover:bg-yellow-50`}
+                        : 'text-white hover:bg-yellow-50'
+                    } rounded-none p-5`}
                   >
-                    <Link to={item.url} className="text-xl py-6 px-4 gap-4">
+                    <Link
+                      to={item.url}
+                      className="flex items-center text-xl py-6 px-4 gap-4"
+                      aria-current={
+                        location.pathname === item.url ? 'page' : undefined
+                      }
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -129,39 +140,66 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="bg-[#242325]">
-        <div className="bg-[#242325] rounded-none border-0 p-5 text-white flex items-start justify-between">
+      <SidebarFooter className="bg-gray-900">
+        <div className="bg-gray-900 rounded-none border-0 p-5 text-white flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <HelpCircle className="text-gray-400" />
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-400">Support</h4>
-            </div>
+            <HelpCircle className="text-gray-400" />
+            <h4 className="font-medium text-gray-400">Support</h4>
           </div>
         </div>
-        <Card className="bg-[#1f1f1f] rounded-none border-0 p-5 text-white flex items-center justify-between">
-          <div className="w-60 flex justify-between items-center gap-4">
+        <Card className="bg-gray-800 rounded-none border-0 p-5 text-white flex items-center justify-between">
+          <div className="flex items-center gap-4 w-full">
             <div className="relative">
-              <Avatar>
+              <Avatar className="w-10 h-10">
                 <AvatarImage
-                  width="40"
                   src="/favicon/apple-touch-icon.png"
-                  alt="fundmanger name"
+                  width="40"
+                  alt={sessionData?.name ?? 'Fund Manager'}
                 />
                 <AvatarFallback>BS</AvatarFallback>
               </Avatar>
-              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-[#1f1f1f]" />
+              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-gray-800" />
             </div>
-            <div className="mr-auto">
+            <div className="flex-1">
               <h4 className="text-white font-medium">
-                {subAdminName ? subAdminName : 'Ammit'}
+                {sessionData?.name ?? 'Ammit'}
               </h4>
               <p className="text-sm text-gray-400">
-                {subAdminUsername ? subAdminUsername : 'ammit@fundos.com'}
+                {sessionData?.invite_code ?? 'No code'}
               </p>
             </div>
-            <LogOut className="text-gray-400" onClick={handleLogOut} />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  aria-label="Log out"
+                  className="focus:outline-none focus:ring-2 focus:ring-yellow-50"
+                >
+                  <LogOut className="text-gray-400 hover:text-white" />
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-gray-900 text-white border-gray-700 rounded-none">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-2xl">
+                    Are you sure you want to log out?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-gray-500">
+                    Logging out will end your current session. You will need to
+                    log in again to access your account.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleLogOut}
+                    className="bg-red-600 text-white hover:bg-red-700 rounded-none"
+                  >
+                    Log Out
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </Card>
       </SidebarFooter>

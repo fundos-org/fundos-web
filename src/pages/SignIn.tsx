@@ -8,7 +8,6 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
 import { useNavigate } from 'react-router-dom';
-import { makeAdminPresent } from '@/slices/globalSlice';
 import toast from 'react-hot-toast';
 
 export default function SignIn() {
@@ -31,9 +30,11 @@ export default function SignIn() {
 
   const onSubmit = async (data: LoginFormData) => {
     if (isAdmin) {
-      const { success } = await loginAdmin(data);
+      const { success, message } = await loginAdmin(data);
       if (success) {
-        dispatch(makeAdminPresent());
+        const sessData = JSON.stringify({ role: 'admin', name: 'Ammit' });
+        sessionStorage.setItem('subadmindetails', sessData);
+        toast.success(message || 'Login successful!');
         navigate('/subadmin');
       } else {
         toast.error('Unable to login. Please check once again!', {
@@ -45,25 +46,20 @@ export default function SignIn() {
     } else {
       dispatch(loginSubAdmin(data))
         .unwrap()
-        .then(response => {
-          toast.success(response.message || 'Login successful!');
+        .then(({ invite_code, name, subadmin_id, message }) => {
+          const sessData = JSON.stringify({
+            invite_code,
+            name,
+            subadmin_id,
+            role: 'subadmin',
+          });
+          sessionStorage.setItem('subadmindetails', sessData);
+          toast.success(message || 'Login successful!');
           navigate('/dashboard');
         })
         .catch((error: CommonError) => {
           toast.error(error.message || 'Login failed.');
         });
-      // await toastifyThunk(loginSubAdmin(data), dispatch, {
-      //   loading: 'Wait, Logging in...',
-      //   success: data => {
-      //     const payload = (data as { payload: { message: string } }).payload;
-      //     dispatch(makeSubAdminPresent());
-      //     const { message, ...rest } = payload;
-      //     sessionStorage.setItem('subadmindetails', JSON.stringify(rest));
-      //     navigate('/dashboard');
-      //     return `Fetched user: ${message}`;
-      //   },
-      //   error: error => `Error: ${error}`,
-      // });
     }
   };
 
