@@ -57,7 +57,6 @@ function CreateSubAdminDialog() {
     try {
       setActiveStep(0);
       methods.reset();
-      toast.success('Sub Admin created successfully!');
     } catch (error) {
       toast.error(String(error));
     }

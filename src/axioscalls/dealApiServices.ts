@@ -237,6 +237,7 @@ export const createCredentials = async (
       invite_code,
     }
   );
+  toast.success('Sub Admin created successfully!');
   return response.data;
 };
 
