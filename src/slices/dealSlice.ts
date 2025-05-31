@@ -10,6 +10,7 @@ import {
   StatisticsResponse,
   AllDealsResponse,
 } from '@/constants/dealsConstant';
+import { AppEnums } from '@/constants/enums';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the Deals state
@@ -60,6 +61,11 @@ const dealsSlice = createSlice({
     resetDealId(state) {
       state.draft.deal_id = '';
     },
+    setDealDraft(state) {
+      state.draft.deal_id = JSON.parse(
+        localStorage.getItem(AppEnums.DEAL_DRAFT) as string
+      );
+    },
   },
   extraReducers: builder => {
     builder
@@ -92,6 +98,10 @@ const dealsSlice = createSlice({
         (state, action: PayloadAction<DraftResponse>) => {
           state.loading = false;
           state.draft = action.payload;
+          localStorage.setItem(
+            AppEnums.DEAL_DRAFT,
+            JSON.stringify(action.payload.deal_id)
+          );
         }
       )
       .addCase(
@@ -129,7 +139,7 @@ const dealsSlice = createSlice({
 });
 
 // Export actions
-export const { resetDeals, resetDealId } = dealsSlice.actions;
+export const { resetDeals, resetDealId, setDealDraft } = dealsSlice.actions;
 
 // Export reducer
 export default dealsSlice.reducer;

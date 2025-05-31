@@ -8,9 +8,11 @@ import {
   StatisticsResponse,
   SubadminsResponse,
 } from '@/constants/dealsConstant';
+import { AppEnums } from '@/constants/enums';
 import { MemberApiResponse } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 const baseUrl = 'http://43.205.36.168/api/v1/live/';
 
@@ -58,6 +60,7 @@ export const companyDetailsTrigger = async (
     `${baseUrl}deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&company_website=${companyWebsite}`,
     formData
   );
+  toast.success(response.data.message);
   return response.data;
 };
 
@@ -73,6 +76,7 @@ export const industryProblemTrigger = async (
     problem_statement: problemStatement,
     business_model: businessModel,
   });
+  toast.success(response.data.message);
   return response.data;
 };
 
@@ -86,6 +90,7 @@ export const customerSegmentTrigger = async (
     company_stage: companyStage,
     target_customer_segment: targetCustomerSegment,
   });
+  toast.success(response.data.message);
   return response.data;
 };
 
@@ -108,6 +113,7 @@ export const valuationTrigger = async (
     `${baseUrl}deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}`,
     formData
   );
+  toast.success(response.data.message);
   return response.data;
 };
 
@@ -117,13 +123,48 @@ export const securitiesTrigger = async (
   conversionTerms: string,
   isStartup: boolean
 ) => {
-  const response = await axios.post(`${baseUrl}deals/web/securities`, {
-    deal_id: dealId,
-    instrument_type: instrumentType,
-    conversion_terms: conversionTerms,
-    is_startup: isStartup,
-  });
-  return response.data;
+  try {
+    const response = await axios.post(`${baseUrl}deals/web/securities`, {
+      deal_id: dealId,
+      instrument_type: instrumentType,
+      conversion_terms: conversionTerms,
+      is_startup: isStartup,
+    });
+    localStorage.removeItem(AppEnums.DEAL_DRAFT);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<{
+        message: string;
+        code?: string;
+        details?: Record<string, unknown>;
+      }>;
+      const errorMessage =
+        axiosError.response?.data?.message ||
+        axiosError.message ||
+        'Failed to trigger securities';
+      const errorCode =
+        axiosError.response?.data?.code || axiosError.code || 'UNKNOWN_ERROR';
+
+      // Log error for debugging (use your preferred logging service)
+      console.error(`Securities API error [${errorCode}]: ${errorMessage}`, {
+        dealId,
+        instrumentType,
+        status: axiosError.response?.status,
+        details: axiosError.response?.data?.details,
+      });
+
+      // Throw a structured error for React Query or caller to handle
+      throw new Error(
+        `Securities API failed: ${errorMessage} (Code: ${errorCode})`
+      );
+    }
+
+    // Handle non-Axios errors (e.g., network issues, code errors)
+    console.error('Unexpected error in securitiesTrigger:', error);
+    throw new Error('An unexpected error occurred while triggering securities');
+  }
 };
 
 // Create async thunk for fetching all deals

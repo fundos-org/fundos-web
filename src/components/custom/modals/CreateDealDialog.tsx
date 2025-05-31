@@ -27,6 +27,8 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { toastifyThunk } from '@/lib/toastifyThunk';
 import { X } from 'lucide-react';
+import { AppEnums } from '@/constants/enums';
+import { setDealDraft } from '@/slices/dealSlice';
 
 export interface FormData {
   companyName: string;
@@ -97,7 +99,12 @@ export default function CreateDealDialog() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!deal_id) callDraftApi();
+    const isDraftThere = localStorage.getItem(AppEnums.DEAL_DRAFT);
+    if (!deal_id && !isDraftThere) {
+      callDraftApi();
+    } else {
+      dispatch(setDealDraft());
+    }
   }, [dispatch, deal_id, callDraftApi]);
 
   const renderStep = () => {
