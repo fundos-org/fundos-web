@@ -177,7 +177,7 @@ export const fetchAllDeals = createAsyncThunk<
     const { subadmin_id } = JSON.parse(
       sessionStorage.getItem('subadmindetails') as string
     );
-    const response = await await axios.get(
+    const response = await axios.get(
       `${baseUrl}subadmin/deals/overview/${subadmin_id}`
     );
     return response.data;
@@ -423,6 +423,24 @@ export const loginAdmin = async ({ username, password }: LoginFormData) => {
     return response.data;
   } catch {
     return { success: false };
+  }
+};
+
+export const addMember = async (subadmin_id: string, email: string) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}subadmin/members/addmember/${subadmin_id}/${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error in apiAadhaarOtpSend:', error);
+    if (axios.isAxiosError(error)) {
+      toast.error(`Error: ${error.message}`);
+      throw new Error(error.message);
+    } else {
+      console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
   }
 };
 
