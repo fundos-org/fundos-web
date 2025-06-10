@@ -27,8 +27,6 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { toastifyThunk } from '@/lib/toastifyThunk';
 import { X } from 'lucide-react';
-import { AppEnums } from '@/constants/enums';
-import { setDealDraft } from '@/slices/dealSlice';
 
 export interface FormData {
   companyName: string;
@@ -78,9 +76,9 @@ export default function CreateDealDialog() {
     mode: 'onChange',
   });
   const dispatch = useAppDispatch();
-  const {
-    draft: { deal_id },
-  } = useAppSelector((state: RootState) => state.deals);
+  const deal_id = useAppSelector(
+    (state: RootState) => state.deals.draft?.deal_data.id
+  );
 
   const callDraftApi = useCallback(async () => {
     try {
@@ -99,13 +97,8 @@ export default function CreateDealDialog() {
   }, [dispatch]);
 
   useEffect(() => {
-    const isDraftThere = localStorage.getItem(AppEnums.DEAL_DRAFT);
-    if (!deal_id && !isDraftThere) {
-      callDraftApi();
-    } else {
-      dispatch(setDealDraft());
-    }
-  }, [dispatch, deal_id, callDraftApi]);
+    callDraftApi();
+  }, [callDraftApi]);
 
   const renderStep = () => {
     switch (activeStep) {
@@ -196,45 +189,45 @@ export default function CreateDealDialog() {
       switch (activeStep) {
         case 0: {
           await companyDetailsTrigger(
-            deal_id,
             values.companyName,
             values.aboutCompany,
             values.companyWebsite,
-            values.logo
+            values.logo,
+            deal_id
           );
           break;
         }
         case 1:
           await industryProblemTrigger(
-            deal_id,
             values.industry,
             values.problemStatement,
-            values.businessModel
+            values.businessModel,
+            deal_id
           );
           break;
         case 2:
           await customerSegmentTrigger(
-            deal_id,
             values.companyStage,
-            values.targetCustomerSegment
+            values.targetCustomerSegment,
+            deal_id
           );
           break;
         case 3:
           await valuationTrigger(
-            deal_id,
             values.currentValuation,
             values.roundSize,
             values.syndicateCommitment,
             values.pitchDeck,
-            values.pitchVideo
+            values.pitchVideo,
+            deal_id
           );
           break;
         case 4:
           await securitiesTrigger(
-            deal_id,
             values.instrumentType,
             values.conversionTerms,
-            values.isStartup
+            values.isStartup,
+            deal_id
           );
           break;
       }

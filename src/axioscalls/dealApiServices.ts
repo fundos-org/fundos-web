@@ -46,11 +46,11 @@ export const createDraft = createAsyncThunk<
 });
 
 export const companyDetailsTrigger = async (
-  dealId: string,
   companyName: string,
   aboutCompany: string,
   companyWebsite: string,
-  logo: File | null
+  logo: File | null,
+  dealId?: string
 ) => {
   const formData = new FormData();
   if (logo) {
@@ -65,10 +65,10 @@ export const companyDetailsTrigger = async (
 };
 
 export const industryProblemTrigger = async (
-  dealId: string,
   industry: string,
   problemStatement: string,
-  businessModel: string
+  businessModel: string,
+  dealId?: string
 ) => {
   const response = await axios.post(`${baseUrl}deals/web/industry-problem`, {
     deal_id: dealId,
@@ -81,9 +81,9 @@ export const industryProblemTrigger = async (
 };
 
 export const customerSegmentTrigger = async (
-  dealId: string,
   companyStage: string,
-  targetCustomerSegment: string
+  targetCustomerSegment: string,
+  dealId?: string
 ) => {
   const response = await axios.post(`${baseUrl}deals/web/customer-segment`, {
     deal_id: dealId,
@@ -95,12 +95,12 @@ export const customerSegmentTrigger = async (
 };
 
 export const valuationTrigger = async (
-  dealId: string,
   currentValuation: string,
   roundSize: string,
   syndicateCommitment: string,
   pitch_deck?: File | null,
-  pitch_video?: File | null
+  pitch_video?: File | null,
+  dealId?: string
 ) => {
   const formData = new FormData();
   if (pitch_deck && pitch_deck instanceof File) {
@@ -118,10 +118,10 @@ export const valuationTrigger = async (
 };
 
 export const securitiesTrigger = async (
-  dealId: string,
   instrumentType: string,
   conversionTerms: string,
-  isStartup: boolean
+  isStartup: boolean,
+  dealId?: string
 ) => {
   try {
     const response = await axios.post(`${baseUrl}deals/web/securities`, {

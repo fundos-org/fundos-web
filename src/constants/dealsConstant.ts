@@ -114,9 +114,16 @@ export interface CommonError {
 //   updated_at: string | null;
 // }
 
+export interface DealData {
+  id: string;
+  fund_manager_id: string;
+  status: string;
+}
+
 export interface DraftResponse {
-  deal_id: string;
+  deal_data: DealData;
   message: string;
+  success: boolean;
 }
 
 export interface Subadmin {
