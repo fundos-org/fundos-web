@@ -165,7 +165,7 @@ export default function AppSidebar() {
                 {sessionData?.name ?? 'Ammit'}
               </h4>
               <p className="text-sm text-gray-400">
-                {sessionData?.invite_code ?? 'No code'}
+                {sessionData?.invite_code ?? 'You dont need invite code 😉'}
               </p>
             </div>
             <AlertDialog>
