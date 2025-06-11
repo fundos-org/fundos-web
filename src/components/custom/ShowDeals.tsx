@@ -12,24 +12,6 @@ export default function ShowDeals() {
       state.deals.allDeals || { activeDeals: [], closedDeals: [] },
     fetchAllDeals
   );
-  // const callAllDealsApi = useCallback(async () => {
-  //   try {
-  //     await toastifyThunk(fetchAllDeals(), dispatch, {
-  //       loading: "Fetching all deals...",
-  //       success: () => {
-  //         return `Fetched user: All deals fetched!`;
-  //       },
-  //       error: (error) => `Error: ${error}`,
-  //     });
-  //   } catch (error) {
-  //     // Errors are handled by toast, but you can add additional logic here if needed
-  //     console.error("Toastified thunk error:", error);
-  //   }
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (!activeDeals || !closedDeals) callAllDealsApi();
-  // }, [dispatch, callAllDealsApi, activeDeals, closedDeals]);
   return (
     <Tabs defaultValue="active" className="w-full mt-5">
       <div className="w-full border-b-1 border-gray-600">

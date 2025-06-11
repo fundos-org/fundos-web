@@ -174,9 +174,15 @@ export interface LoginFormData {
 
 export interface DealCard {
   deal_id: string;
-  company_name: string;
-  status: 'OPEN' | 'ON_HOLD' | 'CLOSED';
-  round_size: number;
+  description: string | null;
+  title: string | null;
+  deal_status: 'open' | 'on_hold' | 'closed';
+  current_valuation: number | null;
+  round_size: number | null;
+  commitment: number | null;
+  business_model: string | null;
+  company_stage: string | null;
+  logo_url: string | null;
   created_at: string;
 }
 
