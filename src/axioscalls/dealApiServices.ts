@@ -444,4 +444,22 @@ export const addMember = async (subadmin_id: string, email: string) => {
   }
 };
 
+export const shareDetails = async (subadmin_id: string) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error in apiAadhaarOtpSend:', error);
+    if (axios.isAxiosError(error)) {
+      toast.error(`Error: ${error.message}`);
+      throw new Error(error.message);
+    } else {
+      console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
 export default createDraft;

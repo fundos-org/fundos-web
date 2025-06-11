@@ -1,6 +1,7 @@
-import { getSubAdminById } from '@/axioscalls/dealApiServices';
+import { getSubAdminById, shareDetails } from '@/axioscalls/dealApiServices';
 import { Button } from '@/components/ui/button';
 import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface Response {
   name: string;
@@ -13,7 +14,6 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   const [data, setData] = useState<Response>();
 
   const callGetSubAdminById = useCallback(async () => {
-    new Promise(r => setTimeout(() => r, 3000));
     try {
       const response = await getSubAdminById(subAdminId);
       setData(response);
@@ -26,7 +26,17 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
     if (!data) {
       callGetSubAdminById();
     }
-  }, [subAdminId]);
+  }, [callGetSubAdminById, data]);
+
+  const handleClick = async () => {
+    const response = await shareDetails(subAdminId);
+    if (!response) {
+      toast.error('Failed to send invite');
+    }
+    if (response.message) {
+      toast.success(response.message);
+    }
+  };
 
   return (
     <div className="relative text-white w-full max-w-md">
@@ -72,7 +82,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
       )}
       <Button
         className="w-full bg-white text-black hover:bg-gray-200 rounded-none"
-        onClick={callGetSubAdminById}
+        onClick={handleClick}
       >
         Share details
       </Button>
