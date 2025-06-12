@@ -3,6 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import ImageInput from '../ImageUpload';
+import { numberToIndianRupeesWords } from '@/lib/currencyToWords';
 
 const Step4: React.FC = () => {
   const {
@@ -13,14 +14,24 @@ const Step4: React.FC = () => {
   } = useFormContext();
   const pitchDeck = watch('pitchDeck');
   const pitchVideo = watch('pitchVideo');
+  const currentValuation = watch('currentValuation');
+  const roundSize = watch('roundSize');
+  const syndicateCommitment = watch('syndicateCommitment');
 
   return (
     <div className="grid gap-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="currentValuation" className="text-right text-white">
-          Current Valuation (INR)
+          Current Valuation (
+          {currentValuation ? (
+            <small>{numberToIndianRupeesWords(currentValuation)}</small>
+          ) : (
+            <small>{'INR'}</small>
+          )}
+          )
         </Label>
         <Input
+          maxLength={10}
           id="currentValuation"
           {...register('currentValuation', {
             required: 'Current valuation is required',
@@ -40,9 +51,16 @@ const Step4: React.FC = () => {
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="roundSize" className="text-right text-white">
-          Round Size (INR)
+          Round Size (
+          {roundSize ? (
+            <small>{numberToIndianRupeesWords(roundSize)}</small>
+          ) : (
+            <small>{'INR'}</small>
+          )}
+          )
         </Label>
         <Input
+          maxLength={10}
           id="roundSize"
           {...register('roundSize', {
             required: 'Round size is required',
@@ -62,9 +80,16 @@ const Step4: React.FC = () => {
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="syndicateCommitment" className="text-right text-white">
-          Syndicate Commitment (INR)
+          Syndicate Commitment (
+          {syndicateCommitment ? (
+            <small>{numberToIndianRupeesWords(syndicateCommitment)}</small>
+          ) : (
+            <small>{'INR'}</small>
+          )}
+          )
         </Label>
         <Input
+          maxLength={10}
           id="syndicateCommitment"
           {...register('syndicateCommitment', {
             required: 'Syndicate commitment is required',

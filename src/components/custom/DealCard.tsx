@@ -4,20 +4,6 @@ import { ChevronDown } from 'lucide-react';
 import { Progress } from '../ui/progress';
 import { DealCard } from '@/constants/dealsConstant';
 
-// {
-//       "deal_id": "05df72d4-6c0a-4eaa-a8a9-a7fdb7cee2c2",
-//       "description": "dscvsd f. df ddfc ",
-//       "title": "hjhghjk",
-//       "deal_status": "open",
-//       "current_valuation": 234545,
-//       "round_size": 78789889,
-//       "commitment": 888788,
-//       "business_model": "transactional",
-//       "company_stage": "series-b",
-//       "logo_url": "https://fundos-dev-bucket.s3.amazonaws.com/deals/logos/05df72d4-6c0a-4eaa-a8a9-a7fdb7cee2c2_20250531094813.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA5Y64M7HMW7LL355H%2F20250531%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20250531T094813Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCmFwLXNvdXRoLTEiRjBEAiBFM68qjRhhpfMHyn0EjsOnOxcahwRpifHBF5mmrf0ydAIgGRLmVlWa3x3na%2FenXhYqikIXeYIj4kttY5Nc0x81eQgqxwUIu%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw5NDY5NjU2NDE2ODkiDIzqW5luj38fQG1QPyqbBTkOpKMISXGFgz3ct9uavEmZ%2Fij6pKg6as3H53Yo75iFYFoVByPNCk0lkusyvzTvkEg8IXmLJxTsRHQv5fvAAHL8xqa1wrsFs%2Fa7m%2F%2F50rXx6ob106etPNaiCoNf6eDHr3ypQjHVqCnXiKBRBqgvXRdA7GROg%2FfQbpaI3ZPcoj3yurIx8w0ggsTvOdqT67C8nbC9yStj5a%2Flhqy9mESzg3kjqfkDuXJy%2BUvLFw1Bmw3UgKpfA1Pteu2MrwO0vy15zEzGwQggGAR3C8ozZd91OdG1bcDktCXx0ErAfMfem29Jf%2FQ%2F8N7ucBRHFBXjvRav%2FHUIeH1N5DjEun9MlD1GKiTx8vk%2FehfAvpJ9QRM3D4yc7WdkVe%2FFsog9OX1%2F%2FABF6Kv3QYdbN4bQEe2iatJ%2Bv8MLjvKDclGEVK%2FzxCEYRswoS5%2FLYcCAqJavgrvafNiwMej5RdzOX6IZ7I7DufUnehsFnOVMKcovVBZRFyflwf%2BVmU7HQS%2FGEgrD5JVe72CHAa7iE%2FXYhMP0L8%2FuTMBn8qS4cOTgiliztYPfEVeb8BeWE0ed6vlLQw%2B8enqLwYt5eoGiDFiGKl7nj%2BwbxNP97HJ24VH2nFmszTI4VI9vioi4BSoEHgW4dk7iLto8nz4QX0kPgUqe0uB2Y2CwQdv0AKoNof34z70ALggbKciphyimqsPCFL5oP8Zn%2B8a9vTZRQao7rEIJmSTI3n4A7KRZQeyWBIgSUlhiepSN16bhcabET75Btf4obkfu%2F%2BEsYhc24Mvtk9ZbAOnexy2n9uRSkKM1b%2FKKm5d07PUFQt4ER0b43%2BKTpjnNylIRYveabUlOCKYUYRAubbUCls3a8xEnXUeg4xGrfS4Iedkh03nc%2Bhz6yL6wE5%2FIvHdC48Mwt5nrwQY6sgGdTuIQ3VTUPNgA3w7iWbFoOYIBFxeZONwD5nG8GLx1xp38T9m20x7kugow0M8Ad763plzSNAAVsXd4L3ptVFWHpj56pHxNKmzxkNvK49va8eu5Bjg6Fkolr8ActE31CGchRLoJ16%2FfDT0KTZvI3TDukffnBLCwYLNmr4lGvfJErYz6qdqjkvjBavFY%2FO3f0BCyofTjAyf8iXeNBqxKj4CLAfX03eMlS0OyO3Ful7qYYM%2FH&X-Amz-Signature=9a1b8c42588700019c38a98b7c8b0539a5159c9b8d0ac3aa4049b10d9a5d0b23",
-//       "created_at": "2025-05-31T08:16:04.304173"
-//     },
-
 export default function CardDeal({ deal }: { deal: DealCard }) {
   const {
     title,
