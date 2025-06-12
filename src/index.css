@@ -165,3 +165,7 @@ body{
 .delay-2000 {
   animation-delay: 2000ms;
 }
+
+:where([data-radix-select-trigger]) [data-radix-select-icon] {
+  display: none;
+}

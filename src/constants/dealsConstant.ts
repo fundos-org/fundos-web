@@ -86,34 +86,6 @@ export interface CommonError {
   message: string;
 }
 
-// Define the Deal interface based on API response
-// export interface Deal {
-//   id: string;
-//   title: string;
-//   description: string;
-//   status: string;
-//   fund_manager_id: string;
-//   created_at: string;
-//   agreed_to_terms: boolean;
-//   company_name: string | null;
-//   company_website: string | null;
-//   about_company: string | null;
-//   company_stage: string | null;
-//   industry: string | null;
-//   target_customer_segment: string | null;
-//   problem_statement: string | null;
-//   business_model: string | null;
-//   current_valuation: number | null;
-//   round_size: number | null;
-//   syndicate_commitment: number | null;
-//   instrument_type: string | null;
-//   conversion_terms: string | null;
-//   logo_url: string | null;
-//   pitch_deck_url: string | null;
-//   pitch_video_url: string | null;
-//   updated_at: string | null;
-// }
-
 export interface DealData {
   id: string;
   fund_manager_id: string;
@@ -184,6 +156,7 @@ export interface DealCard {
   company_stage: string | null;
   logo_url: string | null;
   created_at: string;
+  fund_raised_till_now: number | null;
 }
 
 export interface AllDealsResponse {

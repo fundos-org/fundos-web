@@ -5,6 +5,7 @@ import ActivitesList from '@/components/custom/ActivitesList';
 import OverViewChart from '@/components/custom/OverViewChart';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import TransactionTable from '@/components/custom/tables/TransactionDetailsTable';
+import { useState } from 'react';
 
 const data = [
   {
@@ -84,11 +85,16 @@ function Dashboard() {
     (state: RootState) => state.dashboard.statistics,
     fetchDashboardStatistics
   );
-  console.log(stats);
+  const [name] = useState(
+    JSON.parse(sessionStorage.getItem('subadmindetails') || '{}').name || ''
+  );
+  if (!name) {
+    return <div>Please log in</div>;
+  }
 
   return (
     <>
-      <h2 className="text-4xl">Welcome Back, Kota</h2>
+      <h2 className="text-4xl">Welcome Back, {name}</h2>
       <div className="mb-8">
         <small className="text-gray-500">
           Measure your advertising ROI and report website traffic

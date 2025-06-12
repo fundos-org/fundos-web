@@ -23,6 +23,12 @@ export default function ShowDeals() {
             Active deals
           </TabsTrigger>
           <TabsTrigger
+            value="on_hold"
+            className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+          >
+            On Hold deals
+          </TabsTrigger>
+          <TabsTrigger
             value="closed"
             className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
           >
