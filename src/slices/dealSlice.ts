@@ -17,6 +17,7 @@ export interface DealsState {
   allDeals?: {
     activeDeals: AllDealsResponse['active_deals'] | null;
     closedDeals: AllDealsResponse['closed_deals'] | null;
+    onholdDeals: AllDealsResponse['onhold_deals'] | null;
   };
   draft?: DraftResponse;
   statistics?: StatisticsState;
@@ -29,6 +30,7 @@ const initialState: DealsState = {
   allDeals: {
     activeDeals: null,
     closedDeals: null,
+    onholdDeals: null,
   },
   statistics: {
     liveDeals: null,
@@ -71,6 +73,7 @@ const dealsSlice = createSlice({
           if (state.allDeals) {
             state.allDeals.activeDeals = action.payload.active_deals;
             state.allDeals.closedDeals = action.payload.closed_deals;
+            state.allDeals.onholdDeals = action.payload.onhold_deals;
           }
         }
       )

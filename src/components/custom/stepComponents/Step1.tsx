@@ -26,7 +26,7 @@ const Step1: React.FC = () => {
           setImage={file => setValue('logo', file, { shouldValidate: true })}
         />
         {errors.logo && (
-          <p className="text-red-500 text-sm">{String(errors.logo.message)}</p>
+          <p className="text-red-400 text-sm">{String(errors.logo.message)}</p>
         )}
       </div>
       <div className="flex flex-col gap-2">
@@ -40,7 +40,7 @@ const Step1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.companyName && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.companyName.message)}
           </p>
         )}
@@ -58,7 +58,7 @@ const Step1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.aboutCompany && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.aboutCompany.message)}
           </p>
         )}
@@ -80,7 +80,7 @@ const Step1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.companyWebsite && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.companyWebsite.message)}
           </p>
         )}

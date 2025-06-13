@@ -7,9 +7,13 @@ import { DealCard } from '@/constants/dealsConstant';
 
 export default function ShowDeals() {
   // const dispatch = useAppDispatch();
-  const { activeDeals, closedDeals } = useAppStateEffect(
+  const { activeDeals, closedDeals, onholdDeals } = useAppStateEffect(
     (state: RootState) =>
-      state.deals.allDeals || { activeDeals: [], closedDeals: [] },
+      state.deals.allDeals || {
+        activeDeals: [],
+        closedDeals: [],
+        onholdDeals: [],
+      },
     fetchAllDeals
   );
   return (
@@ -23,16 +27,16 @@ export default function ShowDeals() {
             Active deals
           </TabsTrigger>
           <TabsTrigger
-            value="on_hold"
-            className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
-          >
-            On Hold deals
-          </TabsTrigger>
-          <TabsTrigger
             value="closed"
             className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
           >
             Closed deals
+          </TabsTrigger>
+          <TabsTrigger
+            value="on_hold"
+            className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+          >
+            On hold deals
           </TabsTrigger>
         </TabsList>
       </div>
@@ -44,6 +48,11 @@ export default function ShowDeals() {
       </TabsContent>
       <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
         {closedDeals?.map((deal: DealCard, index: number) => (
+          <CardDeal deal={deal} key={index} />
+        ))}
+      </TabsContent>
+      <TabsContent value="on_hold" className="w-full flex gap-5 flex-wrap">
+        {onholdDeals?.map((deal: DealCard, index: number) => (
           <CardDeal deal={deal} key={index} />
         ))}
       </TabsContent>

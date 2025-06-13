@@ -6,11 +6,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Step, Stepper } from 'react-form-stepper';
 import createDraft, {
   companyDetailsTrigger,
   customerSegmentTrigger,
+  fetchAllDeals,
   industryProblemTrigger,
   securitiesTrigger,
   valuationTrigger,
@@ -22,11 +29,12 @@ import Step2 from '../stepComponents/Step2';
 import Step3 from '../stepComponents/Step3';
 import Step4 from '../stepComponents/Step4';
 import Step5 from '../stepComponents/Step5';
-import CompletionStep from '../stepComponents/CompletedStep';
+// import CompletionStep from '../stepComponents/CompletedStep';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { toastifyThunk } from '@/lib/toastifyThunk';
 import { X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export interface FormData {
   companyName: string;
@@ -38,17 +46,25 @@ export interface FormData {
   logo: File | null;
   companyStage: string;
   targetCustomerSegment: string;
-  currentValuation: string;
-  roundSize: string;
-  syndicateCommitment: string;
+  currentValuation: number | null;
+  roundSize: number | null;
+  syndicateCommitment: number | null;
+  minimumInvestment: number | null;
   pitchDeck: File | null;
   pitchVideo: File | null;
   instrumentType: string;
   conversionTerms: string;
+  managementFee?: number | null;
+  carryPercentage?: number | null;
   isStartup: boolean;
+  investmentSchemeAppendix?: File | null;
 }
 
-export default function CreateDealDialog() {
+export default function CreateDealDialog({
+  setIsDialogOpen,
+}: {
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
+}) {
   const [activeStep, setActiveStep] = useState(0);
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
@@ -60,17 +76,21 @@ export default function CreateDealDialog() {
       companyWebsite: '',
       industry: '',
       problemStatement: '',
-      businessModel: 'businessModel',
+      businessModel: '',
       logo: null,
       companyStage: '',
       targetCustomerSegment: '',
-      currentValuation: '',
-      roundSize: '',
-      syndicateCommitment: '',
+      currentValuation: null,
+      roundSize: null,
+      syndicateCommitment: null,
+      minimumInvestment: null,
       pitchDeck: null,
       pitchVideo: null,
-      instrumentType: 'Equity',
+      investmentSchemeAppendix: null,
+      instrumentType: '',
       conversionTerms: '',
+      managementFee: null,
+      carryPercentage: null,
       isStartup: false,
     },
     mode: 'onChange',
@@ -92,7 +112,7 @@ export default function CreateDealDialog() {
       });
     } catch (error) {
       // Errors are handled by toast, but you can add additional logic here if needed
-      console.error('Toastified thunk error:', error);
+      toast.error(`Error fetching draft: ${error}`);
     }
   }, [dispatch]);
 
@@ -112,14 +132,6 @@ export default function CreateDealDialog() {
         return <Step4 />;
       case 4:
         return <Step5 />;
-      case 5:
-        return (
-          <CompletionStep
-            setActiveStep={setActiveStep}
-            setSubmittedData={setSubmittedData}
-            reset={methods.reset}
-          />
-        );
       default:
         return null;
     }
@@ -217,8 +229,10 @@ export default function CreateDealDialog() {
             values.currentValuation,
             values.roundSize,
             values.syndicateCommitment,
+            values.minimumInvestment,
             values.pitchDeck,
             values.pitchVideo,
+            values.investmentSchemeAppendix,
             deal_id
           );
           break;
@@ -227,15 +241,23 @@ export default function CreateDealDialog() {
             values.instrumentType,
             values.conversionTerms,
             values.isStartup,
-            deal_id
+            deal_id,
+            values.managementFee,
+            values.carryPercentage
           );
+          setActiveStep(0);
+          setSubmittedData({});
+          methods.reset();
+          setIsDialogOpen(false);
+          dispatch(fetchAllDeals());
+          await callDraftApi();
           break;
       }
       // Store the submitted data for this step
       setSubmittedData(prev => ({ ...prev, [activeStep]: stepData }));
       setActiveStep(prev => prev + 1);
     } catch (error) {
-      console.error('Error submitting step:', error);
+      toast.error(`Error submitting step ${activeStep + 1}: ${error}`);
     }
   };
 
@@ -251,6 +273,7 @@ export default function CreateDealDialog() {
           Create a new deal
           <DialogClose
             asChild
+            // onClick={() => dispatch(fetchAllDeals())}
             className="border-[1px] border-[#383739] bg-[#242325]"
           >
             <span className="p-1">

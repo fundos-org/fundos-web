@@ -95,22 +95,27 @@ export const customerSegmentTrigger = async (
 };
 
 export const valuationTrigger = async (
-  currentValuation: string,
-  roundSize: string,
-  syndicateCommitment: string,
-  pitch_deck?: File | null,
-  pitch_video?: File | null,
+  currentValuation: null | number,
+  roundSize: null | number,
+  syndicateCommitment: null | number,
+  minimumInvestment: null | number,
+  pitchDeck?: File | null,
+  pitchVideo?: File | null,
+  investmentSchemeAppendix?: File | null,
   dealId?: string
 ) => {
   const formData = new FormData();
-  if (pitch_deck && pitch_deck instanceof File) {
-    formData.append('pitch_deck', pitch_deck);
+  if (pitchDeck && pitchDeck instanceof File) {
+    formData.append('pitch_deck', pitchDeck);
   }
-  if (pitch_video && pitch_video instanceof File) {
-    formData.append('pitch_video', pitch_video);
+  if (pitchVideo && pitchVideo instanceof File) {
+    formData.append('pitch_video', pitchVideo);
+  }
+  if (investmentSchemeAppendix && investmentSchemeAppendix instanceof File) {
+    formData.append('investment_scheme_appendix', investmentSchemeAppendix);
   }
   const response = await axios.post(
-    `${baseUrl}deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}`,
+    `${baseUrl}deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
     formData
   );
   toast.success(response.data.message);
@@ -121,13 +126,17 @@ export const securitiesTrigger = async (
   instrumentType: string,
   conversionTerms: string,
   isStartup: boolean,
-  dealId?: string
+  dealId?: string,
+  managementFee?: number | null,
+  carryPercentage?: number | null
 ) => {
   try {
     const response = await axios.post(`${baseUrl}deals/web/securities`, {
       deal_id: dealId,
       instrument_type: instrumentType,
       conversion_terms: conversionTerms,
+      management_fee: managementFee,
+      carry: carryPercentage,
       is_startup: isStartup,
     });
     localStorage.removeItem(AppEnums.DEAL_DRAFT);

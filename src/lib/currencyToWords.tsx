@@ -12,11 +12,11 @@ export function numberToIndianRupeesWords(num: number): string {
   let result = '';
   if (crores > 0) {
     if (result) result += ' ';
-    result += crores + 'Cr';
+    result += crores + 'Crore';
   }
   if (lakhs > 0) {
     if (result) result += ' ';
-    result += lakhs + 'Lac';
+    result += lakhs + 'Lakh';
   }
   if (thousands > 0) {
     if (result) result += ' ';

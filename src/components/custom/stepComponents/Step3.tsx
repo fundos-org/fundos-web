@@ -26,7 +26,7 @@ const Step3: React.FC = () => {
           stages={stages}
         />
         {errors.companyStage?.message && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.companyStage.message)}
           </p>
         )}
@@ -46,7 +46,7 @@ const Step3: React.FC = () => {
           }
         />
         {errors.targetCustomerSegment && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.targetCustomerSegment.message)}
           </p>
         )}

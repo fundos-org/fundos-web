@@ -26,7 +26,7 @@ const StepSubAdmin1: React.FC = () => {
           setImage={file => setValue('logo', file, { shouldValidate: true })}
         />
         {errors.logo && (
-          <p className="text-red-500 text-sm">{String(errors.logo.message)}</p>
+          <p className="text-red-400 text-sm">{String(errors.logo.message)}</p>
         )}
       </div>
       <div className="flex flex-col gap-2">
@@ -42,7 +42,7 @@ const StepSubAdmin1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.subadminname && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.subadminname.message)}
           </p>
         )}
@@ -66,7 +66,7 @@ const StepSubAdmin1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.subadminmail && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.subadminmail.message)}
           </p>
         )}
@@ -89,7 +89,7 @@ const StepSubAdmin1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.subadmincontact && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.subadmincontact.message)}
           </p>
         )}
@@ -106,7 +106,7 @@ const StepSubAdmin1: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.about && (
-          <p className="text-red-500 text-sm">{String(errors.about.message)}</p>
+          <p className="text-red-400 text-sm">{String(errors.about.message)}</p>
         )}
       </div>
     </div>

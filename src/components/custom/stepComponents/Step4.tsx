@@ -17,6 +17,8 @@ const Step4: React.FC = () => {
   const currentValuation = watch('currentValuation');
   const roundSize = watch('roundSize');
   const syndicateCommitment = watch('syndicateCommitment');
+  const minimumInvestment = watch('minimumInvestment');
+  const investmentSchemeAppendix = watch('investmentSchemeAppendix');
 
   return (
     <div className="grid gap-4">
@@ -31,7 +33,7 @@ const Step4: React.FC = () => {
           )
         </Label>
         <Input
-          maxLength={10}
+          type="number"
           id="currentValuation"
           {...register('currentValuation', {
             required: 'Current valuation is required',
@@ -44,7 +46,7 @@ const Step4: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.currentValuation?.message && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.currentValuation.message)}
           </p>
         )}
@@ -60,7 +62,7 @@ const Step4: React.FC = () => {
           )
         </Label>
         <Input
-          maxLength={10}
+          type="number"
           id="roundSize"
           {...register('roundSize', {
             required: 'Round size is required',
@@ -73,7 +75,7 @@ const Step4: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.roundSize && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.roundSize.message)}
           </p>
         )}
@@ -89,7 +91,7 @@ const Step4: React.FC = () => {
           )
         </Label>
         <Input
-          maxLength={10}
+          type="number"
           id="syndicateCommitment"
           {...register('syndicateCommitment', {
             required: 'Syndicate commitment is required',
@@ -102,44 +104,97 @@ const Step4: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.syndicateCommitment && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.syndicateCommitment.message)}
           </p>
         )}
       </div>
-      <div>
-        <Label htmlFor="pitchDeck" className="text-right text-white">
-          Upload Pitch Deck
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="minimumInvestment" className="text-right text-white">
+          Minimum Investment (
+          {minimumInvestment ? (
+            <small>{numberToIndianRupeesWords(minimumInvestment)}</small>
+          ) : (
+            <small>{'INR'}</small>
+          )}
+          )
         </Label>
-        <ImageInput
-          image={pitchDeck}
-          id="pitchDeck"
-          setImage={file =>
-            setValue('pitchDeck', file, { shouldValidate: true })
-          }
+        <Input
+          type="number"
+          id="minimumInvestment"
+          {...register('minimumInvestment', {
+            required: 'Minimum investment is required',
+            pattern: {
+              value: /^\d+(\.\d{1,2})?$/,
+              message: 'Enter a valid number',
+            },
+          })}
+          placeholder="Enter minimum investment"
+          className="rounded-none text-white"
         />
-        {errors.pitchDeck && (
-          <p className="text-red-500 text-sm">
-            {String(errors.pitchDeck.message)}
+        {errors.minimumInvestment && (
+          <p className="text-red-400 text-sm">
+            {String(errors.minimumInvestment.message)}
           </p>
         )}
       </div>
-      <div>
-        <Label htmlFor="pitchVideo" className="text-right text-white">
-          Upload Pitch Video
-        </Label>
-        <ImageInput
-          image={pitchVideo}
-          id="pitchVideo"
-          setImage={file =>
-            setValue('pitchVideo', file, { shouldValidate: true })
-          }
-        />
-        {errors.pitchVideo && (
-          <p className="text-red-500 text-sm">
-            {String(errors.pitchVideo.message)}
-          </p>
-        )}
+      <div className="flex flex-wrap gap-5">
+        <div>
+          <Label htmlFor="pitchDeck" className="text-right text-white">
+            Upload Pitch Deck
+          </Label>
+          <ImageInput
+            image={pitchDeck}
+            id="pitchDeck"
+            setImage={file =>
+              setValue('pitchDeck', file, { shouldValidate: true })
+            }
+          />
+          {errors.pitchDeck && (
+            <p className="text-red-400 text-sm">
+              {String(errors.pitchDeck.message)}
+            </p>
+          )}
+        </div>
+        <div>
+          <Label htmlFor="pitchVideo" className="text-right text-white">
+            Upload Pitch Video
+          </Label>
+          <ImageInput
+            image={pitchVideo}
+            id="pitchVideo"
+            setImage={file =>
+              setValue('pitchVideo', file, { shouldValidate: true })
+            }
+          />
+          {errors.pitchVideo && (
+            <p className="text-red-400 text-sm">
+              {String(errors.pitchVideo.message)}
+            </p>
+          )}
+        </div>
+        <div>
+          <Label
+            htmlFor="investmentSchemeAppendix"
+            className="text-right text-white"
+          >
+            Upload Appendix
+          </Label>
+          <ImageInput
+            image={investmentSchemeAppendix}
+            id="investmentSchemeAppendix"
+            setImage={file =>
+              setValue('investmentSchemeAppendix', file, {
+                shouldValidate: true,
+              })
+            }
+          />
+          {errors.investmentSchemeAppendix && (
+            <p className="text-red-400 text-sm">
+              {String(errors.investmentSchemeAppendix.message)}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

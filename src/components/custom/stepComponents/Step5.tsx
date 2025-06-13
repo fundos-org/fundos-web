@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import CustomToggleGroup from '../CustomToggleGroup';
 import { securities } from '@/constants/dealsConstant';
+import { Input } from '@/components/ui/input';
 
 const Step5: React.FC = () => {
   const {
@@ -28,7 +29,7 @@ const Step5: React.FC = () => {
           }
         />
         {errors.instrumentType && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.instrumentType.message)}
           </p>
         )}
@@ -46,8 +47,66 @@ const Step5: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.conversionTerms && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.conversionTerms.message)}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="managementFee" className="text-right text-white">
+          Management Fee (%)
+        </Label>
+        <Input
+          type="number"
+          id="managementFee"
+          {...register('managementFee', {
+            required: 'Management fee is required',
+            pattern: {
+              value: /^\d+(\.\d{1,2})?$/,
+              message: 'Enter a valid number',
+            },
+            max: {
+              value: 5,
+              message: 'Management fee cannot exceed 5%',
+            },
+          })}
+          max={5}
+          step="0.01"
+          placeholder="Enter management fee"
+          className="rounded-none text-white"
+        />
+        {errors.managementFee && (
+          <p className="text-red-400 text-sm">
+            {String(errors.managementFee.message)}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="carryPercentage" className="text-right text-white">
+          Carry Percentage (%)
+        </Label>
+        <Input
+          type="number"
+          id="carryPercentage"
+          {...register('carryPercentage', {
+            required: 'Carry percentage is required',
+            pattern: {
+              value: /^\d+(\.\d{1,2})?$/,
+              message: 'Enter a valid number',
+            },
+            max: {
+              value: 20,
+              message: 'Carry percentage cannot exceed 20%',
+            },
+          })}
+          max={20}
+          step="0.01"
+          placeholder="Enter carry percentage"
+          className="rounded-none text-white"
+        />
+        {errors.carryPercentage && (
+          <p className="text-red-400 text-sm">
+            {String(errors.carryPercentage.message)}
           </p>
         )}
       </div>
@@ -67,7 +126,7 @@ const Step5: React.FC = () => {
           the SEBI (Alternative Investment Funds) Regulations, 2012
         </label>
         {errors.isStartup?.message && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.isStartup.message)}
           </p>
         )}

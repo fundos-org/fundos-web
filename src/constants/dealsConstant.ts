@@ -29,16 +29,65 @@ export const securities = [
   { name: 'Hybrid', value: 'hybrid' },
   { name: 'Derivative', value: 'derivative' },
 ];
-export const businessModels = [
-  { name: 'SaaS', value: 'saas' },
-  { name: 'Transactional', value: 'transactional' },
-  { name: 'Marketplace', value: 'marketplace' },
-  { name: 'Enterprise', value: 'enterprise' },
-  { name: 'Subscription', value: 'subscription' },
-  { name: 'Usage-Based', value: 'usage-based' },
-  { name: 'Ecommerce', value: 'ecommerce' },
-  { name: 'Advertising', value: 'advertising' },
+
+export const industryType = [
+  { name: 'Aerospace', value: 'aerospace' },
+  { name: 'Agritech and Agriculture', value: 'agritech_and_agriculture' },
+  { name: 'Artificial Intelligence', value: 'artificial_intelligence' },
+  { name: 'Automotive', value: 'automotive' },
+  { name: 'Consumer Electronics', value: 'consumer_electronics' },
+  { name: 'Deep Tech', value: 'deep_tech' },
+  { name: 'Edtech and Education', value: 'edtech_and_education' },
+  {
+    name: 'Fintech and Financial Services',
+    value: 'fintech_and_financial_services',
+  },
+  { name: 'Food Industry Services', value: 'food_industury_services' },
+  { name: 'Gaming', value: 'gaming' },
+  { name: 'Government', value: 'government' },
+  { name: 'Healthcare and Medtech', value: 'heathcare_and_medtech' },
+  { name: 'Hospitality', value: 'hospitality' },
+  { name: 'Life Sciences', value: 'life_sciences' },
+  { name: 'Manufacturing', value: 'manufacturing' },
+  { name: 'Marketing', value: 'marketing' },
+  { name: 'Media', value: 'media' },
+  { name: 'Mining', value: 'mining' },
+  { name: 'Non Profit', value: 'non_profit' },
+  { name: 'Oil and Gas', value: 'oil_and_gas' },
+  { name: 'Power and Utilities', value: 'power_and_utilities' },
+  { name: 'Professional Services', value: 'professional_services' },
+  {
+    name: 'Real Estate and Construction',
+    value: 'real_estate_and_construction',
+  },
+  { name: 'Retail', value: 'retail' },
+  { name: 'Robotics', value: 'robotics' },
+  { name: 'Software and Internet', value: 'software_and_internet' },
+  { name: 'Telecom', value: 'telecom' },
+  { name: 'Transportation', value: 'transportation' },
+  { name: 'Travel', value: 'travel' },
+  { name: 'Wholesale and Distribution', value: 'wholesale_and_distribution' },
+  { name: 'Others', value: 'others' },
 ];
+
+export const businessModels = [
+  { name: 'Product Based', value: 'product_based' },
+  { name: 'Service Based', value: 'service_based' },
+  { name: 'Subscription', value: 'subscription' },
+  { name: 'Marketplace', value: 'marketplace' },
+  { name: 'Freemium', value: 'freemium' },
+  { name: 'Ad Based', value: 'ad_based' },
+  { name: 'Licensing', value: 'licensing' },
+  { name: 'Franchise', value: 'franchise' },
+  { name: 'Aggregator', value: 'aggregator' },
+  { name: 'Sharing Economy', value: 'sharing_economy' },
+  { name: 'Data Monetization', value: 'data_monetization' },
+  { name: 'SaaS', value: 'saas' },
+  { name: 'On Demand', value: 'on_demand' },
+  { name: 'Direct to Consumer', value: 'direct_to_consumer' },
+  { name: 'Peer to Peer', value: 'peer_to_peer' },
+];
+
 export const stages: Stages[] = [
   {
     value: 'ideal',
@@ -148,7 +197,7 @@ export interface DealCard {
   deal_id: string;
   description: string | null;
   title: string | null;
-  deal_status: 'open' | 'on_hold' | 'closed';
+  deal_status: DealStatus;
   current_valuation: number | null;
   round_size: number | null;
   commitment: number | null;
@@ -157,12 +206,17 @@ export interface DealCard {
   logo_url: string | null;
   created_at: string;
   fund_raised_till_now: number | null;
+  instruments: string;
+  minimum_investment: string;
 }
+
+export type DealStatus = 'open' | 'closed' | 'on_hold';
 
 export interface AllDealsResponse {
   subadmin_id: string;
   subadmin_name: string;
   active_deals: DealCard[];
   closed_deals: DealCard[];
+  onhold_deals: DealCard[];
   success: boolean;
 }

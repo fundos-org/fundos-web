@@ -39,7 +39,7 @@ const ImageInput = ({
     <>
       <Label
         htmlFor={`${id}-input`}
-        className="w-full flex flex-col items-center mt-2 justify-center border-2 border-dashed border-gray-300 rounded-none p-6"
+        className="min-w-[140px] max-w-[140px] h-[120px] flex flex-col items-center mt-2 justify-center border-2 border-dashed border-gray-300 rounded-none p-6"
       >
         {image ? (
           previewUrl ? (
@@ -53,13 +53,13 @@ const ImageInput = ({
         ) : (
           <Upload className="w-10 h-10 text-gray-400 mb-4" />
         )}
-        {!image ? (
-          <p className="text-gray-500 mb-2">Drag and Drop Logo</p>
+        {/* {!image ? (
+          <p className="text-gray-500 mb-2">Drag and Drop File</p>
         ) : (
           <p className="text-sm text-muted-foreground">
             Selected: {image?.name}
           </p>
-        )}
+        )} */}
       </Label>
       <Input
         id={`${id}-input`}

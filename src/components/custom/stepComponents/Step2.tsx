@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import CustomToggleGroup from '../CustomToggleGroup';
-import { businessModels } from '@/constants/dealsConstant';
+import { businessModels, industryType } from '@/constants/dealsConstant';
 
 const Step2: React.FC = () => {
   const {
@@ -39,7 +39,7 @@ const Step2: React.FC = () => {
           </SelectTrigger>
           <SelectContent className="rounded-none text-white bg-[#1a1a1a]">
             <SelectGroup>
-              {businessModels.map(({ name, value }) => (
+              {industryType.map(({ name, value }) => (
                 <SelectItem key={name} value={value} className="rounded-none">
                   {name}
                 </SelectItem>

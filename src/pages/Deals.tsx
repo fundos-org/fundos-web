@@ -5,15 +5,17 @@ import CreateDealDialog from '@/components/custom/modals/CreateDealDialog';
 import ShowDeals from '@/components/custom/ShowDeals';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { useState } from 'react';
 
 function Deals() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const stats = useAppStateEffect(
     (state: RootState) => state.deals.statistics,
     fetchDealStatistics
   );
   return (
     <>
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <header className="flex justify-between items-center">
           <div>
             <h2 className="text-4xl">Deals</h2>
@@ -33,7 +35,7 @@ function Deals() {
           stats={stats as Record<string, string | number> | undefined}
         />
         <ShowDeals />
-        <CreateDealDialog />
+        <CreateDealDialog setIsDialogOpen={setIsDialogOpen} />
       </Dialog>
     </>
   );

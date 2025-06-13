@@ -1,7 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronDown } from 'lucide-react';
 import { Progress } from '../ui/progress';
-import { businessModels, DealCard, stages } from '@/constants/dealsConstant';
+import {
+  businessModels,
+  DealCard,
+  DealStatus,
+  stages,
+} from '@/constants/dealsConstant';
 import {
   Select,
   SelectContent,
@@ -9,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import {
   Menubar,
   MenubarContent,
@@ -19,18 +24,8 @@ import {
   MenubarTrigger,
 } from '../ui/menubar';
 import toast from 'react-hot-toast';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui/dialog';
-import { Button } from '../ui/button';
-type DealStatus = 'open' | 'closed' | 'on_hold';
+import { Dialog, DialogTrigger } from '../ui/dialog';
+const DealDetailDialog = lazy(() => import('./modals/DealDetailDialog'));
 
 function getStatusColor(status: DealStatus): string {
   switch (status) {
@@ -63,6 +58,7 @@ function getIndustryType(industry: string | null): string {
     'Unknown Industry'
   );
 }
+
 function getCompanyStage(companyStage: string | null): string {
   return (
     stages?.find(model => model.value === companyStage)?.title ||
@@ -203,24 +199,13 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
           </div>
         </CardContent>
       </Card>
-      <DialogContent className="sm:max-w-[425px] rounded-none bg-[#1a1a1a] text-white border-0">
-        <DialogHeader>
-          <DialogTitle>Deal Details</DialogTitle>
-          <DialogDescription>
-            Deal details is under development. Please check back later.
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <DialogClose className="rounded-none bg-[#3a3a3a]" asChild>
-            <Button
-              variant="outline"
-              className="text-slate-200 hover:bg-zinc-600 rounded-none border-0"
-            >
-              Okay
-            </Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
+      <Suspense fallback={<div>Dialog Opening...</div>}>
+        <DealDetailDialog
+          details={deal}
+          displayIndustryType={getIndustryType(business_model)}
+          displayCompanyStage={getCompanyStage(company_stage)}
+        />
+      </Suspense>
     </Dialog>
   );
 }

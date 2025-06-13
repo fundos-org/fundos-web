@@ -62,7 +62,7 @@ const StepSubAdmin2: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.username && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.username.message)}
           </p>
         )}
@@ -86,7 +86,7 @@ const StepSubAdmin2: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.password && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.password.message)}
           </p>
         )}
@@ -108,7 +108,7 @@ const StepSubAdmin2: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.reenterpassword && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.reenterpassword.message)}
           </p>
         )}
@@ -125,7 +125,7 @@ const StepSubAdmin2: React.FC = () => {
           className="rounded-none text-white"
         />
         {errors.appname && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-400 text-sm">
             {String(errors.appname.message)}
           </p>
         )}
