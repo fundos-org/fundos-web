@@ -1,12 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import {
+  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
 import { DealCard } from '@/constants/dealsConstant';
+import { X } from 'lucide-react';
 import { FC } from 'react';
 
 const DealDetailDialog: FC<{
@@ -21,15 +21,28 @@ const DealDetailDialog: FC<{
     description,
     round_size,
     commitment,
+    instruments,
     fund_raised_till_now,
+    minimum_investment,
   } = details;
   return (
-    <DialogContent className="max-w-[800px] h-[600px] rounded-none bg-[#1a1a1a] text-white border-0">
+    <DialogContent
+      className="max-w-[800px] h-[600px] rounded-none bg-[#1a1a1a] text-white border-0"
+      hideCloseButton={true}
+    >
       <DialogHeader>
-        <DialogTitle>Deal Details</DialogTitle>
-        <DialogDescription>
-          Deal details is under development. Please check back later.
-        </DialogDescription>
+        <DialogTitle className="text-3xl text-white flex items-center justify-between">
+          Deal Details
+          <DialogClose
+            asChild
+            className="border-[1px] border-[#383739] bg-[#242325]"
+          >
+            <span className="p-1">
+              <X />
+            </span>
+          </DialogClose>
+        </DialogTitle>
+        <hr />
       </DialogHeader>
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
@@ -58,7 +71,15 @@ const DealDetailDialog: FC<{
               <span className="text-yellow-400">On Hold</span>
             </Badge>
           )}
-          <p className="text-xs text-zinc-400 mt-1">
+          <div className="flex gap-2 mt-3">
+            <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
+              {displayIndustryType}
+            </span>
+            <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
+              {displayCompanyStage}
+            </span>
+          </div>
+          <p className="text-xs text-zinc-400 mt-2">
             <span className="font-medium">Created on:</span>
             <span className="ml-1">
               {created_at ? created_at.split('T')[0] : 'N/A'}
@@ -67,7 +88,7 @@ const DealDetailDialog: FC<{
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold mt-4">
+      <h2 className="text-2xl font-bold">
         {title ? title : 'Default Deal Title'}
       </h2>
       <p className="text-zinc-400 mt-1">
@@ -76,26 +97,19 @@ const DealDetailDialog: FC<{
           : 'Default description for the deal. This is a placeholder text.'}
       </p>
 
-      <div className="flex gap-2 mt-3">
-        <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
-          {displayIndustryType}
-        </span>
-        <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
-          {displayCompanyStage}
-        </span>
-      </div>
-
-      <div className="flex justify-between mt-6">
+          <hr />
+      <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Funding round size</p>
           <p className="text-3xl font-bold">{round_size ? round_size : '0'}</p>
         </div>
         <div>
-          <p className="text-sm text-zinc-400">Capital committed</p>
-          <p className="text-3xl font-bold">{commitment ? commitment : '0'}</p>
+          <p className="text-sm text-zinc-400 text-right">Capital committed</p>
+          <p className="text-3xl font-bold text-right">{commitment ? commitment : '0'}</p>
         </div>
-      </div>
-      <div className="flex justify-between mt-6">
+          </div>
+          <hr />
+      <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Funding raised till now</p>
           <p className="text-3xl font-bold">
@@ -103,24 +117,19 @@ const DealDetailDialog: FC<{
           </p>
         </div>
         <div>
-          <p className="text-sm text-zinc-400">Minimum Investment</p>
-          {/* <p className="text-3xl font-bold">
-              {dealDetails?.minimum_investment
-                ? dealDetails?.minimum_investment
-                : '0'}
-            </p> */}
+          <p className="text-sm text-zinc-400 text-right">Minimum Investment</p>
+          <p className="text-3xl font-bold text-right">
+            {minimum_investment ? minimum_investment : '0'}
+          </p>
         </div>
       </div>
-      <hr className="mt-3" />
-      <div className="w-full mt-4 flex justify-between items-center">
+          <hr />
+      <div className="flex justify-between">
         <div>
-          <p className="text-sm text-zinc-400 mb-1">
-            {fund_raised_till_now}% raised
+          <p className="text-sm text-zinc-400">Instruments</p>
+          <p className="text-3xl font-bold">
+            {instruments ? instruments : '0'}
           </p>
-          <Progress
-            className="bg-white border border-zinc-600 w-30 rounded-none"
-            value={fund_raised_till_now}
-          />
         </div>
       </div>
     </DialogContent>
