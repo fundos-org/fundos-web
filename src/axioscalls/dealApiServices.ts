@@ -2,6 +2,7 @@ import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
   CommonError,
+  DealStatus,
   DraftResponse,
   LoginFormData,
   SignInSubAdminResponse,
@@ -443,6 +444,24 @@ export const addMember = async (subadmin_id: string, email: string) => {
     return response.data;
   } catch (error) {
     console.log('Error in apiAadhaarOtpSend:', error);
+    if (axios.isAxiosError(error)) {
+      toast.error(`Error: ${error.message}`);
+      throw new Error(error.message);
+    } else {
+      console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error in changeDealStatus:', error);
     if (axios.isAxiosError(error)) {
       toast.error(`Error: ${error.message}`);
       throw new Error(error.message);

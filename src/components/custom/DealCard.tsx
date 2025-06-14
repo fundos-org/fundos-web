@@ -25,6 +25,18 @@ import {
 } from '../ui/menubar';
 import toast from 'react-hot-toast';
 import { Dialog, DialogTrigger } from '../ui/dialog';
+import { changeDealStatus, fetchAllDeals } from '@/axioscalls/dealApiServices';
+import { useAppDispatch } from '@/app/hooks';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../ui/alert-dialog';
 const DealDetailDialog = lazy(() => import('./modals/DealDetailDialog'));
 
 function getStatusColor(status: DealStatus): string {
@@ -67,7 +79,10 @@ function getCompanyStage(companyStage: string | null): string {
 }
 
 export default function CardDeal({ deal }: { deal: DealCard }) {
+  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
   const {
+    deal_id,
     title,
     deal_status,
     round_size,
@@ -82,6 +97,24 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
   const [status, setStatus] = useState<DealStatus>(
     (deal_status as DealStatus) || 'open'
   );
+  const handleChangeStatus = async (newStatus: DealStatus) => {
+    if (newStatus === 'closed' && open === false) {
+      setOpen(true);
+      return;
+    } else {
+      const response = await changeDealStatus(deal_id, newStatus);
+      if (!response) {
+        toast.error('Failed to change deal status');
+        return;
+      }
+      if (response.message) {
+        toast.success(response.message);
+      }
+      setStatus(newStatus);
+      if (open === true) setOpen(false);
+      dispatch(fetchAllDeals());
+    }
+  };
   return (
     <Dialog>
       <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
@@ -95,10 +128,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             </div>
 
             <div className="flex flex-col items-end">
-              <Select
-                defaultValue={status}
-                onValueChange={value => setStatus(value as DealStatus)}
-              >
+              <Select defaultValue={status} onValueChange={handleChangeStatus}>
                 <SelectTrigger
                   className={`rounded-none border-0 text-white ${getStatusBgColor(status)}`}
                 >
@@ -123,6 +153,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                   </SelectItem>
                 </SelectContent>
               </Select>
+
               <p className="text-xs text-zinc-400 mt-1">
                 <span className="font-medium">Created on:</span>
                 <span className="ml-1">
@@ -206,6 +237,30 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
           displayCompanyStage={getCompanyStage(company_stage)}
         />
       </Suspense>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent className="bg-gray-900 text-white border-gray-700 rounded-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl">
+              Are you closing this deal?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-500">
+              Closing the deal will mark it as closed and it cannot be
+              reactivated.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none">
+              Close
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 text-white hover:bg-red-700 rounded-none"
+              onClick={() => handleChangeStatus('closed' as DealStatus)}
+            >
+              Close Deal
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
