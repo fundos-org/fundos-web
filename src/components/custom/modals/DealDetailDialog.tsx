@@ -97,7 +97,7 @@ const DealDetailDialog: FC<{
           : 'Default description for the deal. This is a placeholder text.'}
       </p>
 
-          <hr />
+      <hr />
       <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Funding round size</p>
@@ -105,10 +105,12 @@ const DealDetailDialog: FC<{
         </div>
         <div>
           <p className="text-sm text-zinc-400 text-right">Capital committed</p>
-          <p className="text-3xl font-bold text-right">{commitment ? commitment : '0'}</p>
+          <p className="text-3xl font-bold text-right">
+            {commitment ? commitment : '0'}
+          </p>
         </div>
-          </div>
-          <hr />
+      </div>
+      <hr />
       <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Funding raised till now</p>
@@ -123,7 +125,7 @@ const DealDetailDialog: FC<{
           </p>
         </div>
       </div>
-          <hr />
+      <hr />
       <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Instruments</p>
