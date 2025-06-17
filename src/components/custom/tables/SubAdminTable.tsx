@@ -270,7 +270,7 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
               <PaginationLink href="#">1</PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink href="#" isActive className="text-black">
+              <PaginationLink href="#" className="text-black">
                 2
               </PaginationLink>
             </PaginationItem>
