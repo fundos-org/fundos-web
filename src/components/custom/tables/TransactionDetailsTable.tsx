@@ -53,7 +53,7 @@ interface Transaction {
 
 // Define props for the component
 interface InvestmentTableProps {
-  transactions: Transaction[];
+  transactions: Transaction[] | [];
   header?: string;
 }
 

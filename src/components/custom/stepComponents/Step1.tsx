@@ -64,24 +64,23 @@ const Step1: React.FC = () => {
         )}
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="companyWebsite" className="text-right text-white">
-          Company Website
+        <Label
+          htmlFor="investmentSchemeAppendix"
+          className="text-right text-white"
+        >
+          Investment Scheme Appendix
         </Label>
         <Input
-          id="companyWebsite"
-          {...register('companyWebsite', {
-            required: 'Website is required',
-            pattern: {
-              value: /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i,
-              message: 'Invalid website URL',
-            },
+          id="investmentSchemeAppendix"
+          {...register('investmentSchemeAppendix', {
+            required: 'Investment Scheme Appendix is required',
           })}
-          placeholder="Enter company website"
+          placeholder="Enter Investment Scheme Appendix"
           className="rounded-none text-white"
         />
-        {errors.companyWebsite && (
+        {errors.investmentSchemeAppendix && (
           <p className="text-red-400 text-sm">
-            {String(errors.companyWebsite.message)}
+            {String(errors.investmentSchemeAppendix.message)}
           </p>
         )}
       </div>

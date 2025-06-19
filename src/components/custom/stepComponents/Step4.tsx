@@ -2,8 +2,9 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import ImageInput from '../ImageUpload';
+// import ImageInput from '../ImageUpload';
 import { numberToIndianRupeesWords } from '@/lib/currencyToWords';
+import FileInput from '../FileInput';
 
 const Step4: React.FC = () => {
   const {
@@ -18,7 +19,7 @@ const Step4: React.FC = () => {
   const roundSize = watch('roundSize');
   const syndicateCommitment = watch('syndicateCommitment');
   const minimumInvestment = watch('minimumInvestment');
-  const investmentSchemeAppendix = watch('investmentSchemeAppendix');
+  const investmentSchemeAppendixFile = watch('investmentSchemeAppendixFile');
 
   return (
     <div className="grid gap-4">
@@ -140,8 +141,73 @@ const Step4: React.FC = () => {
       </div>
       <div className="flex flex-wrap gap-5">
         <div>
+          <Label
+            htmlFor="investmentSchemeAppendixFile"
+            className="text-right text-white"
+          >
+            Scheme Appendix
+          </Label>
+          <FileInput
+            file={investmentSchemeAppendixFile}
+            id="investmentSchemeAppendixFile"
+            setFile={file =>
+              setValue('investmentSchemeAppendixFile', file, {
+                shouldValidate: true,
+              })
+            }
+            accept="image/*,.pdf"
+            maxSize={50 * 1024 * 1024} // 50MB
+          />
+          {errors.investmentSchemeAppendixFile && (
+            <p className="text-red-400 text-sm">
+              {String(errors.investmentSchemeAppendixFile.message)}
+            </p>
+          )}
+        </div>
+        <div>
           <Label htmlFor="pitchDeck" className="text-right text-white">
-            Upload Pitch Deck
+            Pitch Deck Image
+          </Label>
+          <FileInput
+            file={pitchDeck}
+            id="pitchDeck"
+            setFile={file =>
+              setValue('pitchDeck', file, { shouldValidate: true })
+            }
+            accept="image/*,.pdf"
+            maxSize={50 * 1024 * 1024} // 50MB
+          />
+          {errors.pitchDeck && (
+            <p className="text-red-400 text-sm">
+              {String(errors.pitchDeck.message)}
+            </p>
+          )}
+        </div>
+        {/* <div>
+          <Label
+            htmlFor="investmentSchemeAppendixFile"
+            className="text-right text-white"
+          >
+            Scheme Appendix
+          </Label>
+          <ImageInput
+            image={investmentSchemeAppendixFile}
+            id="investmentSchemeAppendixFile"
+            setImage={file =>
+              setValue('investmentSchemeAppendixFile', file, {
+                shouldValidate: true,
+              })
+            }
+          />
+          {errors.investmentSchemeAppendixFile && (
+            <p className="text-red-400 text-sm">
+              {String(errors.investmentSchemeAppendixFile.message)}
+            </p>
+          )}
+        </div>
+        <div>
+          <Label htmlFor="pitchDeck" className="text-right text-white">
+            Pitch Deck Image
           </Label>
           <ImageInput
             image={pitchDeck}
@@ -155,10 +221,29 @@ const Step4: React.FC = () => {
               {String(errors.pitchDeck.message)}
             </p>
           )}
-        </div>
+        </div> */}
         <div>
           <Label htmlFor="pitchVideo" className="text-right text-white">
-            Upload Pitch Video
+            Pitch Video
+          </Label>
+          <FileInput
+            file={pitchVideo}
+            id="pitchVideo"
+            setFile={file =>
+              setValue('pitchVideo', file, { shouldValidate: true })
+            }
+            accept="image/*,video/*,.pdf" // Allow images, videos, and PDFs
+            maxSize={100 * 1024 * 1024} // 100MB limit
+          />
+          {errors.pitchVideo && (
+            <p className="text-red-400 text-sm">
+              {String(errors.pitchVideo.message)}
+            </p>
+          )}
+        </div>
+        {/* <div>
+          <Label htmlFor="pitchVideo" className="text-right text-white">
+            Pitch Video
           </Label>
           <ImageInput
             image={pitchVideo}
@@ -172,29 +257,7 @@ const Step4: React.FC = () => {
               {String(errors.pitchVideo.message)}
             </p>
           )}
-        </div>
-        <div>
-          <Label
-            htmlFor="investmentSchemeAppendix"
-            className="text-right text-white"
-          >
-            Upload Appendix
-          </Label>
-          <ImageInput
-            image={investmentSchemeAppendix}
-            id="investmentSchemeAppendix"
-            setImage={file =>
-              setValue('investmentSchemeAppendix', file, {
-                shouldValidate: true,
-              })
-            }
-          />
-          {errors.investmentSchemeAppendix && (
-            <p className="text-red-400 text-sm">
-              {String(errors.investmentSchemeAppendix.message)}
-            </p>
-          )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

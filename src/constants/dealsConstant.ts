@@ -91,36 +91,35 @@ export const businessModels = [
 export const stages: Stages[] = [
   {
     value: 'ideal',
-    title: 'Ideal stage',
-    description: 'Brainstorming and validating problem statement',
+    title: 'Ideal Stage',
+    description: 'Identifying and validating the problem',
   },
   {
     value: 'pre-seed',
-    title: 'Pre-seed stage',
-    description: 'Building MVP (Minimum viable product)',
+    title: 'Pre-seed Stage',
+    description: 'Building MVP and early testing',
   },
   {
     value: 'seed',
-    title: 'Seed stage',
-    description: 'Building MVP (Minimum viable product)',
+    title: 'Seed Stage',
+    description: 'Gaining early traction',
   },
   {
     value: 'series-a',
     title: 'Series A',
-    description: 'Building MVP (Minimum viable product)',
+    description: 'Scaling product and operations',
   },
   {
     value: 'series-b',
     title: 'Series B',
-    description: 'Building MVP (Minimum viable product)',
+    description: 'Scaling revenue and market expansion',
   },
   {
     value: 'series-c',
     title: 'Series C',
-    description: 'Building MVP (Minimum viable product)',
+    description: 'Expansion, acquisition, or IPO preparation',
   },
 ];
-// , children: "✓"
 
 export const styleConfig = {
   activeBgColor: '#fff',

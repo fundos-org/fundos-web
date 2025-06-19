@@ -1,3 +1,9 @@
+export function convertToCrores(num: number): string {
+  if (num === 0) return '0 Rupees';
+  const crores = num / 10000000;
+  return crores.toFixed(2).replace(/\.00$/, '') + ' Cr.';
+}
+
 export function numberToIndianRupeesWords(num: number): string {
   if (num === 0) return '0 Rupees';
 

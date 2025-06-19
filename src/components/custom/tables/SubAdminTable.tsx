@@ -36,7 +36,7 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
+  // PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -270,14 +270,12 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
               <PaginationLink href="#">1</PaginationLink>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink href="#" className="text-black">
-                2
-              </PaginationLink>
+              <PaginationLink href="#">2</PaginationLink>
             </PaginationItem>
             <PaginationItem>
               <PaginationLink href="#">3</PaginationLink>
             </PaginationItem>
-            <PaginationItem>
+            {/* <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
             <PaginationItem>
@@ -285,7 +283,7 @@ export function SubAdminTable({ subadmins }: SubAdminTableProps) {
             </PaginationItem>
             <PaginationItem>
               <PaginationLink href="#">13</PaginationLink>
-            </PaginationItem>
+            </PaginationItem> */}
           </div>
           <PaginationItem>
             <PaginationNext href="#" />

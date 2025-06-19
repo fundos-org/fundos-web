@@ -39,7 +39,7 @@ import toast from 'react-hot-toast';
 export interface FormData {
   companyName: string;
   aboutCompany: string;
-  companyWebsite: string;
+  investmentSchemeAppendix: string;
   industry: string;
   problemStatement: string;
   businessModel: string;
@@ -57,7 +57,7 @@ export interface FormData {
   managementFee?: number | null;
   carryPercentage?: number | null;
   isStartup: boolean;
-  investmentSchemeAppendix?: File | null;
+  investmentSchemeAppendixFile?: File | null;
 }
 
 export default function CreateDealDialog({
@@ -73,7 +73,7 @@ export default function CreateDealDialog({
     defaultValues: {
       companyName: '',
       aboutCompany: '',
-      companyWebsite: '',
+      investmentSchemeAppendix: '',
       industry: '',
       problemStatement: '',
       businessModel: '',
@@ -86,7 +86,7 @@ export default function CreateDealDialog({
       minimumInvestment: null,
       pitchDeck: null,
       pitchVideo: null,
-      investmentSchemeAppendix: null,
+      investmentSchemeAppendixFile: null,
       instrumentType: '',
       conversionTerms: '',
       managementFee: null,
@@ -165,7 +165,7 @@ export default function CreateDealDialog({
       0: {
         companyName: values.companyName,
         aboutCompany: values.aboutCompany,
-        companyWebsite: values.companyWebsite,
+        investmentSchemeAppendix: values.investmentSchemeAppendix,
         logo: values.logo,
       },
       1: {
@@ -203,7 +203,7 @@ export default function CreateDealDialog({
           await companyDetailsTrigger(
             values.companyName,
             values.aboutCompany,
-            values.companyWebsite,
+            `AVF - ${values.investmentSchemeAppendix} - 1`,
             values.logo,
             deal_id
           );
@@ -232,7 +232,7 @@ export default function CreateDealDialog({
             values.minimumInvestment,
             values.pitchDeck,
             values.pitchVideo,
-            values.investmentSchemeAppendix,
+            values.investmentSchemeAppendixFile,
             deal_id
           );
           break;

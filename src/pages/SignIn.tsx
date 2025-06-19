@@ -21,8 +21,8 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: 'mudit_dua',
-      password: 'FundOS',
+      username: '',
+      password: '',
     },
   });
 

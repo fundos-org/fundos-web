@@ -49,7 +49,7 @@ export const createDraft = createAsyncThunk<
 export const companyDetailsTrigger = async (
   companyName: string,
   aboutCompany: string,
-  companyWebsite: string,
+  investmentSchemeAppendix: string,
   logo: File | null,
   dealId?: string
 ) => {
@@ -58,7 +58,7 @@ export const companyDetailsTrigger = async (
     formData.append('logo', logo);
   }
   const response = await axios.post(
-    `${baseUrl}deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&company_website=${companyWebsite}`,
+    `${baseUrl}deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
     formData
   );
   toast.success(response.data.message);
