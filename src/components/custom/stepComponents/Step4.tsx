@@ -23,7 +23,7 @@ const Step4: React.FC = () => {
 
   return (
     <div className="grid gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <Label htmlFor="currentValuation" className="text-right text-white">
           Current Valuation (
           {currentValuation ? (
@@ -139,7 +139,7 @@ const Step4: React.FC = () => {
           </p>
         )}
       </div>
-      <div className="flex flex-wrap gap-5">
+      <div className="flex flex-col gap-5">
         <div>
           <Label
             htmlFor="investmentSchemeAppendixFile"
@@ -155,7 +155,7 @@ const Step4: React.FC = () => {
                 shouldValidate: true,
               })
             }
-            accept="image/*,.pdf"
+            accept=".pdf"
             maxSize={50 * 1024 * 1024} // 50MB
           />
           {errors.investmentSchemeAppendixFile && (
@@ -183,45 +183,6 @@ const Step4: React.FC = () => {
             </p>
           )}
         </div>
-        {/* <div>
-          <Label
-            htmlFor="investmentSchemeAppendixFile"
-            className="text-right text-white"
-          >
-            Scheme Appendix
-          </Label>
-          <ImageInput
-            image={investmentSchemeAppendixFile}
-            id="investmentSchemeAppendixFile"
-            setImage={file =>
-              setValue('investmentSchemeAppendixFile', file, {
-                shouldValidate: true,
-              })
-            }
-          />
-          {errors.investmentSchemeAppendixFile && (
-            <p className="text-red-400 text-sm">
-              {String(errors.investmentSchemeAppendixFile.message)}
-            </p>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="pitchDeck" className="text-right text-white">
-            Pitch Deck Image
-          </Label>
-          <ImageInput
-            image={pitchDeck}
-            id="pitchDeck"
-            setImage={file =>
-              setValue('pitchDeck', file, { shouldValidate: true })
-            }
-          />
-          {errors.pitchDeck && (
-            <p className="text-red-400 text-sm">
-              {String(errors.pitchDeck.message)}
-            </p>
-          )}
-        </div> */}
         <div>
           <Label htmlFor="pitchVideo" className="text-right text-white">
             Pitch Video
@@ -241,23 +202,6 @@ const Step4: React.FC = () => {
             </p>
           )}
         </div>
-        {/* <div>
-          <Label htmlFor="pitchVideo" className="text-right text-white">
-            Pitch Video
-          </Label>
-          <ImageInput
-            image={pitchVideo}
-            id="pitchVideo"
-            setImage={file =>
-              setValue('pitchVideo', file, { shouldValidate: true })
-            }
-          />
-          {errors.pitchVideo && (
-            <p className="text-red-400 text-sm">
-              {String(errors.pitchVideo.message)}
-            </p>
-          )}
-        </div> */}
       </div>
     </div>
   );

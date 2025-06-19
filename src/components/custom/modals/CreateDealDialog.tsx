@@ -29,12 +29,12 @@ import Step2 from '../stepComponents/Step2';
 import Step3 from '../stepComponents/Step3';
 import Step4 from '../stepComponents/Step4';
 import Step5 from '../stepComponents/Step5';
-// import CompletionStep from '../stepComponents/CompletedStep';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { toastifyThunk } from '@/lib/toastifyThunk';
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export interface FormData {
   companyName: string;
@@ -293,7 +293,19 @@ export default function CreateDealDialog({
         ))}
       </Stepper>
       <FormProvider {...methods}>
-        <div className="grid gap-4">{renderStep()}</div>
+        <div className="grid gap-4 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeStep}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              {renderStep()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </FormProvider>
       {activeStep < 5 && (
         <DialogFooter>

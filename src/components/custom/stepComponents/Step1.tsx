@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import ImageInput from '../ImageUpload';
+import FileInput from '../FileInput';
 
 const Step1: React.FC = () => {
   const {
@@ -16,19 +16,6 @@ const Step1: React.FC = () => {
 
   return (
     <div className="grid gap-4">
-      <div>
-        <Label htmlFor="logo" className="text-right text-white">
-          Upload Logo
-        </Label>
-        <ImageInput
-          image={logo}
-          id="logo"
-          setImage={file => setValue('logo', file, { shouldValidate: true })}
-        />
-        {errors.logo && (
-          <p className="text-red-400 text-sm">{String(errors.logo.message)}</p>
-        )}
-      </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="companyName" className="text-right text-white">
           Company Name
@@ -82,6 +69,21 @@ const Step1: React.FC = () => {
           <p className="text-red-400 text-sm">
             {String(errors.investmentSchemeAppendix.message)}
           </p>
+        )}
+      </div>
+      <div>
+        <Label htmlFor="logo" className="text-right text-white">
+          Logo Image
+        </Label>
+        <FileInput
+          file={logo}
+          id="logo"
+          setFile={file => setValue('logo', file, { shouldValidate: true })}
+          accept="image/*"
+          maxSize={50 * 1024 * 1024} // 50MB
+        />
+        {errors.logo && (
+          <p className="text-red-400 text-sm">{String(errors.logo.message)}</p>
         )}
       </div>
     </div>
