@@ -37,6 +37,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog';
+import { convertToCrores } from '@/lib/currencyToWords';
 const DealDetailDialog = lazy(() => import('./modals/DealDetailDialog'));
 
 function getStatusColor(status: DealStatus): string {
@@ -97,12 +98,10 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
   const [status, setStatus] = useState<DealStatus>(
     (deal_status as DealStatus) || 'open'
   );
-  const handleChangeStatus = async (newStatus: DealStatus) => {
-    if (newStatus === 'closed' && open === false) {
-      setOpen(true);
-      return;
-    } else {
-      const response = await changeDealStatus(deal_id, newStatus);
+  const handleChangeStatus = async (e: DealStatus) => {
+    console.log('Changing status to:', e, open);
+    if (e !== 'closed' && !open) {
+      const response = await changeDealStatus(deal_id, e);
       if (!response) {
         toast.error('Failed to change deal status');
         return;
@@ -110,25 +109,49 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
       if (response.message) {
         toast.success(response.message);
       }
-      setStatus(newStatus);
-      if (open === true) setOpen(false);
+      setStatus(e);
+      dispatch(fetchAllDeals());
+    } else if (e === 'closed' && !open) {
+      setOpen(true);
+    } else if (e === 'closed' && open) {
+      const response = await changeDealStatus(deal_id, e);
+      if (!response) {
+        toast.error('Failed to change deal status');
+        return;
+      }
+      if (response.message) {
+        toast.success(response.message);
+      }
+      setStatus(e);
+      setOpen(false);
       dispatch(fetchAllDeals());
     }
   };
+
+  const handleClose = async () => {
+    console.log(deal_status);
+    setStatus(deal_status as DealStatus);
+  };
+
   return (
     <Dialog>
       <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
+        {/* <DialogTrigger asChild> */}
         <CardContent className="p-0">
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-3">
               {/* <img src="./fundos.svg" alt="logo" width="50" /> : */}
-              <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
+              {/* <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
                 🚀 Startup
-              </div>
+              </div> */}
             </div>
 
             <div className="flex flex-col items-end">
-              <Select defaultValue={status} onValueChange={handleChangeStatus}>
+              <Select
+                defaultValue={status}
+                value={status}
+                onValueChange={handleChangeStatus}
+              >
                 <SelectTrigger
                   className={`rounded-none border-0 text-white ${getStatusBgColor(status)}`}
                 >
@@ -185,13 +208,13 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             <div>
               <p className="text-sm text-zinc-400">Funding round size</p>
               <p className="text-3xl font-bold">
-                {round_size ? round_size : '0'}
+                {round_size ? convertToCrores(round_size) : '0'}
               </p>
             </div>
             <div>
               <p className="text-sm text-zinc-400">Capital committed</p>
               <p className="text-3xl font-bold">
-                {commitment ? commitment : '0'}
+                {commitment ? convertToCrores(commitment) : '0'}
               </p>
             </div>
           </div>
@@ -229,6 +252,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             </Menubar>
           </div>
         </CardContent>
+        {/* </DialogTrigger> */}
       </Card>
       <Suspense fallback={<div>Dialog Opening...</div>}>
         <DealDetailDialog
@@ -249,7 +273,10 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none">
+            <AlertDialogCancel
+              onClick={handleClose}
+              className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none"
+            >
               Close
             </AlertDialogCancel>
             <AlertDialogAction

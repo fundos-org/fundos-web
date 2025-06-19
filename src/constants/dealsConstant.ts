@@ -206,7 +206,7 @@ export interface DealCard {
   created_at: string;
   fund_raised_till_now: number | null;
   instruments: string;
-  minimum_investment: string;
+  minimum_investment: number | null;
 }
 
 export type DealStatus = 'open' | 'closed' | 'on_hold';

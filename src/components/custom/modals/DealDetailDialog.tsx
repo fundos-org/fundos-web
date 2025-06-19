@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { DealCard } from '@/constants/dealsConstant';
+import { convertToCrores } from '@/lib/currencyToWords';
 import { X } from 'lucide-react';
 import { FC } from 'react';
 
@@ -47,9 +48,9 @@ const DealDetailDialog: FC<{
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
           {/* <img src="./fundos.svg" alt="logo" width="50" /> : */}
-          <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
+          {/* <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
             🚀 Startup
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col items-end">
@@ -101,12 +102,12 @@ const DealDetailDialog: FC<{
       <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Funding round size</p>
-          <p className="text-3xl font-bold">{round_size ? round_size : '0'}</p>
+          <p className="text-3xl font-bold">{round_size ? convertToCrores(round_size) : '0'}</p>
         </div>
         <div>
           <p className="text-sm text-zinc-400 text-right">Capital committed</p>
           <p className="text-3xl font-bold text-right">
-            {commitment ? commitment : '0'}
+            {commitment ? convertToCrores(commitment) : '0'}
           </p>
         </div>
       </div>
@@ -115,13 +116,13 @@ const DealDetailDialog: FC<{
         <div>
           <p className="text-sm text-zinc-400">Funding raised till now</p>
           <p className="text-3xl font-bold">
-            {fund_raised_till_now ? fund_raised_till_now : '0'}
+            {fund_raised_till_now ? convertToCrores(fund_raised_till_now) : '0'}
           </p>
         </div>
         <div>
           <p className="text-sm text-zinc-400 text-right">Minimum Investment</p>
           <p className="text-3xl font-bold text-right">
-            {minimum_investment ? minimum_investment : '0'}
+            {minimum_investment ? convertToCrores(minimum_investment) : '0'}
           </p>
         </div>
       </div>
