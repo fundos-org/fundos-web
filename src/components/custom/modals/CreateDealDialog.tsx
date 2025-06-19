@@ -35,6 +35,7 @@ import { toastifyThunk } from '@/lib/toastifyThunk';
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLoader } from '@/hooks/useLoader';
 
 export interface FormData {
   companyName: string;
@@ -66,6 +67,7 @@ export default function CreateDealDialog({
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [activeStep, setActiveStep] = useState(0);
+  const { showLoader, hideLoader } = useLoader();
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
@@ -137,15 +139,12 @@ export default function CreateDealDialog({
     }
   };
 
-  // CHANGE 2: Added hasDataChanged function to compare current form values with last submitted values
-  // Returns true if data has changed or no previous submission exists, false otherwise
-  // Prevents API calls when clicking "Next" after going back without changes
   const hasDataChanged = (
     currentValues: Partial<FormData>,
     step: number
   ): boolean => {
     const lastSubmitted = submittedData[step];
-    if (!lastSubmitted) return true; // No previous submission, treat as changed
+    if (!lastSubmitted) return true;
 
     return Object.keys(currentValues).some(key => {
       const current = currentValues[key as keyof FormData];
@@ -198,6 +197,7 @@ export default function CreateDealDialog({
     }
 
     try {
+      showLoader();
       switch (activeStep) {
         case 0: {
           await companyDetailsTrigger(
@@ -255,8 +255,10 @@ export default function CreateDealDialog({
       }
       // Store the submitted data for this step
       setSubmittedData(prev => ({ ...prev, [activeStep]: stepData }));
+      hideLoader();
       setActiveStep(prev => prev + 1);
     } catch (error) {
+      hideLoader();
       toast.error(`Error submitting step ${activeStep + 1}: ${error}`);
     }
   };
