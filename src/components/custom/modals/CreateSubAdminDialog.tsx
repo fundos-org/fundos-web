@@ -14,7 +14,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import OverviewStep from '../subAdminStepComponents/OverviewStep';
 import StepSubAdmin1 from '../subAdminStepComponents/StepSubAdmin1';
 import StepSubAdmin2 from '../subAdminStepComponents/StepSubAdmin2';
-import { createCredentials, createProfile } from '@/axioscalls/dealApiServices';
+import { createCredentials, createProfile, shareDetails } from '@/axioscalls/dealApiServices';
 import toast from 'react-hot-toast';
 
 export interface FormData {
@@ -132,6 +132,7 @@ function CreateSubAdminDialog() {
             values.appname,
             values.invitecode
           );
+          await shareDetails(subAdminId);
           break;
         default:
           return null;

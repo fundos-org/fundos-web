@@ -477,6 +477,7 @@ export const shareDetails = async (subadmin_id: string) => {
     const response = await axios.get(
       `${baseUrl}admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
     );
+    toast.success(response.data.message);
     return response.data;
   } catch (error) {
     console.log('Error in apiAadhaarOtpSend:', error);

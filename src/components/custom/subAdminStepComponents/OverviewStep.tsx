@@ -33,9 +33,6 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
     if (!response) {
       toast.error('Failed to send invite');
     }
-    if (response.message) {
-      toast.success(response.message);
-    }
   };
 
   return (
