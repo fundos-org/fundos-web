@@ -7,7 +7,7 @@ export type Stages = {
 };
 
 export const stepsList = [
-  { label: 'Comapany', index: 0 },
+  { label: 'Company', index: 0 },
   { label: 'Industry', index: 1 },
   { label: 'Customer', index: 2 },
   { label: 'Valuation', index: 3 },
