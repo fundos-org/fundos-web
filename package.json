@@ -40,6 +40,7 @@
     "motion": "^12.18.1",
     "next-themes": "^0.4.6",
     "package-lock-only": "^0.0.4",
+    "papaparse": "^5.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.0.0",
     "react-form-stepper": "^2.0.3",
@@ -51,11 +52,13 @@
     "react-transition-group": "^4.4.5",
     "recharts": "^2.15.3",
     "tailwind-merge": "^3.2.0",
-    "tailwindcss": "^4.1.5"
+    "tailwindcss": "^4.1.5",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@types/node": "^22.15.3",
+    "@types/papaparse": "^5.3.16",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

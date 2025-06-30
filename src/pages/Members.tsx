@@ -1,6 +1,7 @@
 import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { fetchMembersStatistics } from '@/axioscalls/dealApiServices';
+import BulkOnboarding from '@/components/custom/BulkOnboarding';
 import AddMemberDialog from '@/components/custom/modals/AddMemberDialog';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import InvestorTable from '@/components/custom/tables/InvestorTable';
@@ -13,14 +14,7 @@ export default function Members() {
     fetchMembersStatistics
   );
   const investors_statistics = statistics?.investors_statistics;
-  const startups_statistics = statistics?.startups_statistics;
-  console.log(
-    inviteCode,
-    subAdminId,
-    investors_statistics,
-    startups_statistics,
-    members
-  );
+  console.log(inviteCode, subAdminId);
 
   return (
     <Dialog>
@@ -50,7 +44,7 @@ export default function Members() {
               value="closed"
               className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
             >
-              Startups
+              Bulk Onboard
             </TabsTrigger>
           </TabsList>
         </div>
@@ -59,8 +53,7 @@ export default function Members() {
           <InvestorTable header="Investors" users={members?.investors || []} />
         </TabsContent>
         <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
-          <StatisticCardList stats={startups_statistics} />
-          <InvestorTable header="Startups" users={members?.investors || []} />
+          <BulkOnboarding />
         </TabsContent>
       </Tabs>
       <AddMemberDialog />
