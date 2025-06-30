@@ -15,7 +15,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
-const baseUrl = 'http://43.205.36.168/api/v1/live/';
+// const baseUrl1 = 'http://43.205.36.168/api/v1/live/';
+const baseUrl = 'https://api.fundos.services/api/v1/live/';
 
 // Create async thunk for creating a draft deal
 export const createDraft = createAsyncThunk<
