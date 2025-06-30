@@ -260,6 +260,15 @@ export default function BulkOnboarding() {
     }
   };
 
+  const handleDownloadTemplate = () => {
+    // Create worksheet with headers only
+    const ws = XLSX.utils.aoa_to_sheet([['email', 'panNumber']]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Template');
+    // Generate and trigger download
+    XLSX.writeFile(wb, 'bulk-onboarding-template.xlsx');
+  };
+
   return (
     <>
       <div className="min-h-screen w-full bg-black text-white">
@@ -319,7 +328,10 @@ export default function BulkOnboarding() {
                 our template.
               </p>
             </div>
-            <button className="bg-white text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors">
+            <button
+              className="cursor-pointer bg-white text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors"
+              onClick={handleDownloadTemplate}
+            >
               <Download className="w-4 h-4" />
               Download template
             </button>
