@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { AppRoute } from '@/RoutesEnum';
 
 type ColorScheme = {
   name: string;
@@ -62,6 +63,7 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
     };
   } else if (hostname.includes('subadmin.fundos.services')) {
+    console.log('Subadmin portal detected', hostname);
     return {
       name: 'FundOS',
       role: 'subadmin',
@@ -79,7 +81,7 @@ const getColorScheme = (): ColorScheme => {
   } else {
     return {
       name: 'FundOS',
-      role: 'subadmin',
+      role: 'admin',
       background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
       cardBg: 'bg-zinc-900/40',
       inputBg: 'bg-gray-800',
@@ -91,22 +93,22 @@ const getColorScheme = (): ColorScheme => {
       buttonText: 'text-black',
       starColor: 'bg-white',
     };
-    return {
-      name: 'Admin Portal',
-      role: 'admin',
-      background:
-        'bg-gradient-to-br from-orange-900 via-yellow-700 via-pink-700 to-rose-900',
-      cardBg: 'bg-gradient-to-br from-white via-yellow-50 to-pink-50',
-      inputBg: 'bg-gradient-to-r from-white via-yellow-100 to-pink-100',
-      inputBorder: 'border-orange-600',
-      inputText: 'text-gray-900',
-      focusRing: 'focus:ring-orange-500',
-      buttonBg: 'bg-gradient-to-r from-orange-600 via-yellow-500 to-pink-500',
-      buttonHover:
-        'hover:from-orange-500 hover:via-yellow-400 hover:to-pink-400',
-      buttonText: 'text-white',
-      starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
-    };
+    // return {
+    //   name: 'Admin Portal',
+    //   role: 'admin',
+    //   background:
+    //     'bg-gradient-to-br from-orange-900 via-yellow-700 via-pink-700 to-rose-900',
+    //   cardBg: 'bg-gradient-to-br from-white via-yellow-50 to-pink-50',
+    //   inputBg: 'bg-gradient-to-r from-white via-yellow-100 to-pink-100',
+    //   inputBorder: 'border-orange-600',
+    //   inputText: 'text-gray-900',
+    //   focusRing: 'focus:ring-orange-500',
+    //   buttonBg: 'bg-gradient-to-r from-orange-600 via-yellow-500 to-pink-500',
+    //   buttonHover:
+    //     'hover:from-orange-500 hover:via-yellow-400 hover:to-pink-400',
+    //   buttonText: 'text-white',
+    //   starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
+    // };
   }
 };
 
@@ -118,7 +120,6 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const colorScheme = getColorScheme();
-
   const {
     register,
     handleSubmit,
@@ -133,6 +134,7 @@ export default function SignIn() {
   useEffect(() => sessionStorage.clear(), []);
 
   const onSubmit = async (data: LoginFormData) => {
+    console.log(role);
     switch (role) {
       case 'admin': {
         const { success, message } = await loginAdmin(data);
@@ -140,7 +142,8 @@ export default function SignIn() {
           const sessData = JSON.stringify({ role: 'admin', name: 'Ammit' });
           sessionStorage.setItem('subadmindetails', sessData);
           toast.success(message || 'Login successful!');
-          navigate('/subadmin');
+          console.log(AppRoute.SUBADMIN_DASHBOARD);
+          navigate(AppRoute.ADMIN_SUBADMIN);
         } else {
           toast.error('Unable to login. Please check once again!', {
             style: { borderRadius: 0 },
@@ -160,7 +163,7 @@ export default function SignIn() {
             });
             sessionStorage.setItem('subadmindetails', sessData);
             toast.success(message || 'Login successful!');
-            navigate('/dashboard');
+            navigate(AppRoute.SUBADMIN_DASHBOARD);
           })
           .catch((error: CommonError) => {
             toast.error(error.message || 'Login failed.');
@@ -311,73 +314,3 @@ export default function SignIn() {
     </div>
   );
 }
-
-// function getRoleByHostname(): 'admin' | 'subadmin' | 'kyc' {
-//   const hostname = window.location.hostname;
-//   if (hostname.includes('admin.fundos.services')) {
-//     return 'admin';
-//   } else if (hostname.includes('subadmin.fundos.services')) {
-//     return 'subadmin';
-//   } else if (hostname.includes('kyc.fundos.services')) {
-//     return 'kyc';
-//   } else {
-//     return 'subadmin';
-//   }
-// }
-// export function AdminToggle({
-//   isAdmin,
-//   setIsAdmin,
-//   colorScheme,
-// }: {
-//   isAdmin: boolean;
-//   setIsAdmin: Dispatch<SetStateAction<boolean>>;
-//   colorScheme: ColorScheme;
-// }) {
-//   return (
-//     <div className="flex items-center justify-center absolute top-10 right-10">
-//       <div
-//         className={`relative w-48 h-14 ${colorScheme.toggleBg} backdrop-blur-lg rounded-none flex items-center p-1 cursor-pointer border ${colorScheme.toggleBorder}`}
-//         onClick={() => setIsAdmin(!isAdmin)}
-//       >
-//         {/* Sliding background with domain-specific gradient */}
-//         <div
-//           className={`absolute w-[calc(50%-0.5rem)] h-[2.5rem] ${colorScheme.toggleSlider} rounded-none transition-transform duration-300 ease-in-out shadow-md ${
-//             isAdmin ? 'translate-x-1' : 'translate-x-[calc(100%+0.5rem)]'
-//           }`}
-//         >
-//           {/* Tiny stars inside the sliding background */}
-//           <div
-//             className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full top-2 left-2 ${
-//               isAdmin ? 'animate-twinkle' : 'animate-twinkle-fast'
-//             }`}
-//           />
-//           <div
-//             className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full bottom-2 right-2 ${
-//               isAdmin
-//                 ? 'animate-twinkle delay-500'
-//                 : 'animate-twinkle-fast delay-300'
-//             }`}
-//           />
-//         </div>
-
-//         {/* Toggle options */}
-//         <div className="relative flex w-full text-center text-sm font-semibold rounded-none">
-//           <span
-//             className={`w-1/2 z-10 transition-colors rounded-none duration-300 ${
-//               isAdmin ? 'text-white' : 'text-gray-400'
-//             }`}
-//           >
-//             Admin
-//           </span>
-//           <span
-//             className={`w-1/2 z-10 transition-colors rounded-none duration-300 ${
-//               !isAdmin ? 'text-white' : 'text-gray-400'
-//             }`}
-//           >
-//             Subadmin
-//           </span>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }

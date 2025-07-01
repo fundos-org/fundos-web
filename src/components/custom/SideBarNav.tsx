@@ -44,7 +44,7 @@ import {
 import { AppRoute } from '@/RoutesEnum';
 
 // Define role type for better type safety
-type Role = 'admin' | 'subadmin';
+type Role = 'admin' | 'subadmin' | 'kyc';
 
 interface Route {
   title: string;
@@ -96,16 +96,16 @@ export default function AppSidebar() {
       if (storedData) {
         const parsedData: SessionData = JSON.parse(storedData);
         setSessionData(parsedData);
-
+        setItems(routes[parsedData.role]);
         // Set items based on hostname
-        const hostname = window.location.hostname;
-        if (hostname === 'admin.fundos.com') {
-          setItems(routes.admin);
-        } else if (hostname === 'subadmin.fundos.com') {
-          setItems(routes.subadmin);
-        } else {
-          setItems(routes.kyc);
-        }
+        // const hostname = window.location.hostname;
+        // if (hostname === 'admin.fundos.com') {
+        //   setItems(routes.admin);
+        // } else if (hostname === 'subadmin.fundos.com') {
+        //   setItems(routes.subadmin);
+        // } else {
+        //   setItems(routes.kyc);
+        // }
       }
     } catch (error) {
       console.error('Error parsing session data:', error);
