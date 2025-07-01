@@ -1,5 +1,7 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
+import { AppRoute } from './RoutesEnum';
+const KycDashboard = lazy(() => import('./pages/KycDashboard'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Deals = lazy(() => import('./pages/Deals'));
 const Members = lazy(() => import('./pages/Members'));
@@ -12,47 +14,66 @@ const AppRoutes = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route
-          path="/dashboard"
-          element={
-            <Layout>
-              <Dashboard />
-            </Layout>
-          }
-        />
-        <Route
-          path="/deals"
-          element={
-            <Layout>
-              <Deals />
-            </Layout>
-          }
-        />
-        <Route
-          path="/members"
-          element={
-            <Layout>
-              <Members />
-            </Layout>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <Layout>
-              <Settings />
-            </Layout>
-          }
-        />
-        <Route
-          path="/subadmin"
-          element={
-            <Layout>
-              <SubAdmin />
-            </Layout>
-          }
-        />
+        <Route path={AppRoute.ROOT} element={<SignIn />} />
+        {/* /admin and /admin/subadmin */}
+        <Route path={AppRoute.ADMIN}>
+          <Route
+            path={AppRoute.ADMIN_SUBADMIN}
+            element={
+              <Layout>
+                <SubAdmin />
+              </Layout>
+            }
+          />
+        </Route>
+
+        {/* /subadmin and its children */}
+        <Route path={AppRoute.SUBADMIN}>
+          <Route
+            path={AppRoute.SUBADMIN_DASHBOARD}
+            element={
+              <Layout>
+                <Dashboard />
+              </Layout>
+            }
+          />
+          <Route
+            path={AppRoute.SUBADMIN_DEALS}
+            element={
+              <Layout>
+                <Deals />
+              </Layout>
+            }
+          />
+          <Route
+            path={AppRoute.SUBADMIN_MEMBERS}
+            element={
+              <Layout>
+                <Members />
+              </Layout>
+            }
+          />
+          <Route
+            path={AppRoute.SUBADMIN_SETTINGS}
+            element={
+              <Layout>
+                <Settings />
+              </Layout>
+            }
+          />
+        </Route>
+
+        {/* /kyc/dashboard */}
+        <Route path={AppRoute.KYC}>
+          <Route
+            path={AppRoute.KYC_DASHBOARD}
+            element={
+              <Layout>
+                <KycDashboard />
+              </Layout>
+            }
+          />
+        </Route>
         {/*<Route path="/search/:city" element={<Layout showHero={false}><SearchPage/></Layout>}/>
           <Route path="/detail/:restaurantId" element={<Layout showHero={false}><DetailPage/></Layout>}/>
           <Route element={<ProtectedRoute/>}>

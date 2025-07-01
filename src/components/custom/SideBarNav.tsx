@@ -41,6 +41,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '../ui/alert-dialog';
+import { AppRoute } from '@/RoutesEnum';
 
 // Define role type for better type safety
 type Role = 'admin' | 'subadmin';
@@ -56,6 +57,7 @@ interface Route {
 interface Routes {
   admin: Route[];
   subadmin: Route[];
+  kyc: Route[];
 }
 
 interface SessionData {
@@ -66,12 +68,19 @@ interface SessionData {
 
 const routes: Routes = {
   subadmin: [
-    { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
-    { title: 'Deals', url: '/deals', icon: ScrollText },
-    { title: 'Members', url: '/members', icon: Users },
-    { title: 'Settings', url: '/settings', icon: Settings },
+    {
+      title: 'Dashboard',
+      url: AppRoute.SUBADMIN_DASHBOARD,
+      icon: LayoutDashboard,
+    },
+    { title: 'Deals', url: AppRoute.SUBADMIN_DEALS, icon: ScrollText },
+    { title: 'Members', url: AppRoute.SUBADMIN_MEMBERS, icon: Users },
+    { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
   ],
-  admin: [{ title: 'Sub Admin', url: '/subadmin', icon: UserRoundPen }],
+  admin: [
+    { title: 'Sub Admin', url: AppRoute.ADMIN_SUBADMIN, icon: UserRoundPen },
+  ],
+  kyc: [{ title: 'KYC Dashboard', url: AppRoute.KYC_DASHBOARD, icon: Users }],
 };
 
 export default function AppSidebar() {
@@ -86,9 +95,16 @@ export default function AppSidebar() {
       const storedData = sessionStorage.getItem('subadmindetails');
       if (storedData) {
         const parsedData: SessionData = JSON.parse(storedData);
-        if (['admin', 'subadmin'].includes(parsedData.role)) {
-          setSessionData(parsedData);
-          setItems(routes[parsedData.role as Role]);
+        setSessionData(parsedData);
+
+        // Set items based on hostname
+        const hostname = window.location.hostname;
+        if (hostname === 'admin.fundos.com') {
+          setItems(routes.admin);
+        } else if (hostname === 'subadmin.fundos.com') {
+          setItems(routes.subadmin);
+        } else {
+          setItems(routes.kyc);
         }
       }
     } catch (error) {
