@@ -81,7 +81,7 @@ const getColorScheme = (): ColorScheme => {
   } else {
     return {
       name: 'FundOS',
-      role: 'admin',
+      role: 'subadmin',
       background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
       cardBg: 'bg-zinc-900/40',
       inputBg: 'bg-gray-800',

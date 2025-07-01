@@ -78,6 +78,11 @@ const routes: Routes = {
     { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
   ],
   admin: [
+    {
+      title: 'Dashboard',
+      url: AppRoute.ADMIN_DASHBOARD,
+      icon: LayoutDashboard,
+    },
     { title: 'Sub Admin', url: AppRoute.ADMIN_SUBADMIN, icon: UserRoundPen },
   ],
   kyc: [{ title: 'KYC Dashboard', url: AppRoute.KYC_DASHBOARD, icon: Users }],

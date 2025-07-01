@@ -7,7 +7,7 @@ import StatisticCardList from '@/components/custom/StatisticCardList';
 import TransactionTable from '@/components/custom/tables/TransactionDetailsTable';
 import { useState } from 'react';
 
-function Dashboard() {
+function SubadminDashboard() {
   const stats = useAppStateEffect(
     (state: RootState) => state.dashboard.statistics,
     fetchDashboardStatistics
@@ -39,4 +39,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default SubadminDashboard;

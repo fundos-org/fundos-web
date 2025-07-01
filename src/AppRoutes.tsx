@@ -1,8 +1,9 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { AppRoute } from './RoutesEnum';
+import AdminDashboard from './pages/AdminDashboard';
 const KycDashboard = lazy(() => import('./pages/KycDashboard'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
+const SubadminDashboard = lazy(() => import('./pages/SubadminDashboard'));
 const Deals = lazy(() => import('./pages/Deals'));
 const Members = lazy(() => import('./pages/Members'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -25,6 +26,14 @@ const AppRoutes = () => {
               </Layout>
             }
           />
+          <Route
+            path={AppRoute.ADMIN_DASHBOARD}
+            element={
+              <Layout>
+                <AdminDashboard />
+              </Layout>
+            }
+          />
         </Route>
 
         {/* /subadmin and its children */}
@@ -33,7 +42,7 @@ const AppRoutes = () => {
             path={AppRoute.SUBADMIN_DASHBOARD}
             element={
               <Layout>
-                <Dashboard />
+                <SubadminDashboard />
               </Layout>
             }
           />

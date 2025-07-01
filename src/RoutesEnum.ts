@@ -2,6 +2,7 @@ export enum AppRoute {
   ROOT = '/',
   ADMIN = '/admin',
   ADMIN_SUBADMIN = '/admin/subadmin',
+  ADMIN_DASHBOARD = '/admin/dashboard',
   SUBADMIN = '/subadmin',
   SUBADMIN_DASHBOARD = '/subadmin/dashboard',
   SUBADMIN_DEALS = '/subadmin/deals',
