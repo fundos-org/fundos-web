@@ -111,9 +111,9 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
       } else {
         acc.invalid += 1;
       }
-      return acc;
+      return { ...acc, total: acc.ready + acc.invalid };
     },
-    { ready: 0, invalid: 0 }
+    { ready: 0, invalid: 0, total: 0 }
   );
 
   const handleConfirm = () => {
@@ -167,6 +167,10 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
 
         {/* --- Professional summary bar --- */}
         <div className="flex flex-wrap gap-4 items-center justify-start mb-4">
+          <div className="flex items-center gap-2 bg-[#232A36] px-8 py-4 text-gray-400 font-semibold">
+            <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
+            Total entries: <span className="text-white">{summary.total}</span>
+          </div>
           <div className="flex items-center gap-2 bg-[#232A36] px-8 py-4 text-green-400 font-semibold">
             <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
             Ready to onboard:{' '}
