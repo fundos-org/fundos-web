@@ -171,7 +171,6 @@ export default function SignIn() {
         break;
       }
       case 'kyc': {
-        // Add your KYC login logic here if needed
         toast.error('KYC login is not implemented yet.');
         break;
       }
