@@ -263,7 +263,7 @@ export const fetchAllSubAdmins = createAsyncThunk<
   { rejectValue: CommonError }
 >('subAdmins/fetchAllDeals', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${baseUrl}admin/subadmins`);
+    const response = await axios.get(`${baseUrl}admin/subadmins/`);
     return response.data;
   } catch (error: unknown) {
     // Handle axios or network errors
