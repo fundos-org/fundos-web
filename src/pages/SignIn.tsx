@@ -49,6 +49,22 @@ const getColorScheme = (): ColorScheme => {
       buttonText: 'text-white',
       starColor: 'bg-cyan-200',
     };
+  } else if (hostname.includes('subadmin.fundos.services')) {
+    console.log('Subadmin portal detected', hostname);
+    return {
+      name: 'FundOS',
+      role: 'subadmin',
+      background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+      cardBg: 'bg-zinc-900/40',
+      inputBg: 'bg-gray-800',
+      inputBorder: 'border-gray-600',
+      inputText: 'text-white',
+      focusRing: 'focus:ring-gray-500',
+      buttonBg: 'bg-white',
+      buttonHover: 'hover:bg-gray-200',
+      buttonText: 'text-black',
+      starColor: 'bg-white',
+    };
   } else if (hostname.includes('admin.fundos.services')) {
     return {
       name: 'Admin Portal',
@@ -65,22 +81,6 @@ const getColorScheme = (): ColorScheme => {
         'hover:from-orange-500 hover:via-yellow-400 hover:to-pink-400',
       buttonText: 'text-white',
       starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
-    };
-  } else if (hostname.includes('subadmin.fundos.services')) {
-    console.log('Subadmin portal detected', hostname);
-    return {
-      name: 'FundOS',
-      role: 'subadmin',
-      background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
-      cardBg: 'bg-zinc-900/40',
-      inputBg: 'bg-gray-800',
-      inputBorder: 'border-gray-600',
-      inputText: 'text-white',
-      focusRing: 'focus:ring-gray-500',
-      buttonBg: 'bg-white',
-      buttonHover: 'hover:bg-gray-200',
-      buttonText: 'text-black',
-      starColor: 'bg-white',
     };
   } else {
     return {
