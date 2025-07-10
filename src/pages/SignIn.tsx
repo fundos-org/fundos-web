@@ -132,6 +132,7 @@ export default function SignIn() {
   useEffect(() => {
     sessionStorage.clear();
     if (!role) setRole(getColorScheme().role);
+    console.log(role);
   }, [role]);
 
   const onSubmit = async (data: LoginFormData) => {
