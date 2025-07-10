@@ -29,10 +29,6 @@ type ColorScheme = {
 // Color scheme configuration based on domain
 const getColorScheme = (): ColorScheme => {
   const hostname = window.location.hostname;
-  console.log(hostname);
-  console.log(hostname.includes('kyc.fundos.services'));
-  console.log(hostname.includes('admin.fundos.services'));
-  console.log(hostname.includes('subadmin.fundos.services'));
 
   if (hostname.includes('kyc.fundos.services')) {
     return {
@@ -52,7 +48,6 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
     };
   } else if (hostname.includes('subadmin.fundos.services')) {
-    console.log('Subadmin portal detected', hostname);
     return {
       name: 'FundOS',
       role: 'subadmin',
@@ -136,11 +131,9 @@ export default function SignIn() {
   useEffect(() => {
     sessionStorage.clear();
     if (!role) setRole(getColorScheme().role);
-    console.log(role, 'test', getColorScheme().role);
   }, [role]);
 
   const onSubmit = async (data: LoginFormData) => {
-    console.log(role);
     switch (role) {
       case 'admin': {
         const { success, message } = await loginAdmin(data);
@@ -148,7 +141,6 @@ export default function SignIn() {
           const sessData = JSON.stringify({ role: 'admin', name: 'Ammit' });
           sessionStorage.setItem('subadmindetails', sessData);
           toast.success(message || 'Login successful!');
-          console.log(AppRoute.SUBADMIN_DASHBOARD);
           navigate(AppRoute.ADMIN_SUBADMIN);
         } else {
           toast.error('Unable to login. Please check once again!', {
