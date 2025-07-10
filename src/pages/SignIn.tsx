@@ -113,9 +113,7 @@ const getColorScheme = (): ColorScheme => {
 };
 
 export default function SignIn() {
-  const [role] = useState<'admin' | 'subadmin' | 'kyc'>(
-    () => getColorScheme().role
-  );
+  const [role, setRole] = useState<'admin' | 'subadmin' | 'kyc'>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -131,7 +129,10 @@ export default function SignIn() {
     },
   });
 
-  useEffect(() => sessionStorage.clear(), []);
+  useEffect(() => {
+    sessionStorage.clear();
+    if (!role) setRole(getColorScheme().role);
+  }, [role]);
 
   const onSubmit = async (data: LoginFormData) => {
     console.log(role);
