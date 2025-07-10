@@ -29,6 +29,10 @@ type ColorScheme = {
 // Color scheme configuration based on domain
 const getColorScheme = (): ColorScheme => {
   const hostname = window.location.hostname;
+  console.log(hostname);
+  console.log(hostname.includes('kyc.fundos.services'));
+  console.log(hostname.includes('admin.fundos.services'));
+  console.log(hostname.includes('subadmin.fundos.services'));
 
   if (hostname.includes('kyc.fundos.services')) {
     return {
