@@ -185,13 +185,6 @@ export default function SignIn() {
     <div
       className={`min-h-screen flex items-center justify-center ${colorScheme.background} relative overflow-hidden`}
     >
-      {/* <AdminToggle
-        isAdmin={isAdmin}
-        setIsAdmin={setIsAdmin}
-        colorScheme={colorScheme}
-      /> */}
-
-      {/* Starry background effect with domain-specific colors */}
       <div className="absolute inset-0 pointer-events-none">
         <div
           className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full top-10 left-20 animate-twinkle`}

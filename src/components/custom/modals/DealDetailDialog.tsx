@@ -102,7 +102,9 @@ const DealDetailDialog: FC<{
       <div className="flex justify-between">
         <div>
           <p className="text-sm text-zinc-400">Funding round size</p>
-          <p className="text-3xl font-bold">{round_size ? convertToCrores(round_size) : '0'}</p>
+          <p className="text-3xl font-bold">
+            {round_size ? convertToCrores(round_size) : '0'}
+          </p>
         </div>
         <div>
           <p className="text-sm text-zinc-400 text-right">Capital committed</p>
