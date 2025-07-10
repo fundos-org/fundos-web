@@ -38,16 +38,18 @@ const getColorScheme = (): ColorScheme => {
     return {
       name: 'KYC Portal',
       role: 'kyc',
-      background: 'bg-gradient-to-br from-blue-900 via-violet-700 to-white-900',
-      cardBg: 'bg-yellow-100',
-      inputBg: 'bg-light-800',
-      inputText: 'text-black',
-      inputBorder: 'border-cyan-500',
-      focusRing: 'focus:ring-cyan-400',
-      buttonBg: 'bg-gradient-to-r from-cyan-600 to-blue-600',
-      buttonHover: 'hover:from-cyan-500 hover:to-blue-500',
+      background:
+        'bg-gradient-to-br from-orange-900 via-yellow-700 via-pink-700 to-rose-900',
+      cardBg: 'bg-gradient-to-br from-white via-yellow-50 to-pink-50',
+      inputBg: 'bg-gradient-to-r from-white via-yellow-100 to-pink-100',
+      inputBorder: 'border-orange-600',
+      inputText: 'text-gray-900',
+      focusRing: 'focus:ring-orange-500',
+      buttonBg: 'bg-gradient-to-r from-orange-600 via-yellow-500 to-pink-500',
+      buttonHover:
+        'hover:from-orange-500 hover:via-yellow-400 hover:to-pink-400',
       buttonText: 'text-white',
-      starColor: 'bg-cyan-200',
+      starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
     };
   } else if (hostname.includes('subadmin.fundos.services')) {
     console.log('Subadmin portal detected', hostname);
@@ -69,18 +71,16 @@ const getColorScheme = (): ColorScheme => {
     return {
       name: 'Admin Portal',
       role: 'admin',
-      background:
-        'bg-gradient-to-br from-orange-900 via-yellow-700 via-pink-700 to-rose-900',
-      cardBg: 'bg-gradient-to-br from-white via-yellow-50 to-pink-50',
-      inputBg: 'bg-gradient-to-r from-white via-yellow-100 to-pink-100',
-      inputBorder: 'border-orange-600',
-      inputText: 'text-gray-900',
-      focusRing: 'focus:ring-orange-500',
-      buttonBg: 'bg-gradient-to-r from-orange-600 via-yellow-500 to-pink-500',
-      buttonHover:
-        'hover:from-orange-500 hover:via-yellow-400 hover:to-pink-400',
+      background: 'bg-gradient-to-br from-blue-900 via-violet-700 to-white-900',
+      cardBg: 'bg-yellow-100',
+      inputBg: 'bg-light-800',
+      inputText: 'text-black',
+      inputBorder: 'border-cyan-500',
+      focusRing: 'focus:ring-cyan-400',
+      buttonBg: 'bg-gradient-to-r from-cyan-600 to-blue-600',
+      buttonHover: 'hover:from-cyan-500 hover:to-blue-500',
       buttonText: 'text-white',
-      starColor: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-orange-200',
+      starColor: 'bg-cyan-200',
     };
   } else {
     return {
