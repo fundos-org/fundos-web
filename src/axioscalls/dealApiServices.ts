@@ -16,7 +16,7 @@ import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
-const baseUrlRaw = import.meta.env.VITE_BASE_URL;
+const baseUrlRaw = import.meta.env.VITE_BASE_ORIGIN;
 const baseUrlSchema = z.string().url();
 const baseUrl = baseUrlSchema.parse(baseUrlRaw);
 
