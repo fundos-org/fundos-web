@@ -1,6 +1,6 @@
 import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
-import { fetchAllSubAdmins } from '@/axioscalls/dealApiServices';
+import { fetchAllSubAdmins } from '@/axioscalls/apiServices';
 import CreateSubAdminDialog from '@/components/custom/modals/CreateSubAdminDialog';
 import { SubAdminTable } from '@/components/custom/tables/SubAdminTable';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';

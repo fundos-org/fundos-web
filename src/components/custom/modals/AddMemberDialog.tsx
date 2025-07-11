@@ -1,4 +1,4 @@
-import { addMember } from '@/axioscalls/dealApiServices';
+import { addMember } from '@/axioscalls/apiServices';
 import { DialogContent } from '@/components/ui/dialog';
 import { useState } from 'react';
 import toast from 'react-hot-toast';

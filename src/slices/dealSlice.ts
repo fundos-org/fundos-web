@@ -2,7 +2,7 @@ import {
   createDraft,
   fetchAllDeals,
   fetchDealStatistics,
-} from '@/axioscalls/dealApiServices';
+} from '@/axioscalls/apiServices';
 import {
   CommonError,
   DraftResponse,

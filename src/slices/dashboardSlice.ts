@@ -1,4 +1,4 @@
-import { fetchDashboardStatistics } from '@/axioscalls/dealApiServices';
+import { fetchDashboardStatistics } from '@/axioscalls/apiServices';
 import {
   DashboardStatistics,
   DashboardStatisticsResponse,

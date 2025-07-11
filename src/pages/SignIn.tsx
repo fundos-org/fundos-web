@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { CommonError, LoginFormData } from '@/constants/dealsConstant';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/app/hooks';
-import { loginAdmin, loginSubAdmin } from '@/axioscalls/dealApiServices';
+import { loginAdmin, loginSubAdmin } from '@/axioscalls/apiServices';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { AppRoute } from '@/RoutesEnum';

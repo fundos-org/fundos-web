@@ -2,7 +2,7 @@ import { RootState } from '@/app/store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import CardDeal from './DealCard';
 import { useAppStateEffect } from '@/app/hooks';
-import { fetchAllDeals } from '@/axioscalls/dealApiServices';
+import { fetchAllDeals } from '@/axioscalls/apiServices';
 import { DealCard } from '@/constants/dealsConstant';
 
 export default function ShowDeals() {

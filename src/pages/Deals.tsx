@@ -1,6 +1,6 @@
 import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
-import { fetchDealStatistics } from '@/axioscalls/dealApiServices';
+import { fetchDealStatistics } from '@/axioscalls/apiServices';
 import CreateDealDialog from '@/components/custom/modals/CreateDealDialog';
 import ShowDeals from '@/components/custom/ShowDeals';
 import StatisticCardList from '@/components/custom/StatisticCardList';

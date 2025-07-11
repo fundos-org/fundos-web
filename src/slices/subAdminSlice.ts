@@ -1,4 +1,4 @@
-import { fetchAllSubAdmins, loginSubAdmin } from '@/axioscalls/dealApiServices';
+import { fetchAllSubAdmins, loginSubAdmin } from '@/axioscalls/apiServices';
 import {
   CommonError,
   SignInSubAdminResponse,

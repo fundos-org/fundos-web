@@ -1,4 +1,4 @@
-import { fetchMembersStatistics } from '@/axioscalls/dealApiServices';
+import { fetchMembersStatistics } from '@/axioscalls/apiServices';
 import { CommonError } from '@/constants/dealsConstant';
 import {
   MemberApiResponse,

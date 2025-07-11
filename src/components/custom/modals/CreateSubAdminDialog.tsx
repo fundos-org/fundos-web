@@ -18,7 +18,7 @@ import {
   createCredentials,
   createProfile,
   shareDetails,
-} from '@/axioscalls/dealApiServices';
+} from '@/axioscalls/apiServices';
 import toast from 'react-hot-toast';
 
 export interface FormData {

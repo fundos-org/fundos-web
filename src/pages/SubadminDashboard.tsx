@@ -1,6 +1,6 @@
 import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
-import { fetchDashboardStatistics } from '@/axioscalls/dealApiServices';
+import { fetchDashboardStatistics } from '@/axioscalls/apiServices';
 // import ActivitesList from '@/components/custom/ActivitesList';
 // import OverViewChart from '@/components/custom/OverViewChart';
 import StatisticCardList from '@/components/custom/StatisticCardList';

@@ -1,6 +1,6 @@
 import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
-import { fetchMembersStatistics } from '@/axioscalls/dealApiServices';
+import { fetchMembersStatistics } from '@/axioscalls/apiServices';
 import BulkOnboarding from '@/components/custom/BulkOnboarding';
 import AddMemberDialog from '@/components/custom/modals/AddMemberDialog';
 import StatisticCardList from '@/components/custom/StatisticCardList';

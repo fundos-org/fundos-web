@@ -25,7 +25,7 @@ import {
 } from '../ui/menubar';
 import toast from 'react-hot-toast';
 import { Dialog, DialogTrigger } from '../ui/dialog';
-import { changeDealStatus, fetchAllDeals } from '@/axioscalls/dealApiServices';
+import { changeDealStatus, fetchAllDeals } from '@/axioscalls/apiServices';
 import { useAppDispatch } from '@/app/hooks';
 import {
   AlertDialog,

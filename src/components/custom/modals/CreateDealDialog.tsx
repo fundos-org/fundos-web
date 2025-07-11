@@ -21,7 +21,7 @@ import createDraft, {
   industryProblemTrigger,
   securitiesTrigger,
   valuationTrigger,
-} from '@/axioscalls/dealApiServices';
+} from '@/axioscalls/apiServices';
 import { stepsList, styleConfig } from '@/constants/dealsConstant';
 import Step1 from '../stepComponents/Step1';
 import { FormProvider, useForm } from 'react-hook-form';

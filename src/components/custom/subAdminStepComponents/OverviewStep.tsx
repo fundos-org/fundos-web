@@ -1,4 +1,4 @@
-import { getSubAdminById, shareDetails } from '@/axioscalls/dealApiServices';
+import { getSubAdminById, shareDetails } from '@/axioscalls/apiServices';
 import { Button } from '@/components/ui/button';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
