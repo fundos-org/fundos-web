@@ -14,9 +14,11 @@ import { MemberApiResponse } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { z } from 'zod';
 
-// const baseUrl1 = 'http://43.205.36.168/api/v1/live/';
-const baseUrl = 'https://api.fundos.services/api/v1/live/';
+const baseUrlRaw = import.meta.env.VITE_BASE_URL;
+const baseUrlSchema = z.string().url();
+const baseUrl = baseUrlSchema.parse(baseUrlRaw);
 
 // Create async thunk for creating a draft deal
 export const createDraft = createAsyncThunk<
