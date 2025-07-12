@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { UseMutateFunction } from 'react-query';
+import InvestorDetailsDialog from './InvestorDetailsDialog';
 
 const AdvancedInvestorActionsCell = ({
   investor,
@@ -38,10 +39,16 @@ const AdvancedInvestorActionsCell = ({
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isDialog, setIsDialog] = useState(false);
 
   const handleDeleteClick = () => {
     setDropdownOpen(false);
     setShowDeleteAlert(true);
+  };
+
+  const handleEdit = () => {
+    setDropdownOpen(false);
+    setIsDialog(true);
   };
 
   const handleConfirmDelete = async () => {
@@ -60,13 +67,11 @@ const AdvancedInvestorActionsCell = ({
     <>
       <TableCell className="font-medium">
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-          <DropdownMenuTrigger className="hover:bg-gray-100 p-2 rounded hover:text-black">
+          <DropdownMenuTrigger className="hover:bg-gray-100 p-2 rounded-none hover:text-black">
             <MoreHorizontal className="h-4 w-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="rounded-none">
-            <DropdownMenuItem
-            // onClick={() => handleEditMember(investor.investor_id)}
-            >
+            <DropdownMenuItem onClick={handleEdit}>
               <Pencil className="mr-2 h-4 w-4" />
               Edit Member
             </DropdownMenuItem>
@@ -118,6 +123,10 @@ const AdvancedInvestorActionsCell = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <InvestorDetailsDialog
+        isDialogOpen={isDialog}
+        setDialogOpen={setIsDialog}
+      />
     </>
   );
 };

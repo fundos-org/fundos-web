@@ -113,7 +113,7 @@ const InvestorTable = () => {
         <button
           onClick={handleRefresh}
           disabled={isRefreshing || isLoading}
-          className="flex gap-3 p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+          className="flex gap-3 p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
           title="Refresh data"
         >
           {/* <span>Refresh:</span> */}
