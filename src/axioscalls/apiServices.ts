@@ -1,3 +1,4 @@
+import { InvestorsListResponse } from '@/components/custom/tables/InvestorTable';
 import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
@@ -16,9 +17,11 @@ import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
-const baseUrlRaw = import.meta.env.VITE_BASE_ORIGIN;
-const baseUrlSchema = z.string().url();
-const baseUrl = baseUrlSchema.parse(baseUrlRaw);
+const baseRaw = import.meta.env.VITE_BASE_ORIGIN;
+const baseStagingRaw = import.meta.env.VITE_BASE_ORIGIN_STAGING;
+const apiSchema = z.string().url();
+const baseUrl = apiSchema.parse(baseRaw);
+const baseUrlStaging = apiSchema.parse(baseStagingRaw);
 
 // Create async thunk for creating a draft deal
 export const createDraft = createAsyncThunk<
@@ -486,6 +489,47 @@ export const shareDetails = async (subadmin_id: string) => {
     console.log('Error in apiAadhaarOtpSend:', error);
     if (axios.isAxiosError(error)) {
       toast.error(`Error: ${error.message}`);
+      throw new Error(error.message);
+    } else {
+      console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+// /api/v1/live/subadmin/investors/list/
+// export const getInvestors = async (): Promise<MemberApiResponse> => {
+//   try {
+//     const { subadmin_id } = JSON.parse(
+//       sessionStorage.getItem('subadmindetails') as string
+//     );
+//     const response = await axios.get(
+//       `${baseUrl}/subadmin/members/statistics/${subadmin_id}`
+//     );
+//     return response.data;
+//   } catch (error: unknown) {
+//     console.log('Error in getInvestors:', error);
+//     if (axios.isAxiosError(error)) {
+//       toast.error(`Error: ${error.message}`);
+//       throw new Error(error.message);
+//     } else {
+//       console.error('Unexpected error:', error);
+//       throw new Error('An unexpected error occurred');
+//     }
+//   }
+// };
+export const getInvestors = async (
+  subadmin_id: string,
+  pageNumber: number,
+  pageSize: number
+): Promise<InvestorsListResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/investors/list/${subadmin_id}?page=${pageNumber}&per_page=${pageSize}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error in getInvestors:', error);
+    if (axios.isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       console.error('Unexpected error:', error);

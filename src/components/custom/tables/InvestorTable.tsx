@@ -1,36 +1,24 @@
-import * as React from 'react';
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { ChevronDown, MoreHorizontal } from 'lucide-react';
+// import {
+//   ChevronDown,
+//   // MoreHorizontal
+// } from 'lucide-react';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
+  // PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -39,330 +27,170 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useInvestors } from '@/hooks/customhooks/useInvestorTable';
+import { FileText, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+// import { Ellipsis } from 'lucide-react';
+import { useState } from 'react';
 
 // Define the type for the user data
-interface User {
-  user_id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  capital_committed: number;
-  kyc_status: string;
+export interface Investor {
+  investor_id: string;
+  name: string;
+  mail: string;
+  type: 'entity' | 'individual';
+  deals_invested: number;
+  kyc_status: 'pending' | 'verified' | 'rejected';
+  mca_key: string;
+  joined_on: string; // Consider Date if you want to parse it
+  profile_pic: string;
 }
 
-// Define props for the component
-interface UserTableProps {
-  users: User[];
-  header?: string;
+export interface Pagination {
+  page: number;
+  per_page: number;
+  total_records: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
 }
 
-// Define the columns based on the API response
-const columns: ColumnDef<User>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={value => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'first_name',
-    header: 'First Name',
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('first_name')}</div>
-    ),
-  },
-  {
-    accessorKey: 'last_name',
-    header: 'Last Name',
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('last_name')}</div>
-    ),
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
-  },
-  {
-    accessorKey: 'capital_committed',
-    header: 'Capital Committed',
-    cell: ({ row }) => <div>{row.getValue('capital_committed')}</div>,
-  },
-  {
-    accessorKey: 'kyc_status',
-    header: 'KYC Status',
-    cell: ({ row }) => <div>{row.getValue('kyc_status')}</div>,
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const user = row.original;
+export interface InvestorsListResponse {
+  subadmin_id: string;
+  subadmin_name: string;
+  investors: Investor[];
+  pagination: Pagination;
+  success: boolean;
+}
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.email)}
-            >
-              Copy email
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View profile</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+const InvestorTable = () => {
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageSize] = useState<number>(10);
+  const { data, isLoading, error } = useInvestors(pageNumber, pageSize);
+  console.log('Investors API data:', data, error);
 
-const InvestorTable = ({ users, header }: UserTableProps) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  if (!data && !isLoading) {
+    return <div>No data found. Check session or API.</div>;
+  }
 
-  const table = useReactTable({
-    data: users,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
+  const pagination = data?.pagination;
+
+  const handlePrev = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    if (pagination?.has_prev && pageNumber > 1) {
+      setPageNumber(prev => prev - 1);
+    }
+  };
+
+  const handleNext = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    if (pagination?.has_next && pageNumber < (pagination?.total_pages || 1)) {
+      setPageNumber(prev => prev + 1);
+    }
+  };
 
   return (
-    <div className="w-full">
-      <div className="flex justify-between items-center py-4 bg-[#2A2A2B] px-5">
-        <h1 className="text-2xl text-zinc-400 py-5 uppercase">
-          {header} Onboarded
-        </h1>
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            table.getColumn('email')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm ml-auto rounded-none"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-5 text-black rounded-none">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-none">
-            {table
-              .getAllColumns()
-              .filter(column => column.getCanHide())
-              .map(column => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value: boolean) =>
-                    column.toggleVisibility(!!value)
-                  }
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="px-5 bg-[#242325]">
-        <Table className="rounded-none px-5">
-          <TableHeader className="text-white">
-            {table.getHeaderGroups().map(headerGroup => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <TableHead key={header.id} className="text-zinc-400">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody className="bg-[#242325] text-white">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-zinc-400"></TableHead>
+            <TableHead className="text-zinc-400">Name</TableHead>
+            <TableHead className="text-zinc-400">Mail</TableHead>
+            <TableHead className="text-zinc-400">Type</TableHead>
+            <TableHead className="text-zinc-400  text-center">
+              Deal Invested
+            </TableHead>
+            <TableHead className="text-zinc-400">KYC Status</TableHead>
+            <TableHead className="text-zinc-400">Joining Date</TableHead>
+            <TableHead className="text-zinc-400">MCA</TableHead>
+            <TableHead className="text-zinc-400"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data?.investors &&
+            data?.investors?.map(investor => (
+              <TableRow key={investor.investor_id}>
+                <TableCell className="font-medium">
+                  <Switch />
+                </TableCell>
+                <TableCell className="font-medium">{investor.name}</TableCell>
+                <TableCell className="font-medium">{investor.mail}</TableCell>
+                {/* <TableCell className="font-medium">
+                  {investor.profile_pic}
+                </TableCell> */}
+                <TableCell className="font-medium capitalize">
+                  {investor.type}
+                </TableCell>
+                <TableCell className="font-medium text-center">
+                  {investor.deals_invested}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {investor.kyc_status}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {investor.joined_on}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {/* {investor.mca_key} */}
+                  <FileText />
+                </TableCell>
+                <TableCell className="font-medium">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="rounded-none">
+                      <DropdownMenuItem
+                      // onClick={() => handleEditMember(investor.investor_id)}
+                      >
+                        <Pencil />
+                        Edit Member
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-red-400"
+                        // onClick={() => handleDeleteMember(investor.investor_id)}
+                      >
+                        <Trash2 className="text-red-400" />
+                        Delete Member
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <Pagination className="bg-[#2A2A2B] p-4">
-        <PaginationContent className="w-full flex justify-between items-center">
+            ))}
+        </TableBody>
+      </Table>
+      <Pagination>
+        <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" onClick={() => table.previousPage()} />
+            <PaginationPrevious
+              onClick={handlePrev}
+              aria-disabled={!pagination?.has_prev}
+            />
           </PaginationItem>
-          <div className="flex gap-2">
-            {table.getPageCount() <= 5 ? (
-              Array.from({ length: table.getPageCount() }, (_, i) => (
-                <PaginationItem key={i}>
-                  <PaginationLink
-                    href="#"
-                    isActive={table.getState().pagination.pageIndex === i}
-                    onClick={() => table.setPageIndex(i)}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))
-            ) : (
-              <>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    isActive={table.getState().pagination.pageIndex === 0}
-                    onClick={() => table.setPageIndex(0)}
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                {table.getState().pagination.pageIndex > 2 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-                {table.getState().pagination.pageIndex > 1 && (
-                  <PaginationItem>
-                    <PaginationLink
-                      href="#"
-                      onClick={() =>
-                        table.setPageIndex(
-                          table.getState().pagination.pageIndex - 1
-                        )
-                      }
-                    >
-                      {table.getState().pagination.pageIndex}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-                {table.getState().pagination.pageIndex !== 0 &&
-                  table.getState().pagination.pageIndex !==
-                    table.getPageCount() - 1 && (
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#"
-                        isActive
-                        onClick={() =>
-                          table.setPageIndex(
-                            table.getState().pagination.pageIndex
-                          )
-                        }
-                      >
-                        {table.getState().pagination.pageIndex + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )}
-                {table.getState().pagination.pageIndex <
-                  table.getPageCount() - 2 && (
-                  <PaginationItem>
-                    <PaginationLink
-                      href="#"
-                      onClick={() =>
-                        table.setPageIndex(
-                          table.getState().pagination.pageIndex + 1
-                        )
-                      }
-                    >
-                      {table.getState().pagination.pageIndex + 2}
-                    </PaginationLink>
-                  </PaginationItem>
-                )}
-                {table.getState().pagination.pageIndex <
-                  table.getPageCount() - 3 && (
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                )}
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    isActive={
-                      table.getState().pagination.pageIndex ===
-                      table.getPageCount() - 1
-                    }
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                  >
-                    {table.getPageCount()}
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-          </div>
+          {Array.from({ length: pagination?.total_pages || 1 }, (_, idx) => (
+            <PaginationItem key={idx + 1}>
+              <PaginationLink
+                className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'}`}
+                isActive={pageNumber === idx + 1}
+                onClick={e => {
+                  e.preventDefault();
+                  setPageNumber(idx + 1);
+                }}
+              >
+                {idx + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
           <PaginationItem>
-            <PaginationNext href="#" onClick={() => table.nextPage()} />
+            <PaginationNext
+              onClick={handleNext}
+              aria-disabled={!pagination?.has_next}
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </div>
+    </>
   );
 };
 

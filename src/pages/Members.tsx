@@ -9,7 +9,7 @@ import { DialogTrigger, Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Members() {
-  const { inviteCode, subAdminId, statistics, members } = useAppStateEffect(
+  const { inviteCode, subAdminId, statistics } = useAppStateEffect(
     (state: RootState) => state.member,
     fetchMembersStatistics
   );
@@ -50,7 +50,7 @@ export default function Members() {
         </div>
         <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
           <StatisticCardList stats={investors_statistics} />
-          <InvestorTable header="Investors" users={members?.investors || []} />
+          <InvestorTable />
         </TabsContent>
         <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
           <BulkOnboarding />

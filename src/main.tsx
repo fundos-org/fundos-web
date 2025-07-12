@@ -8,23 +8,28 @@ import store from './app/store.ts';
 import { Toaster } from 'react-hot-toast';
 import { StrictMode } from 'react';
 import { LoadingProvider } from './LoadingProvider.tsx';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <LoadingProvider>
-        <BrowserRouter>
-          <AppRoutes />
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                borderRadius: 0,
-              },
-            }}
-            reverseOrder={false}
-          />
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AppRoutes />
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                style: {
+                  borderRadius: 0,
+                },
+              }}
+              reverseOrder={false}
+            />
+          </BrowserRouter>
+        </QueryClientProvider>
       </LoadingProvider>
     </Provider>
   </StrictMode>

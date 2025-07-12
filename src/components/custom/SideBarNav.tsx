@@ -42,6 +42,7 @@ import {
   AlertDialogTrigger,
 } from '../ui/alert-dialog';
 import { AppRoute } from '@/RoutesEnum';
+import { AppEnums } from '@/constants/enums';
 
 // Define role type for better type safety
 type Role = 'admin' | 'subadmin' | 'kyc';
@@ -97,7 +98,7 @@ export default function AppSidebar() {
 
   useEffect(() => {
     try {
-      const storedData = sessionStorage.getItem('subadmindetails');
+      const storedData = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
       if (storedData) {
         const parsedData: SessionData = JSON.parse(storedData);
         setSessionData(parsedData);

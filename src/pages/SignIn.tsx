@@ -10,6 +10,7 @@ import { loginAdmin, loginSubAdmin } from '@/axioscalls/apiServices';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { AppRoute } from '@/RoutesEnum';
+import { AppEnums } from '@/constants/enums';
 
 type ColorScheme = {
   name: string;
@@ -139,7 +140,7 @@ export default function SignIn() {
         const { success, message } = await loginAdmin(data);
         if (success) {
           const sessData = JSON.stringify({ role: 'admin', name: 'Ammit' });
-          sessionStorage.setItem('subadmindetails', sessData);
+          sessionStorage.setItem(AppEnums.SUBADMIN_SESSION, sessData);
           toast.success(message || 'Login successful!');
           navigate(AppRoute.ADMIN_SUBADMIN);
         } else {
@@ -159,7 +160,7 @@ export default function SignIn() {
               subadmin_id,
               role: 'subadmin',
             });
-            sessionStorage.setItem('subadmindetails', sessData);
+            sessionStorage.setItem(AppEnums.SUBADMIN_SESSION, sessData);
             toast.success(message || 'Login successful!');
             navigate(AppRoute.SUBADMIN_DASHBOARD);
           })
