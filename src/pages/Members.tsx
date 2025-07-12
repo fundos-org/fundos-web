@@ -7,7 +7,8 @@ import { useInvestorsMetadata } from '@/hooks/customhooks/MembersHooks/useInvest
 import toast from 'react-hot-toast';
 import { lazy, Suspense } from 'react';
 const InvestorTable = lazy(
-  () => import('@/components/custom/tables/InvestorTable/InvestorTable')
+  () =>
+    import('@/components/custom/InvestorSection/InvestorTable/InvestorTable')
 );
 
 export default function Members() {

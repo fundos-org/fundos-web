@@ -1,4 +1,4 @@
-import { InvestorsListResponse } from '@/components/custom/tables/InvestorTable/InvestorTable';
+import { InvestorsListResponse } from '@/components/custom/InvestorSection/InvestorTable/InvestorTable';
 import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,

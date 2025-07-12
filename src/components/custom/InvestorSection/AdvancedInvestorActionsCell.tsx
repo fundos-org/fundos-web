@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { InvestorEntity } from './InvestorTable';
+import { InvestorEntity } from './InvestorTable/InvestorTable';
 import { memo, Suspense, useState } from 'react';
 import { TableCell } from '@/components/ui/table';
 import {
@@ -20,8 +20,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { UseMutateFunction } from 'react-query';
 import { lazy } from 'react';
-const InvestorDetailsDialog = lazy(
-  () => import('../../modals/InvestorDialogItems/InvestorDetailsDialog')
+const InvestorEditDialog = lazy(
+  () => import('./DialogItems/InvestorEditDialog')
 );
 
 const AdvancedInvestorActionsCell = memo(
@@ -128,7 +128,7 @@ const AdvancedInvestorActionsCell = memo(
           </AlertDialogContent>
         </AlertDialog>
         <Suspense fallback={<div className="spinner">Loading...</div>}>
-          <InvestorDetailsDialog
+          <InvestorEditDialog
             isDialogOpen={isDialog}
             setDialogOpen={setIsDialog}
             investor_id={investor.investor_id}

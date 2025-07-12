@@ -14,11 +14,13 @@ import {
   UpdateInvestorRequest,
 } from '@/constants/membersConstant';
 import { useInvestorEditDetails } from '@/hooks/customhooks/MembersHooks/useInvestorEditDetails';
-const PersonalDetails = lazy(() => import('./PersonalDetails'));
-const BankDetails = lazy(() => import('./BankDetails'));
-const ProfessionalBackground = lazy(() => import('./ProfessionalBackground'));
+const PersonalDetails = lazy(() => import('../EditableItems/PersonalDetails'));
+const BankDetails = lazy(() => import('../EditableItems/BankDetails'));
+const ProfessionalBackground = lazy(
+  () => import('../EditableItems/ProfessionalBackground')
+);
 
-export default function InvestorDetailsDialog({
+export default function InvestorEditDialog({
   isDialogOpen,
   setDialogOpen,
   investor_id,

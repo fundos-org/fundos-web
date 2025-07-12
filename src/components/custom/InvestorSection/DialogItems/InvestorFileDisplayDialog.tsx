@@ -10,7 +10,7 @@ import { AppEnums } from '@/constants/enums';
 import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import { FileText, X } from 'lucide-react';
 import { memo, useState } from 'react';
-import { InvestorEntity } from '../../tables/InvestorTable/InvestorTable';
+import { InvestorEntity } from '../InvestorTable/InvestorTable';
 
 const AdvancedInvestorFileDialog = memo(
   ({ investor }: { investor: InvestorEntity }) => {
