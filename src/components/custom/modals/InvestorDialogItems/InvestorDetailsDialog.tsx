@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import PersonalDetails from './PersonalDetails';
 import { useInvestorDetails } from '@/hooks/customhooks/MembersHooks/useInvestorDetails';
 import { InvestorDetailsResponse } from '@/constants/membersConstant';
@@ -19,7 +19,7 @@ export default function InvestorDetailsDialog({
   investor_id,
 }: {
   isDialogOpen: boolean;
-  setDialogOpen: (value: boolean) => void;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
   investor_id: string;
 }) {
   const [activeTab, setActiveTab] = useState<LocalEnum>(LocalEnum.PD);
@@ -29,7 +29,7 @@ export default function InvestorDetailsDialog({
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent
         hideCloseButton={true}
-        className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-6xl max-h-[90vh]"
+        className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-4xl max-h-[90vh]"
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
@@ -55,6 +55,7 @@ export default function InvestorDetailsDialog({
               <Content
                 activeTab={activeTab}
                 investorDetails={investorDetails as InvestorDetailsResponse}
+                setDialogOpen={setDialogOpen}
               />
             </div>
           </>
@@ -87,7 +88,7 @@ const Sidebar: React.FC<{
       {tabs.map(tab => (
         <button
           key={tab.id}
-          className={`w-full text-left py-2 px-4 mb-2 text-lg font-medium ${
+          className={`w-full text-left py-2 px-4 mb-2 text-md font-medium ${
             activeTab === tab.label
               ? 'bg-[#313132] text-white'
               : ' text-gray-400 hover:bg-[#313132]'
@@ -105,18 +106,26 @@ const Sidebar: React.FC<{
 const Content: React.FC<{
   activeTab: LocalEnum;
   investorDetails: InvestorDetailsResponse;
-}> = ({ activeTab, investorDetails }) => {
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ activeTab, investorDetails, setDialogOpen }) => {
   return (
     <div className="flex-1">
       {activeTab === LocalEnum.PD && (
-        <PersonalDetails details={investorDetails.personal_details} />
+        <PersonalDetails
+          details={investorDetails.personal_details}
+          setDialogOpen={setDialogOpen}
+        />
       )}
       {activeTab === LocalEnum.BD && (
-        <BankDetails data={investorDetails.bank_details} />
+        <BankDetails
+          details={investorDetails.bank_details}
+          setDialogOpen={setDialogOpen}
+        />
       )}
       {activeTab === LocalEnum.PB && (
         <ProfessionalBackground
-          data={investorDetails.professional_background}
+          details={investorDetails.professional_background}
+          setDialogOpen={setDialogOpen}
         />
       )}
     </div>

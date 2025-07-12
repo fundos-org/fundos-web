@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -27,6 +26,7 @@ import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable'
 import { FileText, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
+import SwitchCustom from '@/components/ui/switchCustom';
 
 // Define the type for the user data
 export interface Investor {
@@ -127,7 +127,7 @@ const InvestorTable = () => {
       <Table className="rounded-none">
         <TableHeader>
           <TableRow className="border-zinc-400">
-            <TableHead className="text-zinc-400"></TableHead>
+            <TableHead className="text-zinc-400">Action</TableHead>
             <TableHead className="text-zinc-400">Name</TableHead>
             <TableHead className="text-zinc-400">Mail</TableHead>
             <TableHead className="text-zinc-400">Type</TableHead>
@@ -137,7 +137,7 @@ const InvestorTable = () => {
             <TableHead className="text-zinc-400">KYC Status</TableHead>
             <TableHead className="text-zinc-400">Joining Date</TableHead>
             <TableHead className="text-zinc-400">MCA</TableHead>
-            <TableHead className="text-zinc-400"></TableHead>
+            <TableHead className="text-zinc-400">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -145,17 +145,17 @@ const InvestorTable = () => {
             data?.investors?.map(investor => (
               <TableRow className="border-[#2A2A2B]" key={investor.investor_id}>
                 <TableCell className="font-medium">
-                  <Switch />
+                  <SwitchCustom />
                 </TableCell>
-                <TableCell className="font-medium flex items-center">
-                  <div className="w-5 h-5 mr-2 overflow-hidden rounded-full">
+                <TableCell className="font-medium flex items-center py-2">
+                  <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
                     <img
                       src={investor.profile_pic}
                       className="w-full h-full object-cover"
                       alt="dp"
                     />
                   </div>
-                  {investor.name}
+                  <span className="mt-2">{investor.name}</span>
                 </TableCell>
                 <TableCell className="font-medium">{investor.mail}</TableCell>
                 <TableCell className="font-medium capitalize">

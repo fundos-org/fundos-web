@@ -1,16 +1,144 @@
+import { Input } from '@/components/ui/input';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ProfessionalBackground as PBType } from '@/constants/membersConstant';
+import { Dispatch, SetStateAction } from 'react';
 
-const ProfessionalBackground: React.FC<{ data: PBType }> = ({ data }) => {
-  console.log(data);
+const schema = z.object({
+  occupation: z
+    .string()
+    .min(1, { message: 'Occupation is required' })
+    .optional(),
+  income_source: z
+    .string()
+    .min(1, { message: 'Income source is required' })
+    .optional(),
+  annual_income: z
+    .number()
+    .min(0, { message: 'Annual income must be non-negative' })
+    .optional(),
+  capital_commitment: z
+    .number()
+    .min(0, { message: 'Capital commitment must be non-negative' })
+    .optional(),
+});
+
+type FormData = z.infer<typeof schema>;
+
+const ProfessionalBackground: React.FC<{
+  details: PBType;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ details, setDialogOpen }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      occupation: details?.occupation || '',
+      income_source: details?.income_source || '',
+      annual_income: details?.annual_income || 0,
+      capital_commitment: details?.capital_commitment || 0,
+    },
+  });
+
+  const onSubmit = (data: FormData) => {
+    console.log(data);
+  };
+
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Test 1 Component</h2>
-      <p className="text-gray-700">
-        This is the Test 1 component. It contains sample content for the first
-        tab. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-        eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-    </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-4 px-10 py-5 h-full flex flex-col justify-between gap-2"
+    >
+      <div className="flex flex-col gap-5">
+        <Controller
+          name="occupation"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="Occupation"
+              className={`${errors.occupation ? 'border-red-500' : null} rounded-none`}
+              onChange={e => field.onChange(e.target.value)}
+            />
+          )}
+        />
+        {errors.occupation && (
+          <p className="text-red-500 text-sm">{errors.occupation.message}</p>
+        )}
+
+        <Controller
+          name="income_source"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="Income Source"
+              className={`${errors.income_source ? 'border-red-500' : null} rounded-none`}
+              onChange={e => field.onChange(e.target.value)}
+            />
+          )}
+        />
+        {errors.income_source && (
+          <p className="text-red-500 text-sm">{errors.income_source.message}</p>
+        )}
+
+        <Controller
+          name="annual_income"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type="number"
+              placeholder="Annual Income"
+              className={`${errors.annual_income ? 'border-red-500' : null} rounded-none`}
+              onChange={e => field.onChange(Number(e.target.value))}
+            />
+          )}
+        />
+        {errors.annual_income && (
+          <p className="text-red-500 text-sm">{errors.annual_income.message}</p>
+        )}
+
+        <Controller
+          name="capital_commitment"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type="number"
+              placeholder="Capital Commitment"
+              className={`${errors.capital_commitment ? 'border-red-500' : null} rounded-none`}
+              onChange={e => field.onChange(Number(e.target.value))}
+            />
+          )}
+        />
+        {errors.capital_commitment && (
+          <p className="text-red-500 text-sm">
+            {errors.capital_commitment.message}
+          </p>
+        )}
+      </div>
+
+      <div className="flex gap-3 justify-end">
+        <button
+          type="button"
+          onClick={() => setDialogOpen(false)}
+          className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
+        >
+          Close
+        </button>
+        <button
+          type="submit"
+          className="bg-white text-black hover:opacity-50 px-10 py-2 cursor-pointer"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
   );
 };
 

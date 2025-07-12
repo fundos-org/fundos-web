@@ -3,6 +3,7 @@ import { PersonalDetails as PDType } from '@/constants/membersConstant';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Dispatch, SetStateAction } from 'react';
 
 const schema = z.object({
   first_name: z
@@ -27,7 +28,10 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const PersonalDetails: React.FC<{ details: PDType }> = ({ details }) => {
+const PersonalDetails: React.FC<{
+  details: PDType;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ details, setDialogOpen }) => {
   const {
     control,
     handleSubmit,
@@ -152,7 +156,8 @@ const PersonalDetails: React.FC<{ details: PDType }> = ({ details }) => {
 
       <div className="flex gap-3 justify-end">
         <button
-          type="submit"
+          onClick={() => setDialogOpen(false)}
+          type="button"
           className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
         >
           Close
