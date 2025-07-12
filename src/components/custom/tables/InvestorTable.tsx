@@ -18,6 +18,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import {
   Table,
@@ -28,7 +35,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useInvestors } from '@/hooks/customhooks/useInvestorTable';
-import { FileText, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import {
+  FileText,
+  MoreHorizontal,
+  Pencil,
+  RefreshCw,
+  Trash2,
+} from 'lucide-react';
 // import { Ellipsis } from 'lucide-react';
 import { useState } from 'react';
 
@@ -62,15 +75,22 @@ export interface InvestorsListResponse {
   success: boolean;
 }
 
+const pageSizesList = [5, 10, 20, 50];
+
 const InvestorTable = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize] = useState<number>(10);
-  const { data, isLoading, error } = useInvestors(pageNumber, pageSize);
-  console.log('Investors API data:', data, error);
+  const [pageSize, setPageSize] = useState<number>(8);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { data, isLoading, error, refetch } = useInvestors(
+    pageNumber,
+    pageSize
+  );
 
   if (!data && !isLoading) {
     return <div>No data found. Check session or API.</div>;
   }
+
+  if (error) return <div>Error occured please check api</div>;
 
   const pagination = data?.pagination;
 
@@ -88,16 +108,46 @@ const InvestorTable = () => {
     }
   };
 
+  const handlePageSizeChange = (value: string) => {
+    setPageSize(Number(value));
+    setPageNumber(1);
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500); // Small delay for better UX
+    }
+  };
+
   return (
-    <>
-      <Table>
+    <div className="w-full border border-[#2A2A2B]">
+      <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
+        <h1 className="text-2xl text-zinc-400">SUB-ADMIN ONBOARDED</h1>
+        <button
+          onClick={handleRefresh}
+          disabled={isRefreshing || isLoading}
+          className="flex gap-3 p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+          title="Refresh data"
+        >
+          {/* <span>Refresh:</span> */}
+          <RefreshCw
+            className={`w-5 h-5 text-zinc-400 ${
+              isRefreshing || isLoading ? 'animate-spin' : ''
+            } transition-transform duration-200 hover:text-zinc-300`}
+          />
+        </button>
+      </div>
+      <Table className="rounded-none">
         <TableHeader>
-          <TableRow>
+          <TableRow className="border-zinc-400">
             <TableHead className="text-zinc-400"></TableHead>
             <TableHead className="text-zinc-400">Name</TableHead>
             <TableHead className="text-zinc-400">Mail</TableHead>
             <TableHead className="text-zinc-400">Type</TableHead>
-            <TableHead className="text-zinc-400  text-center">
+            <TableHead className="text-zinc-400 text-center">
               Deal Invested
             </TableHead>
             <TableHead className="text-zinc-400">KYC Status</TableHead>
@@ -109,15 +159,21 @@ const InvestorTable = () => {
         <TableBody>
           {data?.investors &&
             data?.investors?.map(investor => (
-              <TableRow key={investor.investor_id}>
+              <TableRow className="border-[#2A2A2B]" key={investor.investor_id}>
                 <TableCell className="font-medium">
                   <Switch />
                 </TableCell>
-                <TableCell className="font-medium">{investor.name}</TableCell>
+                <TableCell className="font-medium flex items-center">
+                  <div className="w-5 h-5 mr-2 overflow-hidden rounded-full">
+                    <img
+                      src={investor.profile_pic}
+                      className="w-full h-full object-cover"
+                      alt="dp"
+                    />
+                  </div>
+                  {investor.name}
+                </TableCell>
                 <TableCell className="font-medium">{investor.mail}</TableCell>
-                {/* <TableCell className="font-medium">
-                  {investor.profile_pic}
-                </TableCell> */}
                 <TableCell className="font-medium capitalize">
                   {investor.type}
                 </TableCell>
@@ -160,37 +216,60 @@ const InvestorTable = () => {
             ))}
         </TableBody>
       </Table>
-      <Pagination>
-        <PaginationContent>
+      <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
+        <span>Total records: {data?.pagination.total_records}</span>
+        <PaginationContent className="gap-10">
           <PaginationItem>
             <PaginationPrevious
+              className="rounded-none"
               onClick={handlePrev}
               aria-disabled={!pagination?.has_prev}
             />
           </PaginationItem>
-          {Array.from({ length: pagination?.total_pages || 1 }, (_, idx) => (
-            <PaginationItem key={idx + 1}>
-              <PaginationLink
-                className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'}`}
-                isActive={pageNumber === idx + 1}
-                onClick={e => {
-                  e.preventDefault();
-                  setPageNumber(idx + 1);
-                }}
-              >
-                {idx + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
+          <div className="flex gap-2">
+            {Array.from({ length: pagination?.total_pages || 1 }, (_, idx) => (
+              <PaginationItem key={idx + 1}>
+                <PaginationLink
+                  className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'} rounded-none`}
+                  isActive={pageNumber === idx + 1}
+                  onClick={e => {
+                    e.preventDefault();
+                    setPageNumber(idx + 1);
+                  }}
+                >
+                  {idx + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+          </div>
           <PaginationItem>
             <PaginationNext
+              className="rounded-none"
               onClick={handleNext}
               aria-disabled={!pagination?.has_next}
             />
           </PaginationItem>
         </PaginationContent>
+        <div className="flex items-center">
+          <label htmlFor="pageSizeSelect" className="text-sm font-medium">
+            Records per page:&nbsp;
+          </label>
+          <Select
+            onValueChange={handlePageSizeChange}
+            defaultValue={String(pageSize)}
+          >
+            <SelectTrigger className="rounded-none w-[100px]">
+              <SelectValue placeholder="Select Page Size" />
+            </SelectTrigger>
+            <SelectContent className="rounded-none">
+              {pageSizesList.map(ps => (
+                <SelectItem value={String(ps)}>{ps}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </Pagination>
-    </>
+    </div>
   );
 };
 
