@@ -19,7 +19,7 @@ export const useInvestors = (pageNumber: number, pageSize: number) => {
       refetchOnWindowFocus: false,
       retry: 2,
       keepPreviousData: true, // useful for pagination
-      staleTime: 1000 * 120, // 2 minute
+      staleTime: 1000 * 60 * 60, // 2 minute
       onSuccess: () => toast.success('Investors fetched successfully'),
       onError: (error: Error) => {
         toast.error(`Fetch investors failed: ${error.message}`);

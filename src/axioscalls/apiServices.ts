@@ -11,7 +11,10 @@ import {
   SubadminsResponse,
 } from '@/constants/dealsConstant';
 import { AppEnums } from '@/constants/enums';
-import { MemberApiResponse } from '@/constants/membersConstant';
+import {
+  InvestorDetailsResponse,
+  MemberApiResponse,
+} from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
@@ -526,6 +529,23 @@ export const getInvestors = async (
   try {
     const response = await axios.get(
       `${baseUrlStaging}/api/v1/live/subadmin/investors/list/${subadmin_id}?page=${pageNumber}&per_page=${pageSize}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getInvestorDetails = async (
+  investor_id: string
+): Promise<InvestorDetailsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/investors/abount_info/${investor_id}`
     );
     return response.data;
   } catch (error) {

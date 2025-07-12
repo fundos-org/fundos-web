@@ -19,7 +19,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { UseMutateFunction } from 'react-query';
-import InvestorDetailsDialog from './InvestorDetailsDialog';
+import InvestorDetailsDialog from '../../modals/InvestorDialogItems/InvestorDetailsDialog';
 
 const AdvancedInvestorActionsCell = ({
   investor,
@@ -126,6 +126,7 @@ const AdvancedInvestorActionsCell = ({
       <InvestorDetailsDialog
         isDialogOpen={isDialog}
         setDialogOpen={setIsDialog}
+        investor_id={investor.investor_id}
       />
     </>
   );
