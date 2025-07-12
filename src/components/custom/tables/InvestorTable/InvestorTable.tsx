@@ -1,18 +1,6 @@
-// import {
-//   ChevronDown,
-//   // MoreHorizontal
-// } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-// import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
-  // PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -34,16 +22,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useInvestors } from '@/hooks/customhooks/useInvestorTable';
-import {
-  FileText,
-  MoreHorizontal,
-  Pencil,
-  RefreshCw,
-  Trash2,
-} from 'lucide-react';
-// import { Ellipsis } from 'lucide-react';
+import { useInvestorDelete } from '@/hooks/customhooks/MembersHooks/useInvestorDelete';
+import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable';
+import { FileText, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
 
 // Define the type for the user data
 export interface Investor {
@@ -54,7 +37,7 @@ export interface Investor {
   deals_invested: number;
   kyc_status: 'pending' | 'verified' | 'rejected';
   mca_key: string;
-  joined_on: string; // Consider Date if you want to parse it
+  joined_on: string;
   profile_pic: string;
 }
 
@@ -81,16 +64,17 @@ const InvestorTable = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(8);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { mutate: deleteInvestor } = useInvestorDelete();
   const { data, isLoading, error, refetch } = useInvestors(
     pageNumber,
     pageSize
   );
 
+  if (error) return <div>Error occured please check api</div>;
+
   if (!data && !isLoading) {
     return <div>No data found. Check session or API.</div>;
   }
-
-  if (error) return <div>Error occured please check api</div>;
 
   const pagination = data?.pagination;
 
@@ -190,28 +174,11 @@ const InvestorTable = () => {
                   {/* {investor.mca_key} */}
                   <FileText />
                 </TableCell>
-                <TableCell className="font-medium">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="rounded-none">
-                      <DropdownMenuItem
-                      // onClick={() => handleEditMember(investor.investor_id)}
-                      >
-                        <Pencil />
-                        Edit Member
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-red-400"
-                        // onClick={() => handleDeleteMember(investor.investor_id)}
-                      >
-                        <Trash2 className="text-red-400" />
-                        Delete Member
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                <AdvancedInvestorActionsCell
+                  key={investor.investor_id}
+                  investor={investor}
+                  deleteInvestor={deleteInvestor}
+                />
               </TableRow>
             ))}
         </TableBody>
@@ -219,7 +186,9 @@ const InvestorTable = () => {
       <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
         <span>Total records: {data?.pagination.total_records}</span>
         <PaginationContent className="gap-10">
-          <PaginationItem>
+          <PaginationItem
+            className={`${!pagination?.has_prev ? 'hidden' : null} cursor-pointer`}
+          >
             <PaginationPrevious
               className="rounded-none"
               onClick={handlePrev}
@@ -228,7 +197,7 @@ const InvestorTable = () => {
           </PaginationItem>
           <div className="flex gap-2">
             {Array.from({ length: pagination?.total_pages || 1 }, (_, idx) => (
-              <PaginationItem key={idx + 1}>
+              <PaginationItem key={idx + 1} className="cursor-pointer">
                 <PaginationLink
                   className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'} rounded-none`}
                   isActive={pageNumber === idx + 1}
@@ -242,12 +211,10 @@ const InvestorTable = () => {
               </PaginationItem>
             ))}
           </div>
-          <PaginationItem>
-            <PaginationNext
-              className="rounded-none"
-              onClick={handleNext}
-              aria-disabled={!pagination?.has_next}
-            />
+          <PaginationItem
+            className={`${!pagination?.has_next ? 'hidden' : null} cursor-pointer`}
+          >
+            <PaginationNext className="rounded-none" onClick={handleNext} />
           </PaginationItem>
         </PaginationContent>
         <div className="flex items-center">
@@ -263,7 +230,9 @@ const InvestorTable = () => {
             </SelectTrigger>
             <SelectContent className="rounded-none">
               {pageSizesList.map(ps => (
-                <SelectItem value={String(ps)}>{ps}</SelectItem>
+                <SelectItem key={ps} value={String(ps)}>
+                  {ps}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

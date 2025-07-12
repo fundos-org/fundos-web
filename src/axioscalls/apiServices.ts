@@ -1,4 +1,4 @@
-import { InvestorsListResponse } from '@/components/custom/tables/InvestorTable';
+import { InvestorsListResponse } from '@/components/custom/tables/InvestorTable/InvestorTable';
 import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
@@ -496,27 +496,28 @@ export const shareDetails = async (subadmin_id: string) => {
     }
   }
 };
-// /api/v1/live/subadmin/investors/list/
-// export const getInvestors = async (): Promise<MemberApiResponse> => {
-//   try {
-//     const { subadmin_id } = JSON.parse(
-//       sessionStorage.getItem('subadmindetails') as string
-//     );
-//     const response = await axios.get(
-//       `${baseUrl}/subadmin/members/statistics/${subadmin_id}`
-//     );
-//     return response.data;
-//   } catch (error: unknown) {
-//     console.log('Error in getInvestors:', error);
-//     if (axios.isAxiosError(error)) {
-//       toast.error(`Error: ${error.message}`);
-//       throw new Error(error.message);
-//     } else {
-//       console.error('Unexpected error:', error);
-//       throw new Error('An unexpected error occurred');
-//     }
-//   }
-// };
+
+// React Query Tanstack
+export const deleteInvestor = async (
+  investor_id: string
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const { subadmin_id } = JSON.parse(
+      sessionStorage.getItem(AppEnums.SUBADMIN_SESSION) as string
+    );
+    const response = await axios.delete(
+      `${baseUrl}/api/v1/live/subadmin/investors/delete/${subadmin_id}/${investor_id}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
 export const getInvestors = async (
   subadmin_id: string,
   pageNumber: number,
@@ -528,11 +529,9 @@ export const getInvestors = async (
     );
     return response.data;
   } catch (error) {
-    console.log('Error in getInvestors:', error);
     if (axios.isAxiosError(error)) {
       throw new Error(error.message);
     } else {
-      console.error('Unexpected error:', error);
       throw new Error('An unexpected error occurred');
     }
   }

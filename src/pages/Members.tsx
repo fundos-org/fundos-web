@@ -4,7 +4,7 @@ import { fetchMembersStatistics } from '@/axioscalls/apiServices';
 import BulkOnboarding from '@/components/custom/BulkOnboarding';
 import AddMemberDialog from '@/components/custom/modals/AddMemberDialog';
 import StatisticCardList from '@/components/custom/StatisticCardList';
-import InvestorTable from '@/components/custom/tables/InvestorTable';
+import InvestorTable from '@/components/custom/tables/InvestorTable/InvestorTable';
 import { DialogTrigger, Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 

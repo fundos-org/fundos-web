@@ -16,6 +16,8 @@ export const useInvestors = (pageNumber: number, pageSize: number) => {
     () => getInvestors(subadmin_id, pageNumber, pageSize),
     {
       enabled: !!subadmin_id,
+      refetchOnWindowFocus: false,
+      retry: 2,
       keepPreviousData: true, // useful for pagination
       staleTime: 1000 * 120, // 2 minute
       onSuccess: () => toast.success('Investors fetched successfully'),
