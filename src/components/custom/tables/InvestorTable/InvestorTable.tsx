@@ -23,13 +23,14 @@ import {
 } from '@/components/ui/table';
 import { useInvestorDelete } from '@/hooks/customhooks/MembersHooks/useInvestorDelete';
 import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable';
-import { FileText, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
 import SwitchCustom from '@/components/ui/switchCustom';
+import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
+import AdvancedInvestorFileDialog from '../../modals/InvestorDialogItems/AdvancedInvestorFileDialog';
 
 // Define the type for the user data
-export interface Investor {
+export interface InvestorEntity {
   investor_id: string;
   name: string;
   mail: string;
@@ -53,7 +54,7 @@ export interface Pagination {
 export interface InvestorsListResponse {
   subadmin_id: string;
   subadmin_name: string;
-  investors: Investor[];
+  investors: InvestorEntity[];
   pagination: Pagination;
   success: boolean;
 }
@@ -109,7 +110,7 @@ const InvestorTable = () => {
   return (
     <div className="w-full border border-[#2A2A2B]">
       <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
-        <h1 className="text-2xl text-zinc-400">SUB-ADMIN ONBOARDED</h1>
+        <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
         <button
           onClick={handleRefresh}
           disabled={isRefreshing || isLoading}
@@ -119,7 +120,7 @@ const InvestorTable = () => {
           {/* <span>Refresh:</span> */}
           <RefreshCw
             className={`w-5 h-5 text-zinc-400 ${
-              isRefreshing || isLoading ? 'animate-spin' : ''
+              isRefreshing || isLoading ? 'animate-spin' : null
             } transition-transform duration-200 hover:text-zinc-300`}
           />
         </button>
@@ -170,10 +171,7 @@ const InvestorTable = () => {
                 <TableCell className="font-medium">
                   {investor.joined_on}
                 </TableCell>
-                <TableCell className="font-medium">
-                  {/* {investor.mca_key} */}
-                  <FileText />
-                </TableCell>
+                <AdvancedInvestorFileDialog investor={investor} />
                 <AdvancedInvestorActionsCell
                   key={investor.investor_id}
                   investor={investor}

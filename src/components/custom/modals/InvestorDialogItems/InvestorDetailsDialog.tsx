@@ -5,13 +5,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { lazy, Suspense } from 'react';
 import { X } from 'lucide-react';
 import { Dispatch, SetStateAction, useState } from 'react';
-import PersonalDetails from './PersonalDetails';
 import { useInvestorDetails } from '@/hooks/customhooks/MembersHooks/useInvestorDetails';
 import { InvestorDetailsResponse } from '@/constants/membersConstant';
-import BankDetails from './BankDetails';
-import ProfessionalBackground from './ProfessionalBackground';
+const PersonalDetails = lazy(() => import('./PersonalDetails'));
+const BankDetails = lazy(() => import('./BankDetails'));
+const ProfessionalBackground = lazy(() => import('./ProfessionalBackground'));
 
 export default function InvestorDetailsDialog({
   isDialogOpen,
@@ -111,22 +112,28 @@ const Content: React.FC<{
   return (
     <div className="flex-1">
       {activeTab === LocalEnum.PD && (
-        <PersonalDetails
-          details={investorDetails.personal_details}
-          setDialogOpen={setDialogOpen}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <PersonalDetails
+            details={investorDetails.personal_details}
+            setDialogOpen={setDialogOpen}
+          />
+        </Suspense>
       )}
       {activeTab === LocalEnum.BD && (
-        <BankDetails
-          details={investorDetails.bank_details}
-          setDialogOpen={setDialogOpen}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <BankDetails
+            details={investorDetails.bank_details}
+            setDialogOpen={setDialogOpen}
+          />
+        </Suspense>
       )}
       {activeTab === LocalEnum.PB && (
-        <ProfessionalBackground
-          details={investorDetails.professional_background}
-          setDialogOpen={setDialogOpen}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProfessionalBackground
+            details={investorDetails.professional_background}
+            setDialogOpen={setDialogOpen}
+          />
+        </Suspense>
       )}
     </div>
   );

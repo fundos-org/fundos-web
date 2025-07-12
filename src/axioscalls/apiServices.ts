@@ -13,6 +13,7 @@ import {
 import { AppEnums } from '@/constants/enums';
 import {
   InvestorDetailsResponse,
+  InvestorMetadataResponse,
   MemberApiResponse,
 } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -546,6 +547,23 @@ export const getInvestorDetails = async (
   try {
     const response = await axios.get(
       `${baseUrlStaging}/api/v1/live/subadmin/investors/abount_info/${investor_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getInvestorMetadata = async (
+  subadmin_id: string
+): Promise<InvestorMetadataResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/investors/metadata/${subadmin_id}`
     );
     return response.data;
   } catch (error) {

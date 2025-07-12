@@ -68,3 +68,14 @@ export interface InvestorDetailsResponse extends InvestorDetails {
   investor_id: string;
   success: boolean;
 }
+
+export interface InvestorMetadataResponse {
+  subadmin_id: string;
+  subadmin_name: string;
+  metadata: {
+    investor_onboarded: number;
+    kyc_pending: number;
+    started_investing: number;
+  };
+  success: boolean;
+}

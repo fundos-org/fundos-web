@@ -1,20 +1,18 @@
-import { useAppStateEffect } from '@/app/hooks';
-import { RootState } from '@/app/store';
-import { fetchMembersStatistics } from '@/axioscalls/apiServices';
 import BulkOnboarding from '@/components/custom/BulkOnboarding';
 import AddMemberDialog from '@/components/custom/modals/AddMemberDialog';
 import StatisticCardList from '@/components/custom/StatisticCardList';
-import InvestorTable from '@/components/custom/tables/InvestorTable/InvestorTable';
 import { DialogTrigger, Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useInvestorsMetadata } from '@/hooks/customhooks/MembersHooks/useInvestorsMetadata';
+import toast from 'react-hot-toast';
+import { lazy, Suspense } from 'react';
+const InvestorTable = lazy(
+  () => import('@/components/custom/tables/InvestorTable/InvestorTable')
+);
 
 export default function Members() {
-  const { inviteCode, subAdminId, statistics } = useAppStateEffect(
-    (state: RootState) => state.member,
-    fetchMembersStatistics
-  );
-  const investors_statistics = statistics?.investors_statistics;
-  console.log(inviteCode, subAdminId);
+  const { data: stats, error } = useInvestorsMetadata();
+  if (error) toast.error('Error while fetch statistics');
 
   return (
     <Dialog>
@@ -36,21 +34,23 @@ export default function Members() {
           <TabsList className="justify-start rounded-none bg-transparent border-b-0 p-0 w-[500px]">
             <TabsTrigger
               value="active"
-              className="text-white border-0 font-semibold data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+              className="cursor-pointer text-white border-0 font-semibold data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
             >
               Investors
             </TabsTrigger>
             <TabsTrigger
               value="closed"
-              className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+              className="cursor-pointer text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
             >
               Bulk Onboard
             </TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
-          <StatisticCardList stats={investors_statistics} />
-          <InvestorTable />
+          <StatisticCardList stats={stats?.metadata} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <InvestorTable />
+          </Suspense>
         </TabsContent>
         <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
           <BulkOnboarding />
