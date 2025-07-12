@@ -15,6 +15,8 @@ import {
   InvestorDetailsResponse,
   InvestorMetadataResponse,
   MemberApiResponse,
+  UpdateInvestorRequest,
+  UpdateInvestorResponse,
 } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
@@ -564,6 +566,26 @@ export const getInvestorMetadata = async (
   try {
     const response = await axios.get(
       `${baseUrlStaging}/api/v1/live/subadmin/investors/metadata/${subadmin_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const updateInvestorDetails = async (
+  subadmin_id: string,
+  investor_id: string,
+  details: UpdateInvestorRequest
+): Promise<UpdateInvestorResponse> => {
+  try {
+    const response = await axios.put(
+      `${baseUrlStaging}/api/v1/live/subadmin/investors/update/${subadmin_id}/${investor_id}`,
+      details
     );
     return response.data;
   } catch (error) {

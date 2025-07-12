@@ -9,7 +9,11 @@ import { lazy, Suspense } from 'react';
 import { X } from 'lucide-react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useInvestorDetails } from '@/hooks/customhooks/MembersHooks/useInvestorDetails';
-import { InvestorDetailsResponse } from '@/constants/membersConstant';
+import {
+  InvestorDetailsResponse,
+  UpdateInvestorRequest,
+} from '@/constants/membersConstant';
+import { useInvestorEditDetails } from '@/hooks/customhooks/MembersHooks/useInvestorEditDetails';
 const PersonalDetails = lazy(() => import('./PersonalDetails'));
 const BankDetails = lazy(() => import('./BankDetails'));
 const ProfessionalBackground = lazy(() => import('./ProfessionalBackground'));
@@ -25,6 +29,10 @@ export default function InvestorDetailsDialog({
 }) {
   const [activeTab, setActiveTab] = useState<LocalEnum>(LocalEnum.PD);
   const { data: investorDetails, error } = useInvestorDetails(investor_id);
+  const { mutate: updateInvestorDetails } = useInvestorEditDetails(investor_id);
+
+  const handleUpdateDetails = (details: Partial<UpdateInvestorRequest>) =>
+    updateInvestorDetails(details);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -57,6 +65,7 @@ export default function InvestorDetailsDialog({
                 activeTab={activeTab}
                 investorDetails={investorDetails as InvestorDetailsResponse}
                 setDialogOpen={setDialogOpen}
+                handleUpdateDetails={handleUpdateDetails}
               />
             </div>
           </>
@@ -108,7 +117,8 @@ const Content: React.FC<{
   activeTab: LocalEnum;
   investorDetails: InvestorDetailsResponse;
   setDialogOpen: Dispatch<SetStateAction<boolean>>;
-}> = ({ activeTab, investorDetails, setDialogOpen }) => {
+  handleUpdateDetails: (value: UpdateInvestorRequest) => void;
+}> = ({ activeTab, investorDetails, setDialogOpen, handleUpdateDetails }) => {
   return (
     <div className="flex-1">
       {activeTab === LocalEnum.PD && (
@@ -116,6 +126,7 @@ const Content: React.FC<{
           <PersonalDetails
             details={investorDetails.personal_details}
             setDialogOpen={setDialogOpen}
+            handleUpdateDetails={handleUpdateDetails}
           />
         </Suspense>
       )}
@@ -132,6 +143,7 @@ const Content: React.FC<{
           <ProfessionalBackground
             details={investorDetails.professional_background}
             setDialogOpen={setDialogOpen}
+            handleUpdateDetails={handleUpdateDetails}
           />
         </Suspense>
       )}

@@ -79,3 +79,19 @@ export interface InvestorMetadataResponse {
   };
   success: boolean;
 }
+
+export interface UpdateInvestorRequest {
+  first_name?: string;
+  last_name?: string;
+  occupation?: string;
+  income_source?: string;
+  annual_income?: number;
+  capital_commitment?: number;
+}
+
+export interface UpdateInvestorResponse {
+  subadmin_id: string;
+  investor_id: string;
+  message: string;
+  success: boolean;
+}

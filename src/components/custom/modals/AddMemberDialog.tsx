@@ -1,5 +1,11 @@
 import { addMember } from '@/axioscalls/apiServices';
-import { DialogContent } from '@/components/ui/dialog';
+import {
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -32,11 +38,29 @@ export default function AddMemberDialog() {
   };
 
   return (
-    <DialogContent className="border-0 max-w-[550px] rounded-none bg-[#1a1a1a] text-white">
+    <DialogContent
+      hideCloseButton={true}
+      className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-2xl min-h-[50vh] max-h-[90vh]"
+      aria-describedby={undefined}
+      onInteractOutside={e => e.preventDefault()}
+    >
       <div className="text-white rounded-none shadow-lg">
-        <h2 className="text-2xl font-semibold mb-6">Add member</h2>
+        <DialogHeader>
+          <DialogTitle className="text-3xl text-white flex items-center justify-between">
+            Add member
+            <DialogClose
+              asChild
+              className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+            >
+              <span className="p-1">
+                <X />
+              </span>
+            </DialogClose>
+          </DialogTitle>
+          <hr className="border-[#232A36] my-2" />
+        </DialogHeader>
 
-        <div className="border-t border-zinc-700 mb-6" />
+        {/* <div className="border-t border-zinc-700 mb-6" /> */}
 
         <div className="mb-6">
           <label className="block text-sm text-zinc-400 mb-1 tracking-wide">

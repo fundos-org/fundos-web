@@ -49,56 +49,69 @@ const BankDetails: React.FC<{
       className="space-y-4 px-10 py-5 h-full flex flex-col justify-between gap-2"
     >
       <div className="flex flex-col gap-5">
-        <Controller
-          name="bank_account_number"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              disabled //disabled for while
-              placeholder="Bank Account Number"
-              className={`${errors.bank_account_number ? 'border-red-500' : null} rounded-none`}
-            />
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Bank Account Number
+          </label>
+          <Controller
+            name="bank_account_number"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Bank Account Number"
+                className={`${errors.bank_account_number ? 'border-red-500' : null} rounded-none`}
+              />
+            )}
+          />
+          {errors.bank_account_number && (
+            <p className="text-red-500 text-sm">
+              {errors.bank_account_number.message}
+            </p>
           )}
-        />
-        {errors.bank_account_number && (
-          <p className="text-red-500 text-sm">
-            {errors.bank_account_number.message}
-          </p>
-        )}
+        </div>
 
-        <Controller
-          name="bank_ifsc"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              disabled //disabled for while
-              placeholder="Bank IFSC"
-              className={`${errors.bank_ifsc ? 'border-red-500' : null} rounded-none`}
-            />
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Bank IFSC
+          </label>
+          <Controller
+            name="bank_ifsc"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Bank IFSC"
+                className={`${errors.bank_ifsc ? 'border-red-500' : null} rounded-none`}
+              />
+            )}
+          />
+          {errors.bank_ifsc && (
+            <p className="text-red-500 text-sm">{errors.bank_ifsc.message}</p>
           )}
-        />
-        {errors.bank_ifsc && (
-          <p className="text-red-500 text-sm">{errors.bank_ifsc.message}</p>
-        )}
+        </div>
 
-        <Controller
-          name="account_holder_name"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              placeholder="Account Holder Name"
-              className={`${errors.account_holder_name ? 'border-red-500' : null} rounded-none`}
-            />
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Account Holder Name
+          </label>
+          <Controller
+            name="account_holder_name"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Account Holder Name"
+                className={`${errors.account_holder_name ? 'border-red-500' : null} rounded-none`}
+              />
+            )}
+          />
+          {errors.account_holder_name && (
+            <p className="text-red-500 text-sm">
+              {errors.account_holder_name.message}
+            </p>
           )}
-        />
-        {errors.account_holder_name && (
-          <p className="text-red-500 text-sm">
-            {errors.account_holder_name.message}
-          </p>
-        )}
+        </div>
       </div>
 
       <div className="flex gap-3 justify-end">
