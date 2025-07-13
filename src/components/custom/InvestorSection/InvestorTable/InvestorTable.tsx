@@ -23,19 +23,17 @@ import {
 } from '@/components/ui/table';
 import { useInvestorDelete } from '@/hooks/customhooks/MembersHooks/useInvestorDelete';
 import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, SquareArrowOutUpRight } from 'lucide-react';
 import { lazy, Suspense, useState } from 'react';
 import SwitchCustom from '@/components/ui/switchCustom';
-import AdvancedInvestorActionsCell from '../AdvancedInvestorActionsCell';
-import { FullScreenDialog } from '../DialogItems/InvestorDetailsDialog';
+import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
 const InvestorFileDisplayDialog = lazy(
   () => import('../DialogItems/InvestorFileDisplayDialog')
 );
-// const InvestorDetailsDialog = lazy(
-//   () => import('../DialogItems/InvestorDetailsDialog')
-// );
+const InvestorDetailsDialog = lazy(
+  () => import('../DialogItems/InvestorDetailsDialog')
+);
 
-// Define the type for the user data
 export interface InvestorEntity {
   investor_id: string;
   name: string;
@@ -46,6 +44,7 @@ export interface InvestorEntity {
   mca_key: string;
   joined_on: string;
   profile_pic: string;
+  capital_commitment: number;
 }
 
 export interface Pagination {
@@ -68,6 +67,7 @@ export interface InvestorsListResponse {
 const pageSizesList = [5, 10, 20, 50];
 
 const InvestorTable = () => {
+  const [sendDetails, setSendDetails] = useState<InvestorEntity>();
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -114,6 +114,11 @@ const InvestorTable = () => {
     }
   };
 
+  const goInsideDialog = (investor: InvestorEntity) => {
+    setOpenDetails(true);
+    setSendDetails(investor);
+  };
+
   return (
     <>
       <div className="w-full border border-[#2A2A2B]">
@@ -145,6 +150,9 @@ const InvestorTable = () => {
               </TableHead>
               <TableHead className="text-zinc-400">KYC Status</TableHead>
               <TableHead className="text-zinc-400">Joining Date</TableHead>
+              <TableHead className="text-zinc-400">
+                Capital Commit(INR)
+              </TableHead>
               <TableHead className="text-zinc-400">MCA</TableHead>
               <TableHead className="text-zinc-400">Action</TableHead>
             </TableRow>
@@ -155,12 +163,14 @@ const InvestorTable = () => {
                 <TableRow
                   className="border-[#2A2A2B]"
                   key={investor.investor_id}
-                  onClick={() => setOpenDetails(true)}
                 >
                   <TableCell className="font-medium">
                     <SwitchCustom />
                   </TableCell>
-                  <TableCell className="font-medium flex items-center py-2">
+                  <TableCell
+                    className="font-medium flex items-center py-2 cursor-pointer hover:underline"
+                    onClick={() => goInsideDialog(investor)}
+                  >
                     <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
                       <img
                         src={investor.profile_pic}
@@ -169,6 +179,7 @@ const InvestorTable = () => {
                       />
                     </div>
                     <span className="mt-2">{investor.name}</span>
+                    <SquareArrowOutUpRight className="w-3 ml-1 mt-2 text-blue-400" />
                   </TableCell>
                   <TableCell className="font-medium">{investor.mail}</TableCell>
                   <TableCell className="font-medium capitalize">
@@ -182,6 +193,9 @@ const InvestorTable = () => {
                   </TableCell>
                   <TableCell className="font-medium">
                     {investor.joined_on}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {investor.capital_commitment}
                   </TableCell>
                   <Suspense fallback={<div>Loading...</div>}>
                     <InvestorFileDisplayDialog investor={investor} />
@@ -254,19 +268,13 @@ const InvestorTable = () => {
           </div>
         </Pagination>
       </div>
-      {/* <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
         <InvestorDetailsDialog
           open={openDetails}
           onOpenChange={setOpenDetails}
+          details={sendDetails}
         />
-      </Suspense> */}
-      <FullScreenDialog
-        open={openDetails}
-        onOpenChange={setOpenDetails}
-        title="My Full Screen Dialog"
-      >
-        <div>Dialog Content Here</div>
-      </FullScreenDialog>
+      </Suspense>
     </>
   );
 };

@@ -39,8 +39,8 @@ export default function AddMemberDialog() {
 
   return (
     <DialogContent
-      hideCloseButton={true}
       className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-2xl min-h-[50vh] max-h-[90vh]"
+      hideCloseButton={true}
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >

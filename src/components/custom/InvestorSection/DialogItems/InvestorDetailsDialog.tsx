@@ -1,186 +1,102 @@
-// import {
-//   Dialog,
-//   //   DialogClose,
-//   DialogContent,
-//   //   DialogDescription,
-//   //   DialogHeader,
-//   //   DialogTitle,
-// } from '@/components/ui/dialog';
-// import {
-//   TableHeader,
-//   TableRow,
-//   TableHead,
-//   TableBody,
-//   TableCell,
-// } from '@/components/ui/table';
-// import { Table } from 'lucide-react';
-// // import { cn } from '@/lib/utils';
-// const InvestorDetailsDialog = ({
-//   open,
-//   onOpenChange,
-// }: {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-// }) => {
-//   return (
-//     <Dialog open={open} onOpenChange={onOpenChange}>
-//       <DialogContent className="fixed inset-0 w-screen h-screen bg-[#181C23] p-6 border-none rounded-none max-w-none max-h-none text-white">
-//         <div className="h-full flex flex-col">
-//           <h2 className="text-2xl mb-4">Investors Onboarded</h2>
-//           <div className="overflow-auto flex-1">
-//             <Table>
-//               <TableHeader>
-//                 <TableRow>
-//                   <TableHead className="w-[50px]">Action</TableHead>
-//                   <TableHead>Name</TableHead>
-//                   <TableHead>Mail</TableHead>
-//                   <TableHead>Type</TableHead>
-//                   <TableHead>Deal Invested</TableHead>
-//                   <TableHead>KYC Status</TableHead>
-//                   <TableHead>Joining Date</TableHead>
-//                   <TableHead>MCA</TableHead>
-//                   <TableHead>Action</TableHead>
-//                 </TableRow>
-//               </TableHeader>
-//               <TableBody>
-//                 <TableRow>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>Manish Lamba</TableCell>
-//                   <TableCell>rojasernest@example.net</TableCell>
-//                   <TableCell>Individual</TableCell>
-//                   <TableCell>-</TableCell>
-//                   <TableCell>verified</TableCell>
-//                   <TableCell>2025-07-11</TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                 </TableRow>
-//                 <TableRow>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>Anthony Martino</TableCell>
-//                   <TableCell>henry82@example.com</TableCell>
-//                   <TableCell>Individual</TableCell>
-//                   <TableCell>-</TableCell>
-//                   <TableCell>rejected</TableCell>
-//                   <TableCell>2025-07-11</TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                 </TableRow>
-//                 <TableRow>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>Sharon Rosario</TableCell>
-//                   <TableCell>jennypball@example.com</TableCell>
-//                   <TableCell>Individual</TableCell>
-//                   <TableCell>2</TableCell>
-//                   <TableCell>rejected</TableCell>
-//                   <TableCell>2025-07-11</TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                 </TableRow>
-//                 <TableRow>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>Diane Peterson</TableCell>
-//                   <TableCell>zsantiago@example.com</TableCell>
-//                   <TableCell>Individual</TableCell>
-//                   <TableCell>7</TableCell>
-//                   <TableCell>verified</TableCell>
-//                   <TableCell>2025-07-11</TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                   <TableCell>
-//                     <span className="w-4 h-4 inline-block"></span>
-//                   </TableCell>
-//                 </TableRow>
-//               </TableBody>
-//             </Table>
-//           </div>
-//           <div className="mt-4 flex justify-between items-center">
-//             <span>Total records: 18</span>
-//             <div className="flex items-center gap-2">
-//               <span>1 2</span>
-//               <span>Next</span>
-//               <select className="bg-[#181C23] text-white border border-gray-600 rounded">
-//                 <option>10</option>
-//                 <option>20</option>
-//                 <option>50</option>
-//               </select>
-//             </div>
-//           </div>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
-
-// export default InvestorDetailsDialog;
-
-import * as React from 'react';
 import {
   Dialog,
-  //   DialogTrigger,
   DialogContent,
-  //   DialogHeader,
-  DialogTitle,
-  DialogDescription,
   DialogClose,
+  DialogTitle,
 } from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
+import { ChevronLeft, X } from 'lucide-react';
+import { DialogHeader } from '@/components/ui/dialog';
+import { InvestorEntity } from '../InvestorTable/InvestorTable';
+import { FC, lazy, Suspense } from 'react';
+const InvestorMainTab = lazy(() => import('../TabItems/InvestorMainTab'));
 
-export function FullScreenDialog({
-  open,
-  onOpenChange,
-  children,
-  title,
-  description,
-}: {
+const InvestorDetailsDialog: FC<{
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  children: React.ReactNode;
-  title?: string;
-  description?: string;
-}) {
+  details?: InvestorEntity;
+}> = ({ open, onOpenChange, details }) => {
+  const {
+    name,
+    deals_invested,
+    joined_on,
+    profile_pic,
+    type,
+    capital_commitment,
+    investor_id,
+  } = details ?? {};
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        aria-describedby={undefined}
+        onInteractOutside={e => e.preventDefault()}
         className={cn(
-          'fixed inset-0 z-50 p-10 mx-[20rem] my-[0rem] rounded-none shadow-none w-screen h-screen max-w-none max-h-none bg-black'
+          'fixed inset-0 z-50 p-10 mx-[20rem] my-[0rem] rounded-none shadow-none w-[calc(100vw-20rem)] h-screen max-w-none max-h-none bg-black'
         )}
       >
-        {/* <DialogHeader className="p-6 border-b relative"> */}
-        {title && <DialogTitle>{title}</DialogTitle>}
-        {description && <DialogDescription>{description}</DialogDescription>}
-        <DialogClose asChild>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="text-lg font-bold"
-            aria-label="Close"
-          >
-            ×
-          </button>
-        </DialogClose>
-        {/* </DialogHeader> */}
-        <div className="flex-1 overflow-auto p-6">{children}</div>
+        <DialogHeader>
+          <DialogTitle className="text-3xl text-white flex items-center justify-between">
+            <div className="flex justify-center items-center gap-3">
+              <DialogClose
+                asChild
+                className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+              >
+                <span className="p-1">
+                  <ChevronLeft
+                    className="text-3xl font-bold cursor-pointer hover:opacity-50"
+                    onClick={() => onOpenChange(false)}
+                  />
+                </span>
+              </DialogClose>
+              <span>Member Details</span>
+            </div>
+            <DialogClose
+              asChild
+              className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+            >
+              <span className="p-1">
+                <X />
+              </span>
+            </DialogClose>
+          </DialogTitle>
+          <hr className="border-[#232A36] my-2" />
+          <div className="flex justify-between w-full">
+            <div className="flex gap-5">
+              <div className="w-30 h-30 mr-2 mt-2 overflow-hidden">
+                <img
+                  src={profile_pic}
+                  className="w-full h-full object-cover"
+                  alt="dp"
+                />
+              </div>
+              <div className="flex flex-col justify-around">
+                <p className="text-3xl font-bold">{name}</p>
+                <span className="border border-[#383739] text-white bg-zinc-400/20 text-center uppercase">
+                  {type} Investor
+                </span>
+                <p>Joined on: {joined_on}</p>
+              </div>
+            </div>
+            <div className="flex gap-5 px-5 py-2">
+              <div className="flex flex-col items-center">
+                <h2 className="text-5xl">{deals_invested}</h2>
+                <small className="text-muted">Deals</small>
+              </div>
+              <div className="border-l border-[#383739] h-17"></div>
+              <div className="flex flex-col items-center">
+                <h2 className="text-5xl">{capital_commitment}</h2>
+                <small className="text-muted">Capital Commited</small>
+              </div>
+            </div>
+          </div>
+        </DialogHeader>
+        <Suspense fallback={<div>Loading...</div>}>
+          <InvestorMainTab investor_id={investor_id ?? ''} />
+        </Suspense>
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default InvestorDetailsDialog;

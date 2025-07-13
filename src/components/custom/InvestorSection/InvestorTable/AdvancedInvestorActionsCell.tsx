@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { InvestorEntity } from './InvestorTable/InvestorTable';
+import { InvestorEntity } from './InvestorTable';
 import { memo, Suspense, useState } from 'react';
 import { TableCell } from '@/components/ui/table';
 import {
@@ -21,7 +21,7 @@ import {
 import { UseMutateFunction } from 'react-query';
 import { lazy } from 'react';
 const InvestorEditDialog = lazy(
-  () => import('./DialogItems/InvestorEditDialog')
+  () => import('../DialogItems/InvestorEditDialog')
 );
 
 const AdvancedInvestorActionsCell = memo(

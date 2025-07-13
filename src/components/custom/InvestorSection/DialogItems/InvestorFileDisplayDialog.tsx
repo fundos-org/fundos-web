@@ -9,18 +9,17 @@ import { TableCell } from '@/components/ui/table';
 import { AppEnums } from '@/constants/enums';
 import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import { FileText, X } from 'lucide-react';
-import { memo, useState } from 'react';
+import { FC, memo, useState } from 'react';
 import { InvestorEntity } from '../InvestorTable/InvestorTable';
 
-const AdvancedInvestorFileDialog = memo(
-  ({ investor }: { investor: InvestorEntity }) => {
+const AdvancedInvestorFileDialog: FC<{ investor?: InvestorEntity }> = memo(
+  () => {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const { data: showFile, error } = useAwsFileObjectKey(
       AppEnums.AWS_BUCKET_NAME,
       'deals/pitch_decks/18e75944-883f-46b5-b716-22c61cc3a061_20250510134038.png' // ||
       //   investor.investor_id
     );
-    console.log(investor);
 
     return (
       <>
