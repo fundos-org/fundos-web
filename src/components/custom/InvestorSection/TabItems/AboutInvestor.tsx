@@ -1,9 +1,6 @@
-// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-// import { Badge } from '@/components/ui/badge';
 import { FC, useEffect, useState } from 'react';
 import { useInvestorDetails } from '@/hooks/customhooks/MembersHooks/useInvestorDetails';
 import { InvestorDetailsResponse } from '@/constants/membersConstant';
-// import { Input } from '@/components/ui/input';
 import { CheckCircle } from 'lucide-react';
 
 const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
@@ -21,7 +18,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
   return (
     <div className="w-full text-white space-y-6 overflow-y-auto h-[calc(100vh-30vh)]">
       <div className="min-h-screen p-6">
-        <div className=" mx-auto space-y-12">
+        <div className=" mx-auto space-y-6">
           {/* Personal Details Section */}
           <div className="space-y-2">
             <h2 className="text-2xl">Personal Details</h2>
@@ -33,7 +30,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   FIRST NAME
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  Pratyush
+                  {details.personal_details.first_name}
                 </div>
               </div>
 
@@ -43,7 +40,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   LAST NAME
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  Mahapatra
+                  {details.personal_details.last_name}
                 </div>
               </div>
             </div>
@@ -55,7 +52,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   E-MAIL
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
-                  <span>mahapatra.pratyush2@gmail.com</span>
+                  <span>{details.personal_details.email}</span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
                     VERIFIED
@@ -69,7 +66,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   CONTACT
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
-                  <span>+91 9776888194</span>
+                  <span>{details.personal_details.phone_number}</span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
                     VERIFIED
@@ -85,7 +82,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   PAN NUMBER
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
-                  <span>1802ERUI23</span>
+                  <span>{details.personal_details.pan_number ?? 'N/A'}</span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
                     VERIFIED
@@ -99,7 +96,9 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   AADHAR NUMBER
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
-                  <span>1209 8988 3456</span>
+                  <span>
+                    {details.personal_details.aadhaar_number ?? 'N/A'}
+                  </span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
                     VERIFIED
@@ -108,7 +107,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
               </div>
             </div>
           </div>
-
+          <hr className="border-r border-[#383739]" />
           {/* Bank Details Section */}
           <div className="space-y-2">
             <h2 className="text-2xl">Bank Details</h2>
@@ -120,7 +119,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   BANK ACCOUNT
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  012345678910
+                  {details.bank_details.bank_account_number ?? 'N/A'}
                 </div>
               </div>
 
@@ -130,7 +129,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   IFSC CODE
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  KKBK20078
+                  {details.bank_details.bank_ifsc ?? 'N/A'}
                 </div>
               </div>
             </div>
@@ -141,11 +140,11 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 ACCOUNT HOLDER'S NAME
               </label>
               <div className="bg-[#383739] text-white px-4 py-2 max-w-md">
-                Pratyush Kumar mahapatra
+                {details.bank_details.account_holder_name}
               </div>
             </div>
           </div>
-
+          <hr className="border-r border-[#383739]" />
           {/* Professional Background Section */}
           <div className="space-y-2">
             <h2 className="text-2xl">Professional Background</h2>
@@ -157,7 +156,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   OCCUPATION
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  Investor
+                  {details.professional_background.occupation}
                 </div>
               </div>
 
@@ -167,7 +166,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   INCOME SOURCE
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  Business
+                  {details.professional_background.income_source}
                 </div>
               </div>
             </div>
@@ -179,7 +178,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   ANNUAL INCOME (IN Rs.)
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  1Cr - 5Cr
+                  {details.professional_background.annual_income}
                 </div>
               </div>
 
@@ -189,7 +188,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                   CAPITAL COMMITMENT (OVER 5 YEARS)
                 </label>
                 <div className="bg-[#383739] text-white px-4 py-2">
-                  ₹50,00,000
+                  {details.professional_background.capital_commitment}
                 </div>
               </div>
             </div>

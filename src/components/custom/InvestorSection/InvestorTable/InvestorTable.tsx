@@ -64,13 +64,13 @@ export interface InvestorsListResponse {
   success: boolean;
 }
 
-const pageSizesList = [5, 10, 20, 50];
+const pageSizesList = [6, 10, 20, 50];
 
 const InvestorTable = () => {
   const [sendDetails, setSendDetails] = useState<InvestorEntity>();
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const { mutate: deleteInvestor } = useInvestorDelete();
   const { data, isLoading, error, refetch } = useInvestors(
@@ -138,77 +138,87 @@ const InvestorTable = () => {
             />
           </button>
         </div>
-        <Table className="rounded-none">
-          <TableHeader>
-            <TableRow className="border-zinc-400">
-              <TableHead className="text-zinc-400">Action</TableHead>
-              <TableHead className="text-zinc-400">Name</TableHead>
-              <TableHead className="text-zinc-400">Mail</TableHead>
-              <TableHead className="text-zinc-400">Type</TableHead>
-              <TableHead className="text-zinc-400 text-center">
-                Deal Invested
-              </TableHead>
-              <TableHead className="text-zinc-400">KYC Status</TableHead>
-              <TableHead className="text-zinc-400">Joining Date</TableHead>
-              <TableHead className="text-zinc-400">
-                Capital Commit(INR)
-              </TableHead>
-              <TableHead className="text-zinc-400">MCA</TableHead>
-              <TableHead className="text-zinc-400">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.investors &&
-              data?.investors?.map(investor => (
-                <TableRow
-                  className="border-[#2A2A2B]"
-                  key={investor.investor_id}
-                >
-                  <TableCell className="font-medium">
-                    <SwitchCustom />
-                  </TableCell>
-                  <TableCell
-                    className="font-medium flex items-center py-2 cursor-pointer hover:underline"
-                    onClick={() => goInsideDialog(investor)}
-                  >
-                    <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
-                      <img
-                        src={investor.profile_pic}
-                        className="w-full h-full object-cover"
-                        alt="dp"
+        <div className="flex flex-col h-[calc(100vh-29rem)]">
+          {' '}
+          {/* Or any height you want */}
+          <Table className="rounded-none">
+            <TableHeader>
+              <TableRow className="border-zinc-400/60">
+                <TableHead className="text-zinc-400">Action</TableHead>
+                <TableHead className="text-zinc-400">Name</TableHead>
+                <TableHead className="text-zinc-400">Mail</TableHead>
+                <TableHead className="text-zinc-400">Type</TableHead>
+                <TableHead className="text-zinc-400 text-center">
+                  Deal Invested
+                </TableHead>
+                <TableHead className="text-zinc-400">KYC Status</TableHead>
+                <TableHead className="text-zinc-400">Joining Date</TableHead>
+                <TableHead className="text-zinc-400">
+                  Capital Commit(INR)
+                </TableHead>
+                <TableHead className="text-zinc-400">MCA</TableHead>
+                <TableHead className="text-zinc-400">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+          </Table>
+          <div className="flex-1 overflow-y-auto">
+            <Table className="rounded-none">
+              <TableBody>
+                {data?.investors &&
+                  data?.investors?.map(investor => (
+                    <TableRow
+                      className="border-[#2A2A2B]"
+                      key={investor.investor_id}
+                    >
+                      <TableCell className="font-medium">
+                        <SwitchCustom />
+                      </TableCell>
+                      <TableCell
+                        className="font-medium flex items-center py-2 cursor-pointer hover:underline"
+                        onClick={() => goInsideDialog(investor)}
+                      >
+                        <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
+                          <img
+                            src={investor.profile_pic}
+                            className="w-full h-full object-cover"
+                            alt="dp"
+                          />
+                        </div>
+                        <span className="mt-2">{investor.name}</span>
+                        <SquareArrowOutUpRight className="w-3 ml-1 mt-2 text-blue-400" />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {investor.mail}
+                      </TableCell>
+                      <TableCell className="font-medium capitalize">
+                        {investor.type}
+                      </TableCell>
+                      <TableCell className="font-medium text-center">
+                        {investor.deals_invested}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {investor.kyc_status}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {investor.joined_on}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {investor.capital_commitment}
+                      </TableCell>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <InvestorFileDisplayDialog investor={investor} />
+                      </Suspense>
+                      <AdvancedInvestorActionsCell
+                        key={investor.investor_id}
+                        investor={investor}
+                        deleteInvestor={deleteInvestor}
                       />
-                    </div>
-                    <span className="mt-2">{investor.name}</span>
-                    <SquareArrowOutUpRight className="w-3 ml-1 mt-2 text-blue-400" />
-                  </TableCell>
-                  <TableCell className="font-medium">{investor.mail}</TableCell>
-                  <TableCell className="font-medium capitalize">
-                    {investor.type}
-                  </TableCell>
-                  <TableCell className="font-medium text-center">
-                    {investor.deals_invested}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {investor.kyc_status}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {investor.joined_on}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {investor.capital_commitment}
-                  </TableCell>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <InvestorFileDisplayDialog investor={investor} />
-                  </Suspense>
-                  <AdvancedInvestorActionsCell
-                    key={investor.investor_id}
-                    investor={investor}
-                    deleteInvestor={deleteInvestor}
-                  />
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
         <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
           <span>Total records: {data?.pagination.total_records}</span>
           <PaginationContent className="gap-10">
