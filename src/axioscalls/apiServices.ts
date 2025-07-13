@@ -12,6 +12,7 @@ import {
 } from '@/constants/dealsConstant';
 import { AppEnums } from '@/constants/enums';
 import {
+  InvestmentDealsResponse,
   InvestorDetailsResponse,
   InvestorMetadataResponse,
   MemberApiResponse,
@@ -549,6 +550,23 @@ export const getInvestorDetails = async (
   try {
     const response = await axios.get(
       `${baseUrlStaging}/api/v1/live/subadmin/investors/abount_info/${investor_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getInvestorDealInvestments = async (
+  investor_id: string
+): Promise<InvestmentDealsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/investors/investments_info/${investor_id}`
     );
     return response.data;
   } catch (error) {

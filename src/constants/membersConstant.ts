@@ -1,3 +1,5 @@
+import { DealStatus } from './dealsConstant';
+
 export interface Member {
   user_id: string;
   first_name: string;
@@ -93,5 +95,24 @@ export interface UpdateInvestorResponse {
   subadmin_id: string;
   investor_id: string;
   message: string;
+  success: boolean;
+}
+
+export interface InvestedDeal {
+  company_name: string;
+  about_company: string;
+  industry: string;
+  company_stage: string;
+  logo_url: string;
+  status: DealStatus;
+  created_at: string;
+  deal_capital_commitment: number;
+  equity: number;
+  term_sheet: string;
+}
+
+export interface InvestmentDealsResponse {
+  investor_id: string;
+  deals: InvestedDeal[];
   success: boolean;
 }
