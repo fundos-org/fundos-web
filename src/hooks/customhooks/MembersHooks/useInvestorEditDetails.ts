@@ -1,4 +1,5 @@
 import { updateInvestorDetails } from '@/axioscalls/apiServices';
+import { AppEnums } from '@/constants/enums';
 import { UpdateInvestorRequest } from '@/constants/membersConstant';
 import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
@@ -6,12 +7,11 @@ import { useMutation, useQueryClient } from 'react-query';
 
 export const useInvestorEditDetails = (investor_id: string) => {
   const queryClient = useQueryClient();
-  //   const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  //   const { subadmin_id } = subadminDetailsRaw
-  //     ? JSON.parse(subadminDetailsRaw)
-  //     : {};
+  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
+  const { subadmin_id } = subadminDetailsRaw
+    ? JSON.parse(subadminDetailsRaw)
+    : {};
 
-  const subadmin_id = '0a63af64-ad47-45a9-b8eb-efe0e9a08085';
   return useMutation({
     mutationFn: (details: UpdateInvestorRequest) =>
       updateInvestorDetails(subadmin_id, investor_id, details),

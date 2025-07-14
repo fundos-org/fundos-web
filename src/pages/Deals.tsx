@@ -2,10 +2,12 @@ import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { fetchDealStatistics } from '@/axioscalls/apiServices';
 import CreateDealDialog from '@/components/custom/modals/CreateDealDialog';
-import ShowDeals from '@/components/custom/ShowDeals';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { lazy, useState, Suspense } from 'react';
+const ShowDeals = lazy(
+  () => import('@/components/custom/DealSection/ShowDeals')
+);
 
 function Deals() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -34,7 +36,9 @@ function Deals() {
         <StatisticCardList
           stats={stats as Record<string, string | number> | undefined}
         />
-        <ShowDeals />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ShowDeals />
+        </Suspense>
         <CreateDealDialog setIsDialogOpen={setIsDialogOpen} />
       </Dialog>
     </>

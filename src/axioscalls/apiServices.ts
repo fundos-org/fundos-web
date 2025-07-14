@@ -523,6 +523,28 @@ export const shareDetails = async (subadmin_id: string) => {
 };
 
 // React Query Tanstack
+export const getDeals = async (
+  subadmin_id: string
+): Promise<AllDealsResponse> => {
+  try {
+    if (!subadmin_id) {
+      throw new Error('No subadmin id found in session storage');
+    }
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/overview/${subadmin_id}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data as CommonError;
+      if (errorData.isSuccess !== undefined && errorData.message) {
+        throw new Error(errorData.message);
+      }
+    }
+    throw new Error('Failed to fetch deals');
+  }
+};
+
 export const markDealInactive = async (
   deal_id: string
 ): Promise<{

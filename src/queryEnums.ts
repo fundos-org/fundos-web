@@ -4,4 +4,6 @@ export enum QueryEnums {
   InvestorsMetadata = 'investorMetadata',
   InvestorDealInvestments = 'investorDealInvestments',
   InvestorTransactions = 'investorTransactions',
+
+  Deals = 'Deals',
 }
