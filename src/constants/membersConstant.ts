@@ -116,3 +116,30 @@ export interface InvestmentDealsResponse {
   deals: InvestedDeal[];
   success: boolean;
 }
+
+export interface Transaction {
+  transaction_type: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created_at: string;
+  invitation_code: string;
+}
+
+export interface InvestorTransactionsResponse {
+  investor_id: string;
+  transactions: Transaction[];
+  success: boolean;
+}
+
+export interface Documents {
+  mca_key: string;
+  share_certificate_key: string;
+  term_sheet_key: string;
+}
+
+export interface InvestorDocumentsResponse {
+  investor_id: string;
+  documents: Documents;
+  success: boolean;
+}

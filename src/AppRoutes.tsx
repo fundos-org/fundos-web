@@ -19,6 +19,7 @@ const AppRoutes = () => {
         {/* /admin and /admin/subadmin */}
         <Route path={AppRoute.ADMIN}>
           <Route
+            index
             path={AppRoute.ADMIN_SUBADMIN}
             element={
               <Layout>
@@ -39,6 +40,7 @@ const AppRoutes = () => {
         {/* /subadmin and its children */}
         <Route path={AppRoute.SUBADMIN}>
           <Route
+            index
             path={AppRoute.SUBADMIN_DASHBOARD}
             element={
               <Layout>
@@ -75,6 +77,7 @@ const AppRoutes = () => {
         {/* /kyc/dashboard */}
         <Route path={AppRoute.KYC}>
           <Route
+            index
             path={AppRoute.KYC_DASHBOARD}
             element={
               <Layout>

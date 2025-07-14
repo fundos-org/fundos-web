@@ -2,6 +2,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FC, lazy, Suspense } from 'react';
 const AboutInvestor = lazy(() => import('./AboutInvestor'));
 const InvestorInvestments = lazy(() => import('./InvestorInvestments'));
+const InvestorTransactions = lazy(() => import('./InvestorTransactions'));
+const InvestorDocuments = lazy(() => import('./InvestorDocuments'));
 
 const InvestorMainTab: FC<{ investor_id: string }> = ({ investor_id }) => {
   return (
@@ -44,14 +46,16 @@ const InvestorMainTab: FC<{ investor_id: string }> = ({ investor_id }) => {
           <InvestorInvestments investor_id={investor_id} />
         </Suspense>
       </TabsContent>
-      <TabsContent
-        value="transactions"
-        className="w-full flex gap-5 flex-wrap"
-      ></TabsContent>
-      <TabsContent
-        value="documents"
-        className="w-full flex gap-5 flex-wrap"
-      ></TabsContent>
+      <TabsContent value="transactions" className="w-full flex gap-5 flex-wrap">
+        <Suspense fallback={<div>Loading...</div>}>
+          <InvestorTransactions investor_id={investor_id} />
+        </Suspense>
+      </TabsContent>
+      <TabsContent value="documents" className="w-full flex gap-5 flex-wrap">
+        <Suspense fallback={<div>Loading...</div>}>
+          <InvestorDocuments investor_id={investor_id} />
+        </Suspense>
+      </TabsContent>
     </Tabs>
   );
 };
