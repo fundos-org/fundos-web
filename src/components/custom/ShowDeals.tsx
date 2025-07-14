@@ -22,19 +22,19 @@ export default function ShowDeals() {
         <TabsList className="justify-start rounded-none bg-transparent border-b-0 p-0 w-[500px]">
           <TabsTrigger
             value="active"
-            className="text-white border-0 font-semibold data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+            className="text-white border-0 cursor-pointer font-semibold data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
           >
             Active deals
           </TabsTrigger>
           <TabsTrigger
             value="closed"
-            className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+            className="text-white border-0 cursor-pointer font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
           >
             Closed deals
           </TabsTrigger>
           <TabsTrigger
             value="on_hold"
-            className="text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+            className="text-white border-0 cursor-pointer font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
           >
             On hold deals
           </TabsTrigger>

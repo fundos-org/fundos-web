@@ -282,7 +282,7 @@ export default function SignIn() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {!showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {errors.password && (

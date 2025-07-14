@@ -43,9 +43,12 @@ export const createDraft = createAsyncThunk<
   );
   await new Promise(r => setTimeout(r, 2000));
   try {
-    const response = await axios.post(`${baseUrl}/deals/web/create/draft`, {
-      fund_manager_id: subadmin_id,
-    });
+    const response = await axios.post(
+      `${baseUrl}/api/v1/live/deals/web/create/draft`,
+      {
+        fund_manager_id: subadmin_id,
+      }
+    );
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response?.data) {
@@ -73,7 +76,7 @@ export const companyDetailsTrigger = async (
     formData.append('logo', logo);
   }
   const response = await axios.post(
-    `${baseUrl}/deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
+    `${baseUrl}/api/v1/live/deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
     formData
   );
   toast.success(response.data.message);
@@ -86,12 +89,15 @@ export const industryProblemTrigger = async (
   businessModel: string,
   dealId?: string
 ) => {
-  const response = await axios.post(`${baseUrl}/deals/web/industry-problem`, {
-    deal_id: dealId,
-    industry: industry,
-    problem_statement: problemStatement,
-    business_model: businessModel,
-  });
+  const response = await axios.post(
+    `${baseUrl}/api/v1/live/deals/web/industry-problem`,
+    {
+      deal_id: dealId,
+      industry: industry,
+      problem_statement: problemStatement,
+      business_model: businessModel,
+    }
+  );
   toast.success(response.data.message);
   return response.data;
 };
@@ -101,11 +107,14 @@ export const customerSegmentTrigger = async (
   targetCustomerSegment: string,
   dealId?: string
 ) => {
-  const response = await axios.post(`${baseUrl}/deals/web/customer-segment`, {
-    deal_id: dealId,
-    company_stage: companyStage,
-    target_customer_segment: targetCustomerSegment,
-  });
+  const response = await axios.post(
+    `${baseUrl}/api/v1/live/deals/web/customer-segment`,
+    {
+      deal_id: dealId,
+      company_stage: companyStage,
+      target_customer_segment: targetCustomerSegment,
+    }
+  );
   toast.success(response.data.message);
   return response.data;
 };
@@ -131,7 +140,7 @@ export const valuationTrigger = async (
     formData.append('investment_scheme_appendix', investmentSchemeAppendix);
   }
   const response = await axios.post(
-    `${baseUrl}/deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
+    `${baseUrl}/api/v1/live/deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
     formData
   );
   toast.success(response.data.message);
@@ -147,14 +156,17 @@ export const securitiesTrigger = async (
   carryPercentage?: number | null
 ) => {
   try {
-    const response = await axios.post(`${baseUrl}/deals/web/securities`, {
-      deal_id: dealId,
-      instrument_type: instrumentType,
-      conversion_terms: conversionTerms,
-      management_fee: managementFee,
-      carry: carryPercentage,
-      is_startup: isStartup,
-    });
+    const response = await axios.post(
+      `${baseUrl}/api/v1/live/deals/web/securities`,
+      {
+        deal_id: dealId,
+        instrument_type: instrumentType,
+        conversion_terms: conversionTerms,
+        management_fee: managementFee,
+        carry: carryPercentage,
+        is_startup: isStartup,
+      }
+    );
     localStorage.removeItem(AppEnums.DEAL_DRAFT);
     toast.success(response.data.message);
     return response.data;
@@ -203,7 +215,7 @@ export const fetchAllDeals = createAsyncThunk<
       sessionStorage.getItem('subadmindetails') as string
     );
     const response = await axios.get(
-      `${baseUrl}/subadmin/deals/overview/${subadmin_id}`
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/overview/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
@@ -223,7 +235,9 @@ export const fetchAllDeals = createAsyncThunk<
 });
 
 export const dealWithIdTrigger = async (dealId: string) => {
-  const response = await axios.get(`${baseUrl}/deals/mobile/${dealId}`);
+  const response = await axios.get(
+    `${baseUrl}/api/v1/live/deals/mobile/${dealId}`
+  );
   return response.data;
 };
 
@@ -237,7 +251,7 @@ export const createProfile = async (
   const formData = new FormData();
   if (logo) formData.append('logo', logo);
   const response = await axios.post(
-    `${baseUrl}/admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`,
+    `${baseUrl}/api/v1/live/admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`,
     formData
   );
   return response.data;
@@ -252,7 +266,7 @@ export const createCredentials = async (
   invite_code: string
 ) => {
   const response = await axios.post(
-    `${baseUrl}/admin/subadmins/create/credentials`,
+    `${baseUrl}/api/v1/live/admin/subadmins/create/credentials`,
     {
       subadmin_id,
       username,
@@ -267,7 +281,9 @@ export const createCredentials = async (
 };
 
 export const getSubAdminById = async (subadmin_id: string) => {
-  const response = await axios.get(`${baseUrl}/admin/subadmins/${subadmin_id}`);
+  const response = await axios.get(
+    `${baseUrl}/api/v1/live/admin/subadmins/${subadmin_id}`
+  );
   return response.data;
 };
 
@@ -277,7 +293,7 @@ export const fetchAllSubAdmins = createAsyncThunk<
   { rejectValue: CommonError }
 >('subAdmins/fetchAllDeals', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${baseUrl}/admin/subadmins/`);
+    const response = await axios.get(`${baseUrl}/api/v1/live/admin/subadmins/`);
     return response.data;
   } catch (error: unknown) {
     // Handle axios or network errors
@@ -305,7 +321,7 @@ export const fetchDealStatistics = createAsyncThunk<
       sessionStorage.getItem('subadmindetails') as string
     );
     const response = await axios.get(
-      `${baseUrl}/subadmin/deals/statistics/${subadmin_id}`
+      `${baseUrl}/api/v1/live/subadmin/deals/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
@@ -334,7 +350,7 @@ export const fetchMembersStatistics = createAsyncThunk<
       sessionStorage.getItem('subadmindetails') as string
     );
     const response = await axios.get(
-      `${baseUrl}/subadmin/members/statistics/${subadmin_id}`
+      `${baseUrl}/api/v1/live/subadmin/members/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
@@ -363,7 +379,7 @@ export const fetchTransactionList = createAsyncThunk<
       sessionStorage.getItem('subadmindetails') as string
     );
     const response = await axios.get(
-      `${baseUrl}/subadmin/dashboard/transactions/${subadmin_id}`
+      `${baseUrl}/api/v1/live/subadmin/dashboard/transactions/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
@@ -392,7 +408,7 @@ export const fetchDashboardStatistics = createAsyncThunk<
       sessionStorage.getItem('subadmindetails') as string
     );
     const response = await axios.get(
-      `${baseUrl}/subadmin/dashboard/statistics/${subadmin_id}`
+      `${baseUrl}/api/v1/live/subadmin/dashboard/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
@@ -420,7 +436,7 @@ export const loginSubAdmin = createAsyncThunk<
   async ({ username, password }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${baseUrl}/subadmin/signin?username=${username}&password=${password}`
+        `${baseUrlStaging}/api/v1/live/subadmin/signin?username=${username}&password=${password}`
       );
       return response.data;
     } catch (error: unknown) {
@@ -434,7 +450,7 @@ export const loginSubAdmin = createAsyncThunk<
       // Fallback for unexpected errors
       return rejectWithValue({
         isSuccess: false,
-        message: 'Failed to fetch deals',
+        message: 'Failed to Login Subadmin',
       });
     }
   }
@@ -443,7 +459,7 @@ export const loginSubAdmin = createAsyncThunk<
 export const loginAdmin = async ({ username, password }: LoginFormData) => {
   try {
     const response = await axios.post(
-      `${baseUrl}/admin/signin?username=${username}&password=${password}`
+      `${baseUrl}/api/v1/live/admin/signin?username=${username}&password=${password}`
     );
     return response.data;
   } catch {
@@ -454,7 +470,7 @@ export const loginAdmin = async ({ username, password }: LoginFormData) => {
 export const addMember = async (subadmin_id: string, email: string) => {
   try {
     const response = await axios.post(
-      `${baseUrl}/subadmin/members/addmember/${subadmin_id}/${email}`
+      `${baseUrl}/api/v1/live/subadmin/members/addmember/${subadmin_id}/${email}`
     );
     return response.data;
   } catch (error) {
@@ -472,7 +488,7 @@ export const addMember = async (subadmin_id: string, email: string) => {
 export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
   try {
     const response = await axios.post(
-      `${baseUrl}/subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
+      `${baseUrl}/api/v1/live/subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
     );
     return response.data;
   } catch (error) {
@@ -490,7 +506,7 @@ export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
 export const shareDetails = async (subadmin_id: string) => {
   try {
     const response = await axios.get(
-      `${baseUrl}/admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
+      `${baseUrl}/api/v1/live/admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
     );
     toast.success(response.data.message);
     return response.data;
@@ -507,6 +523,31 @@ export const shareDetails = async (subadmin_id: string) => {
 };
 
 // React Query Tanstack
+export const markDealInactive = async (
+  deal_id: string
+): Promise<{
+  success: boolean;
+  message: string;
+  subadmin_id: string;
+  deal_id: string;
+}> => {
+  try {
+    const { subadmin_id } = JSON.parse(
+      sessionStorage.getItem(AppEnums.SUBADMIN_SESSION) as string
+    );
+    const response = await axios.post(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/mark_inactive/${subadmin_id}/${deal_id}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
 export const deleteInvestor = async (
   investor_id: string
 ): Promise<{ success: boolean; message: string }> => {

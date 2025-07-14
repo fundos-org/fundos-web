@@ -72,7 +72,7 @@ const subAdminSlice = createSlice({
         loginSubAdmin.rejected,
         (state, action: PayloadAction<CommonError | undefined>) => {
           state.loading = false;
-          state.error = action.payload?.message || 'Failed to fetch deals';
+          state.error = action.payload?.message || 'Failed to Login';
         }
       );
   },

@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Eye, EyeOff, PenLine } from 'lucide-react';
 import { Progress } from '../ui/progress';
 import {
   businessModels,
@@ -38,6 +38,7 @@ import {
   AlertDialogTitle,
 } from '../ui/alert-dialog';
 import { convertToCrores } from '@/lib/currencyToWords';
+import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive';
 const DealDetailDialog = lazy(() => import('./modals/DealDetailDialog'));
 
 function getStatusColor(status: DealStatus): string {
@@ -98,6 +99,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
   const [status, setStatus] = useState<DealStatus>(
     (deal_status as DealStatus) || 'open'
   );
+  const { mutate: markInactive } = useDealInactive();
   const handleChangeStatus = async (e: DealStatus) => {
     console.log('Changing status to:', e, open);
     if (e !== 'closed' && !open) {
@@ -234,18 +236,27 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                 <MenubarTrigger className="rounded-none bg-[#1a1a1a] border-0 text-white font-medium cursor-pointer">
                   Manage <ChevronDown className="ml-1 h-5 w-5" />
                 </MenubarTrigger>
-                <MenubarContent className="bg-[#1a1a1a] text-white rounded-none">
+                <MenubarContent className="bg-[#1a1a1a] text-white rounded-none border border-[#383739]">
                   <DialogTrigger asChild>
-                    <MenubarItem className="rounded-none">
-                      View Deal
+                    <MenubarItem className="rounded-none cursor-pointer">
+                      <Eye /> View Deal
                     </MenubarItem>
                   </DialogTrigger>
-                  <MenubarSeparator />
+                  <MenubarSeparator className="border-b border-[#383739]" />
                   <MenubarItem
                     onClick={() => toast.error('Edit Deal not implemented yet')}
-                    className="rounded-none"
+                    className="rounded-none cursor-pointer"
                   >
+                    <PenLine />
                     Edit Deal
+                  </MenubarItem>
+                  <MenubarSeparator className="border-b border-[#383739]" />
+                  <MenubarItem
+                    onClick={() => markInactive(deal.deal_id)}
+                    className="rounded-none cursor-pointer"
+                  >
+                    <EyeOff className="text-red-500" />
+                    <p className="text-red-500">Mark Inactive</p>
                   </MenubarItem>
                 </MenubarContent>
               </MenubarMenu>

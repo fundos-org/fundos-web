@@ -10,7 +10,7 @@ export const useInvestorDelete = () => {
       return deleteInvestor(investor_id);
     },
     onSuccess: (response, investor_id) => {
-      toast.success(response?.message && 'Investors fetched successfully');
+      toast.success(response?.message && 'Investors deleted successfully');
       queryClient.invalidateQueries({
         queryKey: [QueryEnums.Investors],
       });
