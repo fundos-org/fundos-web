@@ -3,12 +3,15 @@ import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
   CommonError,
+  DealDetails,
+  DealDetailsResponse,
   DealStatus,
   DraftResponse,
   LoginFormData,
   SignInSubAdminResponse,
   StatisticsResponse,
   SubadminsResponse,
+  UpdateDealDetailsResponse,
 } from '@/constants/dealsConstant';
 import { AppEnums } from '@/constants/enums';
 import {
@@ -542,6 +545,44 @@ export const getDeals = async (
       }
     }
     throw new Error('Failed to fetch deals');
+  }
+};
+
+export const getDealDetails = async (
+  subadmin_id: string,
+  deal_id: string
+): Promise<DealDetailsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_details/${subadmin_id}/${deal_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const updateDealDetails = async (
+  subadmin_id: string,
+  deal_id: string,
+  details: Partial<DealDetails>
+): Promise<UpdateDealDetailsResponse> => {
+  try {
+    const response = await axios.put(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/edit_deals/${subadmin_id}/${deal_id}`,
+      details
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
   }
 };
 

@@ -39,7 +39,7 @@ import {
 } from '../../ui/alert-dialog';
 import { convertToCrores } from '@/lib/currencyToWords';
 import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive';
-const DealEditDialog = lazy(() => import('./DealEditDialog'));
+const DealEditDialog = lazy(() => import('./DialogItems/DealEditDialog'));
 
 function getStatusColor(status: DealStatus): string {
   switch (status) {

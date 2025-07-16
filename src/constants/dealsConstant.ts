@@ -219,3 +219,35 @@ export interface AllDealsResponse {
   onhold_deals: DealCard[];
   success: boolean;
 }
+
+export interface DealDetails {
+  logo_url: string;
+  company_name: string;
+  about_company: string;
+  company_website: string;
+  problem_statement: string;
+  industry: string;
+  business_model: string;
+  company_stage: string;
+  current_valuation: number;
+  round_size: number;
+  syndicate_commitment: number;
+  conversion_terms: string;
+  instrument_type: string;
+  pitch_deck_url: string;
+  pitch_video_url: string;
+}
+
+export interface DealDetailsResponse {
+  subadmin_id: string;
+  deal_id: string;
+  deal_details: DealDetails;
+  success: boolean;
+}
+
+export interface UpdateDealDetailsResponse {
+  subadmin_id: string;
+  deal_id: string;
+  message: string;
+  success: boolean;
+}

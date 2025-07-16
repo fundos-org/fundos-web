@@ -7,7 +7,7 @@ const CustomToggleGroup = ({
 }: {
   array: { name: string; value: string }[];
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (value: string) => void;
 }) => {
   return (
     <div className="flex flex-wrap gap-2">

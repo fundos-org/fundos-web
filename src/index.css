@@ -165,3 +165,27 @@ body{
 .delay-2000 {
   animation-delay: 2000ms;
 }
+
+.custom-scrollbar-table {
+  /* For Chrome, Edge, Safari */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #383739 #18181b; /* thumb color, track color */
+  cursor: pointer;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+  background: #18181b; /* Track color */
+  cursor: pointer;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-thumb {
+  background: #383739; /* Thumb color */
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-thumb:hover {
+  background: #38373930; /* Thumb hover color */
+  cursor: pointer;
+}

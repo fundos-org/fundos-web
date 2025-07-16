@@ -16,7 +16,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
   if (!details) return <div>No Details found.</div>;
 
   return (
-    <div className="w-full text-white space-y-6 overflow-y-auto h-[calc(100vh-30vh)]">
+    <div className="w-full text-white space-y-6 overflow-y-auto h-[calc(100vh-30vh)] custom-scrollbar-table">
       <div className="min-h-screen p-6">
         <div className=" mx-auto space-y-6">
           {/* Personal Details Section */}

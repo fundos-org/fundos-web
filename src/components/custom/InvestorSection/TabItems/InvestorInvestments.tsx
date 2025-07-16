@@ -5,7 +5,7 @@ import CardDeal from './Deal';
 const InvestorInvestments: FC<{ investor_id: string }> = ({ investor_id }) => {
   const { data } = useInvestorDealInvestments(investor_id);
   return (
-    <div className="flex flex-wrap gap-4 overflow-y-auto h-[calc(100vh-40vh)]">
+    <div className="flex flex-wrap gap-4 overflow-y-auto h-[calc(100vh-40vh)] custom-scrollbar-table">
       {data?.deals.map(deal => <CardDeal deal={deal} />)}
     </div>
   );

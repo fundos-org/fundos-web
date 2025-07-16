@@ -9,7 +9,7 @@ const CustomRadioButtonGroup = ({
 }: {
   stages: Stages[];
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (value: string) => void;
 }) => {
   return (
     <RadioGroup

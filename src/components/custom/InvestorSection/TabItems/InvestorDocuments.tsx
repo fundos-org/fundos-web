@@ -19,7 +19,6 @@ const convertKeyToLabel = (k: string) =>
 const InvestorDocuments: FC<{ investor_id: string }> = ({ investor_id }) => {
   const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
   const { data } = useInvestorDocuments(investor_id);
-  console.log(data);
 
   return (
     <>
