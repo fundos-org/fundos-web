@@ -488,24 +488,6 @@ export const addMember = async (subadmin_id: string, email: string) => {
   }
 };
 
-export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
-  try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
-    );
-    return response.data;
-  } catch (error) {
-    console.log('Error in changeDealStatus:', error);
-    if (axios.isAxiosError(error)) {
-      toast.error(`Error: ${error.message}`);
-      throw new Error(error.message);
-    } else {
-      console.error('Unexpected error:', error);
-      throw new Error('An unexpected error occurred');
-    }
-  }
-};
-
 export const shareDetails = async (subadmin_id: string) => {
   try {
     const response = await axios.get(
@@ -606,6 +588,24 @@ export const markDealInactive = async (
     if (axios.isAxiosError(error)) {
       throw new Error(error.message);
     } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
+  try {
+    const response = await axios.post(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error in changeDealStatus:', error);
+    if (axios.isAxiosError(error)) {
+      toast.error(`Error: ${error.message}`);
+      throw new Error(error.message);
+    } else {
+      console.error('Unexpected error:', error);
       throw new Error('An unexpected error occurred');
     }
   }
