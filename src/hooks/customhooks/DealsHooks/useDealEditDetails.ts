@@ -24,7 +24,7 @@ export const useDealEditDetails = (deal_id: string) => {
         queryKey: [QueryEnums.DealDetails, deal_id],
       });
       queryClient.invalidateQueries({
-        queryKey: [QueryEnums.Investors, subadmin_id],
+        queryKey: [QueryEnums.DealDetails, deal_id],
         exact: false,
       });
     },

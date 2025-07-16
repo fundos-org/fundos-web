@@ -260,31 +260,6 @@ const DealDetails: React.FC<{
           )}
         </div>
 
-        {/* <div>
-          <Label
-            htmlFor="pitch_deck_url"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
-            Pitch Deck URL
-          </Label>
-          <Controller
-            name="pitch_deck_url"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Pitch Deck URL"
-                className={`${errors.pitch_deck_url ? 'border-red-500' : ''} rounded-none`}
-              />
-            )}
-          />
-          {errors.pitch_deck_url && (
-            <p className="text-red-500 text-sm">
-              {errors.pitch_deck_url.message}
-            </p>
-          )}
-        </div> */}
-
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">
             Pitch Deck

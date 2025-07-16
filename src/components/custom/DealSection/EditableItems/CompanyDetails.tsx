@@ -84,7 +84,7 @@ const CompanyDetails: FC<{
                   >
                     <img
                       src={field.value}
-                      alt="Company Logo"
+                      alt="logo"
                       className="w-[60px] h-[60px] object-cover hover:opacity-30"
                     />
                     <Upload className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden group-hover:block" />
