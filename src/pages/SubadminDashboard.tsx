@@ -1,13 +1,11 @@
 import { useAppStateEffect } from '@/app/hooks';
 import { RootState } from '@/app/store';
 import { fetchDashboardStatistics } from '@/axioscalls/apiServices';
-// import ActivitesList from '@/components/custom/ActivitesList';
-// import OverViewChart from '@/components/custom/OverViewChart';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import TransactionTable from '@/components/custom/tables/TransactionDetailsTable';
 import { useState } from 'react';
 
-function SubadminDashboard() {
+const SubadminDashboard = () => {
   const stats = useAppStateEffect(
     (state: RootState) => state.dashboard.statistics,
     fetchDashboardStatistics
@@ -37,6 +35,6 @@ function SubadminDashboard() {
       <TransactionTable header="Recent" transactions={[]} />
     </>
   );
-}
+};
 
 export default SubadminDashboard;

@@ -2,6 +2,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { AppRoute } from './RoutesEnum';
 import AdminDashboard from './pages/AdminDashboard';
+import Communication from './pages/Communication';
 const KycDashboard = lazy(() => import('./pages/KycDashboard'));
 const SubadminDashboard = lazy(() => import('./pages/SubadminDashboard'));
 const Deals = lazy(() => import('./pages/Deals'));
@@ -61,6 +62,14 @@ const AppRoutes = () => {
             element={
               <Layout>
                 <Members />
+              </Layout>
+            }
+          />
+          <Route
+            path={AppRoute.SUBADMIN_COMMUNICATION}
+            element={
+              <Layout>
+                <Communication />
               </Layout>
             }
           />

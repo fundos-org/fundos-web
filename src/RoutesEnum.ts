@@ -7,6 +7,7 @@ export enum AppRoute {
   SUBADMIN_DASHBOARD = '/subadmin/dashboard',
   SUBADMIN_DEALS = '/subadmin/deals',
   SUBADMIN_MEMBERS = '/subadmin/members',
+  SUBADMIN_COMMUNICATION = '/subadmin/communications',
   SUBADMIN_SETTINGS = '/subadmin/settings',
   KYC = '/kyc',
   KYC_DASHBOARD = '/kyc/dashboard',

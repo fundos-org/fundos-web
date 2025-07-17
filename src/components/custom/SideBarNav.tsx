@@ -18,6 +18,7 @@ import {
   UserRoundPen,
   LucideProps,
   LogOut,
+  Mail,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
@@ -76,6 +77,11 @@ const routes: Routes = {
     },
     { title: 'Deals', url: AppRoute.SUBADMIN_DEALS, icon: ScrollText },
     { title: 'Members', url: AppRoute.SUBADMIN_MEMBERS, icon: Users },
+    {
+      title: 'Communications',
+      url: AppRoute.SUBADMIN_COMMUNICATION,
+      icon: Mail,
+    },
     { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
   ],
   admin: [
