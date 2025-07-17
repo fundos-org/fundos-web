@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import SwitchCustom from '@/components/ui/switchCustom';
 import {
   Table,
   TableBody,
@@ -21,18 +22,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useInvestorDelete } from '@/hooks/customhooks/MembersHooks/useInvestorDelete';
-import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable';
-import { FileText, RefreshCw, SquareArrowOutUpRight } from 'lucide-react';
-import { lazy, Suspense, useState } from 'react';
-import SwitchCustom from '@/components/ui/switchCustom';
-import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
-import { InvestorEntity } from '@/constants/membersConstant';
+import { InvestorForDeals } from '@/constants/dealsConstant';
+import { useDealInvestorInvestments } from '@/hooks/customhooks/DealsHooks/useDealInvestorInvestments';
+import { RefreshCw, SquareArrowOutUpRight, FileText } from 'lucide-react';
+import { FC, lazy, Suspense, useState } from 'react';
 const InvestorFileDisplayDialog = lazy(
-  () => import('../DialogItems/InvestorFileDisplayDialog')
-);
-const InvestorDetailsDialog = lazy(
-  () => import('../DialogItems/InvestorDetailsDialog')
+  () => import('../../InvestorSection/DialogItems/InvestorFileDisplayDialog')
 );
 
 const test =
@@ -40,25 +35,21 @@ const test =
 
 const pageSizesList = [6, 10, 20, 50];
 
-const InvestorTable = () => {
-  const [sendDetails, setSendDetails] = useState<InvestorEntity>();
-  const [openDetails, setOpenDetails] = useState<boolean>(false);
-  const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
+const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { mutate: deleteInvestor } = useInvestorDelete();
-  const { data, isLoading, error, refetch } = useInvestors(
+  const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
+  const { data, error, isLoading, refetch } = useDealInvestorInvestments(
+    deal_id,
     pageNumber,
     pageSize
   );
-
   if (error) return <div>Error occured please check api</div>;
 
   if (!data && !isLoading) {
     return <div>No data found. Check session or API.</div>;
   }
-
   const pagination = data?.pagination;
 
   const handlePrev = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -88,17 +79,13 @@ const InvestorTable = () => {
       setTimeout(() => setIsRefreshing(false), 500); // Small delay for better UX
     }
   };
-
-  const goInsideDialog = (investor: InvestorEntity) => {
-    setOpenDetails(true);
-    setSendDetails(investor);
-  };
-
   return (
     <>
       <div className="w-full border border-[#2A2A2B]">
         <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
-          <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
+          <h1 className="text-2xl text-zinc-400">
+            Investors Invested in this Deal
+          </h1>
           <button
             onClick={handleRefresh}
             disabled={isRefreshing || isLoading}
@@ -119,23 +106,16 @@ const InvestorTable = () => {
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom-0 after:border-zinc-400/60">
                 <TableHead className="text-zinc-400 pl-4">Action</TableHead>
                 <TableHead className="text-zinc-400">Name</TableHead>
-                <TableHead className="text-zinc-400">Mail</TableHead>
                 <TableHead className="text-zinc-400">Type</TableHead>
-                <TableHead className="text-zinc-400 text-center">
-                  Deal Invested
-                </TableHead>
-                <TableHead className="text-zinc-400">KYC Status</TableHead>
-                <TableHead className="text-zinc-400">Joining Date</TableHead>
-                <TableHead className="text-zinc-400">
-                  Capital Commit(INR)
-                </TableHead>
-                <TableHead className="text-zinc-400">MCA</TableHead>
-                <TableHead className="text-zinc-400">Action</TableHead>
+                <TableHead className="text-zinc-400">Commitments</TableHead>
+                <TableHead className="text-zinc-400">Date</TableHead>
+                <TableHead className="text-zinc-400">Status</TableHead>
+                <TableHead className="text-zinc-400">Term Sheet</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
               {data?.investors &&
-                data?.investors?.map((investor: InvestorEntity) => (
+                data?.investors?.map((investor: InvestorForDeals) => (
                   <TableRow
                     className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
                     key={investor.investor_id}
@@ -143,49 +123,30 @@ const InvestorTable = () => {
                     <TableCell className="font-medium pl-4">
                       <SwitchCustom />
                     </TableCell>
-                    <TableCell
-                      className="font-medium flex items-center py-2 cursor-pointer hover:underline"
-                      onClick={() => goInsideDialog(investor)}
-                    >
-                      <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
-                        <img
-                          src={investor.profile_pic}
-                          className="w-full h-full object-cover"
-                          alt="dp"
-                        />
-                      </div>
-                      <span className="mt-2">{investor.name}</span>
+                    <TableCell className="font-medium flex items-center py-2 cursor-pointer hover:underline">
+                      <span className="mt-2">
+                        {investor.first_name + ' ' + investor.last_name}
+                      </span>
                       <SquareArrowOutUpRight className="w-3 ml-1 mt-2 text-blue-400" />
                     </TableCell>
                     <TableCell className="font-medium">
-                      {investor.mail}
+                      {investor.investor_type}
                     </TableCell>
                     <TableCell className="font-medium capitalize">
-                      {investor.type}
-                    </TableCell>
-                    <TableCell className="font-medium text-center">
-                      {investor.deals_invested}
+                      {investor.commitments}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {investor.kyc_status}
+                      {investor.created_at}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {investor.joined_on}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {investor.capital_commitment}
+                      {investor.status}
                     </TableCell>
                     <TableCell className="font-medium">
                       <FileText
-                        onClick={() => setAwsObjectKey(test)}
+                        onClick={() => setAwsObjectKey(test)} // investor.term_sheet_key
                         className="cursor-pointer"
                       />
                     </TableCell>
-                    <AdvancedInvestorActionsCell
-                      key={investor.investor_id}
-                      investor={investor}
-                      deleteInvestor={deleteInvestor}
-                    />
                   </TableRow>
                 ))}
             </TableBody>
@@ -251,13 +212,6 @@ const InvestorTable = () => {
         </Pagination>
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <InvestorDetailsDialog
-          open={openDetails}
-          onOpenChange={setOpenDetails}
-          details={sendDetails}
-        />
-      </Suspense>
-      <Suspense fallback={<div>Loading...</div>}>
         <InvestorFileDisplayDialog
           // awsObjectKey={sendDetails?.investor_id} // needed this comment
           awsObjectKey={awsObjectKey}
@@ -268,4 +222,4 @@ const InvestorTable = () => {
   );
 };
 
-export default InvestorTable;
+export default DealInvestments;

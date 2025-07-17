@@ -45,6 +45,36 @@ export interface PersonalDetails {
   aadhaar_number: string | null;
 }
 
+export interface InvestorEntity {
+  investor_id: string;
+  name: string;
+  mail: string;
+  type: 'entity' | 'individual';
+  deals_invested: number;
+  kyc_status: 'pending' | 'verified' | 'rejected';
+  mca_key: string;
+  joined_on: string;
+  profile_pic: string;
+  capital_commitment: number;
+}
+
+export interface Pagination {
+  page: number;
+  per_page: number;
+  total_records: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface InvestorsListResponse {
+  subadmin_id: string;
+  subadmin_name: string;
+  investors: InvestorEntity[];
+  pagination: Pagination;
+  success: boolean;
+}
+
 // Bank Details Interface
 export interface BankDetails {
   bank_account_number: string | null;

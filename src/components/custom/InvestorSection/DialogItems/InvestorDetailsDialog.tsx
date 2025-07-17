@@ -7,8 +7,8 @@ import {
 import { cn } from '@/lib/utils';
 import { ChevronLeft, X } from 'lucide-react';
 import { DialogHeader } from '@/components/ui/dialog';
-import { InvestorEntity } from '../InvestorTable/InvestorTable';
 import { FC, lazy, Suspense } from 'react';
+import { InvestorEntity } from '@/constants/membersConstant';
 const InvestorMainTab = lazy(() => import('../TabItems/InvestorMainTab'));
 
 const InvestorDetailsDialog: FC<{

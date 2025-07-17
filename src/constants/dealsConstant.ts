@@ -251,3 +251,31 @@ export interface UpdateDealDetailsResponse {
   message: string;
   success: boolean;
 }
+
+export interface InvestorForDeals {
+  investor_id: string;
+  first_name: string;
+  last_name: string;
+  investor_type: string;
+  commitments: number;
+  created_at: string;
+  status: string;
+  term_sheet_key: string;
+  deal_investor_status: number;
+}
+
+interface Pagination {
+  page: number;
+  per_page: number;
+  total_records: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface DealInvestorsResponse {
+  deal_id: string;
+  investors: InvestorForDeals[];
+  pagination: Pagination;
+  success: boolean;
+}

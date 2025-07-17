@@ -7,19 +7,13 @@ import {
 import { cn } from '@/lib/utils';
 import { ChevronLeft, EyeOff, PenLine, X } from 'lucide-react';
 import { DialogHeader } from '@/components/ui/dialog';
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  // lazy,
-  Suspense,
-} from 'react';
+import { Dispatch, FC, SetStateAction, lazy, Suspense } from 'react';
 import { DealCard, DealStatus } from '@/constants/dealsConstant';
 import { convertToCrores } from '@/lib/currencyToWords';
 import { Progress } from '@/components/ui/progress';
 import DealStatusSelect from '../DealStatusSelect';
 import { Button } from '@/components/ui/button';
-// const InvestorMainTab = lazy(() => import('../TabItems/InvestorMainTab'));
+const DealMainTab = lazy(() => import('../TabItems/DealMainTab'));
 
 const DealDetailsDialog: FC<{
   details?: DealCard | null;
@@ -140,7 +134,7 @@ const DealDetailsDialog: FC<{
           </div>
         </DialogHeader>
         <Suspense fallback={<div>Loading...</div>}>
-          {/* <InvestorMainTab investor_id={investor_id ?? ''} /> */}
+          <DealMainTab deal_id={deal_id ?? ''} />
         </Suspense>
       </DialogContent>
     </Dialog>

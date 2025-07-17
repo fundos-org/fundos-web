@@ -1,10 +1,10 @@
-import { InvestorsListResponse } from '@/components/custom/InvestorSection/InvestorTable/InvestorTable';
 import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
   CommonError,
   DealDetails,
   DealDetailsResponse,
+  DealInvestorsResponse,
   DealStatus,
   DraftResponse,
   LoginFormData,
@@ -19,6 +19,7 @@ import {
   InvestorDetailsResponse,
   InvestorDocumentsResponse,
   InvestorMetadataResponse,
+  InvestorsListResponse,
   InvestorTransactionsResponse,
   MemberApiResponse,
   UpdateInvestorRequest,
@@ -606,6 +607,25 @@ export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
       throw new Error(error.message);
     } else {
       console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getDealInvestorInvestments = async (
+  deal_id: string,
+  pageNumber: number,
+  pageSize: number
+): Promise<DealInvestorsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_info/investors/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
       throw new Error('An unexpected error occurred');
     }
   }
