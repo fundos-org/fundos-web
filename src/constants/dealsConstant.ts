@@ -304,3 +304,14 @@ export interface DealTransactionsResponse {
   pagination: Pagination;
   success: boolean;
 }
+
+export interface DealDocs {
+  pitchdeck_final_key: string;
+  video_pitch_key: string;
+}
+
+export interface DealDocumentsResponse {
+  deal_id: string;
+  documents: DealDocs;
+  success: boolean;
+}

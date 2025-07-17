@@ -4,6 +4,7 @@ import {
   CommonError,
   DealDetails,
   DealDetailsResponse,
+  DealDocumentsResponse,
   DealInvestorsResponse,
   DealStatus,
   DealTransactionsResponse,
@@ -640,6 +641,23 @@ export const getDealTransactions = async (
   try {
     const response = await axios.get(
       `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_info/transactions/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getDealDocuments = async (
+  deal_id: string
+): Promise<DealDocumentsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_info/documents/${deal_id}`
     );
     return response.data;
   } catch (error) {
