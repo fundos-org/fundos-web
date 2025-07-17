@@ -29,7 +29,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   FIRST NAME
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.personal_details.first_name}
                 </div>
               </div>
@@ -39,7 +39,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   LAST NAME
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.personal_details.last_name}
                 </div>
               </div>
@@ -51,7 +51,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   E-MAIL
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2 flex items-center justify-between">
                   <span>{details.personal_details.email}</span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
@@ -65,7 +65,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   CONTACT
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2 flex items-center justify-between">
                   <span>{details.personal_details.phone_number}</span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
@@ -81,7 +81,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   PAN NUMBER
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2 flex items-center justify-between">
                   <span>{details.personal_details.pan_number ?? 'N/A'}</span>
                   <div className="flex items-center gap-1 text-[#14ca74] text-xs font-medium">
                     <CheckCircle className="w-3 h-3" />
@@ -95,7 +95,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   AADHAR NUMBER
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2 flex items-center justify-between">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2 flex items-center justify-between">
                   <span>
                     {details.personal_details.aadhaar_number ?? 'N/A'}
                   </span>
@@ -118,7 +118,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   BANK ACCOUNT
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.bank_details.bank_account_number ?? 'N/A'}
                 </div>
               </div>
@@ -128,7 +128,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   IFSC CODE
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.bank_details.bank_ifsc ?? 'N/A'}
                 </div>
               </div>
@@ -139,7 +139,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
               <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                 ACCOUNT HOLDER'S NAME
               </label>
-              <div className="bg-[#383739] text-white px-4 py-2 max-w-md">
+              <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2 max-w-md">
                 {details.bank_details.account_holder_name}
               </div>
             </div>
@@ -155,7 +155,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   OCCUPATION
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.professional_background.occupation}
                 </div>
               </div>
@@ -165,7 +165,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   INCOME SOURCE
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.professional_background.income_source}
                 </div>
               </div>
@@ -177,7 +177,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   ANNUAL INCOME (IN Rs.)
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.professional_background.annual_income}
                 </div>
               </div>
@@ -187,7 +187,7 @@ const AboutInvestor: FC<{ investor_id: string }> = ({ investor_id }) => {
                 <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   CAPITAL COMMITMENT (OVER 5 YEARS)
                 </label>
-                <div className="bg-[#383739] text-white px-4 py-2">
+                <div className="border bg-[#38373980] border-[#383739] text-white px-4 py-2">
                   {details.professional_background.capital_commitment}
                 </div>
               </div>
