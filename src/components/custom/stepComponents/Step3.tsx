@@ -1,9 +1,9 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
-import CustomRadioButtonGroup from '../CustomRadioButtonGroup';
 import CustomToggleGroup from '../CustomToggleGroup';
 import { stages, targetCustomers } from '@/constants/dealsConstant';
+import NewCustomRadioGroup from '../NewCustomRadioGroup';
 
 const Step3: React.FC = () => {
   const {
@@ -14,14 +14,14 @@ const Step3: React.FC = () => {
 
   return (
     <div className="grid gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mr-3">
         <Label htmlFor="companyStage" className="text-right text-white">
           Company Stage
         </Label>
-        <CustomRadioButtonGroup
-          value={watch('companyStage')}
-          setValue={value =>
-            setValue('companyStage', value, { shouldValidate: true })
+        <NewCustomRadioGroup
+          value={watch('company_stage') ?? ''}
+          setValue={(value: string) =>
+            setValue('company_stage', value, { shouldValidate: true })
           }
           stages={stages}
         />

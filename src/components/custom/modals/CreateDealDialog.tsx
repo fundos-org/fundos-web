@@ -13,7 +13,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { Step, Stepper } from 'react-form-stepper';
+// import { Step, Stepper } from 'react-form-stepper';
 import createDraft, {
   companyDetailsTrigger,
   customerSegmentTrigger,
@@ -22,7 +22,7 @@ import createDraft, {
   securitiesTrigger,
   valuationTrigger,
 } from '@/axioscalls/apiServices';
-import { stepsList, styleConfig } from '@/constants/dealsConstant';
+// import { stepsList, styleConfig } from '@/constants/dealsConstant';
 import Step1 from '../stepComponents/Step1';
 import { FormProvider, useForm } from 'react-hook-form';
 import Step2 from '../stepComponents/Step2';
@@ -36,6 +36,7 @@ import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoader } from '@/hooks/useLoader';
+import StepperDemo from './StepperDemo';
 
 export interface FormData {
   companyName: string;
@@ -266,7 +267,7 @@ export default function CreateDealDialog({
   return (
     <DialogContent
       hideCloseButton={true}
-      className="border-0 w-[800px] rounded-none bg-[#1a1a1a] text-white"
+      className="border-0 rounded-none bg-[#1a1a1a] text-white sm:max-w-3xl max-h-[90vh]"
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >
@@ -275,8 +276,7 @@ export default function CreateDealDialog({
           Create a new deal
           <DialogClose
             asChild
-            // onClick={() => dispatch(fetchAllDeals())}
-            className="border-[1px] border-[#383739] bg-[#242325]"
+            className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
           >
             <span className="p-1">
               <X />
@@ -285,7 +285,7 @@ export default function CreateDealDialog({
         </DialogTitle>
         <hr />
       </DialogHeader>
-      <Stepper
+      {/* <Stepper
         activeStep={activeStep}
         styleConfig={styleConfig}
         style={{ padding: 0 }}
@@ -293,45 +293,52 @@ export default function CreateDealDialog({
         {stepsList.map(step => (
           <Step key={step.index} label={step.label} index={step.index} />
         ))}
-      </Stepper>
-      <FormProvider {...methods}>
-        <div className="grid gap-4 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStep}
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            >
-              {renderStep()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </FormProvider>
-      {activeStep < 5 && (
-        <DialogFooter>
-          <div className="w-full flex justify-between items-center">
-            <Button
-              type="button"
-              className="bg-white rounded-none py-5"
-              disabled={activeStep === 0}
-              onClick={() => setActiveStep(prev => prev - 1)}
-            >
-              <div className="flex gap-2 mx-10 text-black">Back</div>
-            </Button>
-            <Button
-              type="button"
-              className="bg-white rounded-none py-5 hover:bg-zinc-300"
-              onClick={handleNext}
-            >
-              <div className="flex gap-2 mx-10 text-black">
-                {activeStep === 4 ? 'Submit' : 'Next'}
+      </Stepper> */}
+      <div className="flex">
+        <StepperDemo activeStep={activeStep} setActiveStep={setActiveStep} />
+        <div className="flex flex-col w-full">
+          <FormProvider {...methods}>
+            <div className="grid gap-4 overflow-hidden w-full pl-6 mb-10">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStep}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                >
+                  {renderStep()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </FormProvider>
+          {activeStep < 5 && (
+            <DialogFooter>
+              <div className="w-full flex justify-end-safe gap-3 items-center">
+                <Button
+                  type="button"
+                  className="border border-zinc-700 rounded-none py-5 hover:bg-[#38373990] cursor-pointer"
+                  disabled={activeStep === 0}
+                  onClick={() => setActiveStep(prev => prev - 1)}
+                >
+                  <div className="flex gap-2 mx-10 text-white hover:text-zinc-300">
+                    Back
+                  </div>
+                </Button>
+                <Button
+                  type="button"
+                  className="bg-white rounded-none py-5 hover:bg-zinc-300 cursor-pointer"
+                  onClick={handleNext}
+                >
+                  <div className="flex gap-2 mx-10 text-black">
+                    {activeStep === 4 ? 'Submit' : 'Next'}
+                  </div>
+                </Button>
               </div>
-            </Button>
-          </div>
-        </DialogFooter>
-      )}
+            </DialogFooter>
+          )}
+        </div>
+      </div>
     </DialogContent>
   );
 }

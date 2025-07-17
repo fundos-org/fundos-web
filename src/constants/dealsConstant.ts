@@ -279,3 +279,28 @@ export interface DealInvestorsResponse {
   pagination: Pagination;
   success: boolean;
 }
+
+export interface DealTransaction {
+  transaction_id: string;
+  invitation_code: string;
+  transaction_type: string;
+  amount: number;
+  created_at: string;
+  status: string;
+}
+
+interface Pagination {
+  page: number;
+  per_page: number;
+  total_records: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface DealTransactionsResponse {
+  deal_id: string;
+  transactions: DealTransaction[];
+  pagination: Pagination;
+  success: boolean;
+}

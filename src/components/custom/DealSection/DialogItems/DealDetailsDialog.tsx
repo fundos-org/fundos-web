@@ -99,10 +99,10 @@ const DealDetailsDialog: FC<{
                   deal_id={deal_id ?? ''}
                   initialStatus={deal_status as DealStatus}
                 />
-                <Button className="rounded-none px-10 border border-[#393738]">
+                <Button className="rounded-none px-10 border border-[#393738] cursor-pointer">
                   <PenLine className="text-blue-500" /> Edit
                 </Button>
-                <Button className="rounded-none px-10 border border-[#393738]">
+                <Button className="rounded-none px-10 border border-[#393738] cursor-pointer">
                   <EyeOff className="text-red-500" /> Mark Inactive
                 </Button>
               </div>

@@ -24,8 +24,8 @@ const NewCustomRadioGroup = ({
           value={stage.value}
           id={stage.value}
           className={cn(
-            'cursor-pointer relative group ring-[1px] ring-[#2a2a2a] py-2 px-3 text-start bg-[#1a1a1a] border border-[#2a2a2a]',
-            'data-[state=checked]:ring-2 data-[state=checked]:ring-blue-500'
+            'cursor-pointer relative group ring-[1px] ring-[#2a2a2a] py-2 px-3 text-start bg-[#1a1a1a] border border-[#404040]',
+            'data-[state=checked]:ring-1 data-[state=checked]:bg-[#38373970] data-[state=checked]:ring-zinc-400'
           )}
         >
           <CircleCheck

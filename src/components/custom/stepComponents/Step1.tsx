@@ -15,7 +15,7 @@ const Step1: React.FC = () => {
   const logo = watch('logo');
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 w-full">
       <div className="flex flex-col gap-2">
         <Label htmlFor="companyName" className="text-right text-white">
           Company Name

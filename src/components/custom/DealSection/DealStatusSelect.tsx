@@ -99,7 +99,7 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
         onValueChange={handleChangeStatus}
       >
         <SelectTrigger
-          className={`rounded-none border-0 text-white ${getStatusBgColor(status)}`}
+          className={`rounded-none border-0 text-white ${getStatusBgColor(status)} cursor-pointer`}
         >
           <SelectValue>
             <span

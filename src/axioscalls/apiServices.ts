@@ -6,6 +6,7 @@ import {
   DealDetailsResponse,
   DealInvestorsResponse,
   DealStatus,
+  DealTransactionsResponse,
   DraftResponse,
   LoginFormData,
   SignInSubAdminResponse,
@@ -620,6 +621,25 @@ export const getDealInvestorInvestments = async (
   try {
     const response = await axios.get(
       `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_info/investors/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getDealTransactions = async (
+  deal_id: string,
+  pageNumber: number,
+  pageSize: number
+): Promise<DealTransactionsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_info/transactions/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {
