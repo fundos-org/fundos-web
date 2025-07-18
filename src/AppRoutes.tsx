@@ -36,6 +36,22 @@ const AppRoutes = () => {
               </Layout>
             }
           />
+          <Route
+            path={AppRoute.ADMIN_MEMBERS}
+            element={
+              <Layout>
+                <Members />
+              </Layout>
+            }
+          />
+          <Route
+            path={AppRoute.ADMIN_DEALS}
+            element={
+              <Layout>
+                <Deals />
+              </Layout>
+            }
+          />
         </Route>
 
         {/* /subadmin and its children */}

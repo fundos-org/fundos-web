@@ -3,6 +3,8 @@ export enum AppRoute {
   ADMIN = '/admin',
   ADMIN_SUBADMIN = '/admin/subadmin',
   ADMIN_DASHBOARD = '/admin/dashboard',
+  ADMIN_MEMBERS = '/admin/members',
+  ADMIN_DEALS = '/admin/deals',
   SUBADMIN = '/subadmin',
   SUBADMIN_DASHBOARD = '/subadmin/dashboard',
   SUBADMIN_DEALS = '/subadmin/deals',

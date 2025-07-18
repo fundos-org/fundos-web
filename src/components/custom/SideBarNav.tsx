@@ -91,6 +91,8 @@ const routes: Routes = {
       icon: LayoutDashboard,
     },
     { title: 'Sub Admin', url: AppRoute.ADMIN_SUBADMIN, icon: UserRoundPen },
+    { title: 'Users', url: AppRoute.ADMIN_MEMBERS, icon: Users },
+    { title: 'Deals', url: AppRoute.ADMIN_DEALS, icon: ScrollText },
   ],
   kyc: [{ title: 'KYC Dashboard', url: AppRoute.KYC_DASHBOARD, icon: Users }],
 };
