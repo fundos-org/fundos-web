@@ -16,65 +16,72 @@ const StepSubAdmin1: React.FC = () => {
 
   return (
     <div className="grid gap-4">
-      <div>
-        <Label htmlFor="logo" className="text-right text-white">
-          Upload Logo
-        </Label>
-        <ImageInput
-          image={logo}
-          id="logo"
-          setImage={file => setValue('logo', file, { shouldValidate: true })}
-        />
-        {errors.logo && (
-          <p className="text-red-400 text-sm">{String(errors.logo.message)}</p>
-        )}
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="subadminname" className="text-right text-white">
-          Sub Admin Name
-        </Label>
-        <Input
-          id="subadminname"
-          {...register('subadminname', {
-            required: 'Subadmin name is required',
-          })}
-          placeholder="Enter subadmin name"
-          className="rounded-none text-white"
-        />
-        {errors.subadminname && (
-          <p className="text-red-400 text-sm">
-            {String(errors.subadminname.message)}
-          </p>
-        )}
-      </div>
+      <div className="flex gap-6">
+        <div>
+          <Label htmlFor="logo" className="text-right text-white">
+            Upload Logo<span className="text-red-400">*</span>
+          </Label>
+          <ImageInput
+            image={logo}
+            id="logo"
+            setImage={file => setValue('logo', file, { shouldValidate: true })}
+          />
+          {errors.logo && (
+            <p className="text-red-400 text-sm">
+              {String(errors.logo.message)}
+            </p>
+          )}
+        </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="subadminmail" className="text-right text-white">
-          Sub Admin Email
-        </Label>
-        <Input
-          id="subadminmail"
-          type="email"
-          {...register('subadminmail', {
-            required: 'Email is required',
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: 'Invalid email address',
-            },
-          })}
-          placeholder="Enter subadmin email"
-          className="rounded-none text-white"
-        />
-        {errors.subadminmail && (
-          <p className="text-red-400 text-sm">
-            {String(errors.subadminmail.message)}
-          </p>
-        )}
+        <div className="w-full flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subadminname" className="text-right text-white">
+              Sub Admin Name<span className="text-red-400">*</span>
+            </Label>
+            <Input
+              id="subadminname"
+              {...register('subadminname', {
+                required: 'Subadmin name is required',
+              })}
+              placeholder="Enter subadmin name"
+              className="rounded-none text-white"
+            />
+            {errors.subadminname && (
+              <p className="text-red-400 text-sm">
+                {String(errors.subadminname.message)}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="subadminmail" className="text-right text-white">
+              Sub Admin Email<span className="text-red-400">*</span>
+            </Label>
+            <Input
+              id="subadminmail"
+              type="email"
+              {...register('subadminmail', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: 'Invalid email address',
+                },
+              })}
+              placeholder="Enter subadmin email"
+              className="rounded-none text-white"
+            />
+            {errors.subadminmail && (
+              <p className="text-red-400 text-sm">
+                {String(errors.subadminmail.message)}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="subadmincontact" className="text-right text-white">
-          Sub Admin Contact
+          Sub Admin Contact<span className="text-red-400">*</span>
         </Label>
         <Input
           id="subadmincontact"
@@ -97,7 +104,7 @@ const StepSubAdmin1: React.FC = () => {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="about" className="text-right text-white">
-          About
+          About<span className="text-red-400">*</span>
         </Label>
         <Textarea
           id="about"

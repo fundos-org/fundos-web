@@ -1,9 +1,8 @@
-import { fetchAllSubAdmins, loginSubAdmin } from '@/axioscalls/apiServices';
+import { loginSubAdmin } from '@/axioscalls/apiServices';
 import {
   CommonError,
   SignInSubAdminResponse,
   Subadmin,
-  SubadminsResponse,
 } from '@/constants/dealsConstant';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -38,23 +37,6 @@ const subAdminSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchAllSubAdmins.pending, state => {
-        state.loading = true;
-      })
-      .addCase(
-        fetchAllSubAdmins.fulfilled,
-        (state, action: PayloadAction<SubadminsResponse>) => {
-          state.loading = false;
-          state.subAdmins = action.payload.subadmins;
-        }
-      )
-      .addCase(
-        fetchAllSubAdmins.rejected,
-        (state, action: PayloadAction<CommonError | undefined>) => {
-          state.loading = false;
-          state.error = action.payload?.message || 'Failed to fetch deals';
-        }
-      )
       .addCase(loginSubAdmin.pending, state => {
         state.loading = true;
       })

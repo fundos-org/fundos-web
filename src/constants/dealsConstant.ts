@@ -156,8 +156,18 @@ export interface Subadmin {
   onboarding_date: string;
 }
 
+interface Pagination {
+  page: number;
+  per_page: number;
+  total_records: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
 export interface SubadminsResponse {
   subadmins: Subadmin[];
+  pagination: Pagination;
 }
 
 export interface SignInSubAdminResponse {

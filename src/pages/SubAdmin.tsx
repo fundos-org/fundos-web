@@ -1,23 +1,8 @@
-import { useAppStateEffect } from '@/app/hooks';
-import { RootState } from '@/app/store';
-import { fetchAllSubAdmins } from '@/axioscalls/apiServices';
 import CreateSubAdminDialog from '@/components/custom/modals/CreateSubAdminDialog';
-import { SubAdminTable } from '@/components/custom/tables/SubAdminTable';
+import SubAdminTable from '@/components/custom/tables/SubAdminTable';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import toast from 'react-hot-toast';
 
 function SubAdmin() {
-  const subAdmins = useAppStateEffect(
-    (state: RootState) => state.subAdmin.subAdmins,
-    fetchAllSubAdmins
-  );
-  if (subAdmins)
-    toast.success('Successfully fetch the sub admin list!', {
-      style: {
-        border: 0,
-        borderRadius: 0,
-      },
-    });
   return (
     <Dialog>
       <header className="flex justify-between items-center">
@@ -35,7 +20,7 @@ function SubAdmin() {
           Track how your managers are performing
         </small>
       </div>
-      {subAdmins && <SubAdminTable subadmins={subAdmins} />}
+      <SubAdminTable />
       <CreateSubAdminDialog />
     </Dialog>
   );

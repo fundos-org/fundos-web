@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
 // getDeals
-export const useDealsTable = () => {
+export const useDeals = () => {
   const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
   const { subadmin_id } = subadminDetailsRaw
     ? JSON.parse(subadminDetailsRaw)

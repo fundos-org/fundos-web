@@ -2,11 +2,11 @@ import { lazy, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 const Dealcard = lazy(() => import('./DealCard'));
 import { DealCard } from '@/constants/dealsConstant';
-import { useDealsTable } from '@/hooks/customhooks/DealsHooks/useDealTable';
+import { useDeals } from '@/hooks/customhooks/DealsHooks/useDealTable';
 import { RefreshCw } from 'lucide-react';
 
 const ShowDeals = () => {
-  const { data: deals, refetch, isLoading } = useDealsTable();
+  const { data: deals, refetch, isLoading } = useDeals();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const handleRefresh = async () => {
     setIsRefreshing(true);

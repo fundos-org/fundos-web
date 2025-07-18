@@ -37,7 +37,6 @@ export interface FormData {
 function CreateSubAdminDialog() {
   const [activeStep, setActiveStep] = useState(0);
   const [subAdminId, setSubAdminId] = useState('');
-  // const [transferToOverview, setTransferToOverview] = useState();
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
@@ -165,7 +164,7 @@ function CreateSubAdminDialog() {
   return (
     <DialogContent
       hideCloseButton={true}
-      className="w-[800px] rounded-none bg-[#1a1a1a] text-white border-none"
+      className="rounded-none bg-[#1a1a1a] text-white border-none sm:max-w-4xl"
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >

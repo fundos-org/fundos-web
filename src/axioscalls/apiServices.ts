@@ -293,29 +293,29 @@ export const getSubAdminById = async (subadmin_id: string) => {
   return response.data;
 };
 
-export const fetchAllSubAdmins = createAsyncThunk<
-  SubadminsResponse,
-  void,
-  { rejectValue: CommonError }
->('subAdmins/fetchAllDeals', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axios.get(`${baseUrl}/api/v1/live/admin/subadmins/`);
-    return response.data;
-  } catch (error: unknown) {
-    // Handle axios or network errors
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const errorData = error.response.data as CommonError;
-      if (errorData.isSuccess !== undefined && errorData.message) {
-        return rejectWithValue(errorData);
-      }
-    }
-    // Fallback for unexpected errors
-    return rejectWithValue({
-      isSuccess: false,
-      message: 'Failed to fetch deals',
-    });
-  }
-});
+// export const fetchAllSubAdmins = createAsyncThunk<
+//   SubadminsResponse,
+//   void,
+//   { rejectValue: CommonError }
+// >('subAdmins/fetchAllDeals', async (_, { rejectWithValue }) => {
+//   try {
+//     const response = await axios.get(`${baseUrl}/api/v1/live/admin/subadmins/`);
+//     return response.data;
+//   } catch (error: unknown) {
+//     // Handle axios or network errors
+//     if (axios.isAxiosError(error) && error.response?.data) {
+//       const errorData = error.response.data as CommonError;
+//       if (errorData.isSuccess !== undefined && errorData.message) {
+//         return rejectWithValue(errorData);
+//       }
+//     }
+//     // Fallback for unexpected errors
+//     return rejectWithValue({
+//       isSuccess: false,
+//       message: 'Failed to fetch deals',
+//     });
+//   }
+// });
 
 export const fetchDealStatistics = createAsyncThunk<
   StatisticsResponse,
@@ -511,6 +511,23 @@ export const shareDetails = async (subadmin_id: string) => {
 };
 
 // React Query Tanstack
+export const getSubadmins = async (): Promise<SubadminsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/admin/subadmins/`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data as CommonError;
+      if (errorData.isSuccess !== undefined && errorData.message) {
+        throw new Error(errorData.message);
+      }
+    }
+    throw new Error('Failed to fetch deals');
+  }
+};
+
 export const getDeals = async (
   subadmin_id: string
 ): Promise<AllDealsResponse> => {

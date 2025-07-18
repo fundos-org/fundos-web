@@ -1,30 +1,18 @@
-import * as React from 'react';
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import { ChevronDown, MoreHorizontal } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -33,263 +21,199 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Pagination,
-  PaginationContent,
-  // PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+import { UserPen, RefreshCw } from 'lucide-react';
+import { FC, useState } from 'react';
+import SwitchCustom from '@/components/ui/switchCustom';
+import { useSubadmins } from '@/hooks/customhooks/SubAdminsHooks/useSubadminTable';
+import { Subadmin } from '@/constants/dealsConstant';
+// const InvestorEditDialog = lazy(
+//   () => import('../InvestorSection/DialogItems/InvestorEditDialog')
+// );
 
-// Define the type for the subadmin data
-interface Subadmin {
-  subadmin_id: string;
-  name: string;
-  email: string;
-  invite_code: string;
-  total_users: number;
-  active_deals: number;
-  onboarding_date: string;
-}
+const pageSizesList = [6, 10, 20, 50];
 
-// Define props for the component
-interface SubAdminTableProps {
-  subadmins: Subadmin[];
-}
-
-// Define the columns based on the API response
-export const columns: ColumnDef<Subadmin>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={value => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('name')}</div>
-    ),
-  },
-  {
-    accessorKey: 'email',
-    header: 'Mail',
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
-  },
-  {
-    accessorKey: 'invite_code',
-    header: 'Invite Code',
-    cell: ({ row }) => <div>{row.getValue('invite_code')}</div>,
-  },
-  {
-    accessorKey: 'total_users',
-    header: 'Total Users',
-    cell: ({ row }) => <div>{row.getValue('total_users')}</div>,
-  },
-  {
-    accessorKey: 'active_deals',
-    header: 'Active Deals',
-    cell: ({ row }) => <div>{row.getValue('active_deals')}</div>,
-  },
-  {
-    accessorKey: 'onboarding_date',
-    header: 'Onboarding Date',
-    cell: ({ row }) => <div>{row.getValue('onboarding_date')}</div>,
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const subadmin = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(subadmin.email)}
-            >
-              Copy email
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View profile</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-export function SubAdminTable({ subadmins }: SubAdminTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+const SubAdminTable: FC = () => {
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(6);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { data, isLoading, error, refetch } = useSubadmins(
+    pageNumber,
+    pageSize
   );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
 
-  const table = useReactTable({
-    data: subadmins,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
+  if (error) return <div>Error occured please check api</div>;
+
+  if (!data && !isLoading) {
+    return <div>No data found. Check session or API.</div>;
+  }
+
+  const pagination = data?.pagination;
+
+  const handlePrev = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    if (pagination?.has_prev && pageNumber > 1) {
+      setPageNumber(prev => prev - 1);
+    }
+  };
+
+  const handleNext = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    if (pagination?.has_next && pageNumber < (pagination?.total_pages || 1)) {
+      setPageNumber(prev => prev + 1);
+    }
+  };
+
+  const handlePageSizeChange = (value: string) => {
+    setPageSize(Number(value));
+    setPageNumber(1);
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500); // Small delay for better UX
+    }
+  };
 
   return (
-    <div className="w-full">
-      <div className="flex justify-between items-center py-4 bg-[#2A2A2B] px-5">
-        <h1 className="text-2xl text-zinc-400 py-5">SUB-ADMIN ONBOARDED</h1>
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={event =>
-            table.getColumn('email')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm ml-auto rounded-none"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-5 text-black rounded-none">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-none">
-            {table
-              .getAllColumns()
-              .filter(column => column.getCanHide())
-              .map(column => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={value => column.toggleVisibility(!!value)}
+    <>
+      <div className="w-full border border-[#2A2A2B]">
+        <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
+          <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing || isLoading}
+            className="flex gap-3 p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
+            title="Refresh data"
+          >
+            {/* <span>Refresh:</span> */}
+            <RefreshCw
+              className={`w-5 h-5 text-zinc-400 ${
+                isRefreshing || isLoading ? 'animate-spin' : null
+              } transition-transform duration-200 hover:text-zinc-300`}
+            />
+          </button>
+        </div>
+        <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
+          <Table className="rounded-none">
+            <TableHeader>
+              <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:absolute bottom-0 border-zinc-700">
+                <TableHead className="text-zinc-400 pl-4">Archive</TableHead>
+                <TableHead className="text-zinc-400">Sub-AdminName</TableHead>
+                <TableHead className="text-zinc-400">Email</TableHead>
+                <TableHead className="text-zinc-400">Invitation Code</TableHead>
+                <TableHead className="text-zinc-400">Total Users</TableHead>
+                <TableHead className="text-zinc-400">Active Deals</TableHead>
+                <TableHead className="text-zinc-400">Onboarding Date</TableHead>
+                <TableHead className="text-zinc-400">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="overflow-hidden">
+              {data?.subadmins &&
+                data?.subadmins?.map((subadmin: Subadmin) => (
+                  <TableRow
+                    className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
+                    key={subadmin.subadmin_id}
                   >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="px-5 bg-[#242325]">
-        <Table className="rounded-none px-5">
-          <TableHeader className="text-white">
-            {table.getHeaderGroups().map(headerGroup => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  return (
-                    <TableHead key={header.id} className="text-zinc-400">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody className="bg-[#242325] text-white">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <TableCell className="font-medium pl-4">
+                      <SwitchCustom />
                     </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <Pagination className="bg-[#2A2A2B] p-4">
-        <PaginationContent className="w-full flex justify-between items-center">
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <div className="flex gap-2">
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
+                    <TableCell className="font-medium capitalize">
+                      {subadmin.name}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {subadmin.email}
+                    </TableCell>
+                    <TableCell className="font-medium capitalize">
+                      {subadmin.invite_code}
+                    </TableCell>
+                    <TableCell className="font-medium px-10">
+                      {subadmin.total_users}
+                    </TableCell>
+                    <TableCell className="font-medium px-10">
+                      {subadmin.active_deals}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {subadmin.onboarding_date}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <UserPen className="text-blue-400" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
+        <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
+          <span>Total records: {data?.pagination.total_records}</span>
+          <PaginationContent className="gap-10">
+            <PaginationItem
+              className={`${!pagination?.has_prev ? 'hidden' : null} cursor-pointer`}
+            >
+              <PaginationPrevious
+                className="rounded-none"
+                onClick={handlePrev}
+                aria-disabled={!pagination?.has_prev}
+              />
             </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">2</PaginationLink>
+            <div className="flex gap-2">
+              {Array.from(
+                { length: pagination?.total_pages || 1 },
+                (_, idx) => (
+                  <PaginationItem key={idx + 1} className="cursor-pointer">
+                    <PaginationLink
+                      className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'} rounded-none`}
+                      isActive={pageNumber === idx + 1}
+                      onClick={e => {
+                        e.preventDefault();
+                        setPageNumber(idx + 1);
+                      }}
+                    >
+                      {idx + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
+            </div>
+            <PaginationItem
+              className={`${!pagination?.has_next ? 'hidden' : null} cursor-pointer`}
+            >
+              <PaginationNext className="rounded-none" onClick={handleNext} />
             </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            {/* <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">12</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">13</PaginationLink>
-            </PaginationItem> */}
+          </PaginationContent>
+          <div className="flex items-center">
+            <label htmlFor="pageSizeSelect" className="text-sm font-medium">
+              Records per page:&nbsp;
+            </label>
+            <Select
+              onValueChange={handlePageSizeChange}
+              defaultValue={String(pageSize)}
+            >
+              <SelectTrigger className="rounded-none w-[100px]">
+                <SelectValue placeholder="Select Page Size" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none">
+                {pageSizesList.map(ps => (
+                  <SelectItem key={ps} value={String(ps)}>
+                    {ps}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </div>
+        </Pagination>
+      </div>
+      {/* <Suspense fallback={<div className="spinner">Loading...</div>}>
+                <InvestorEditDialog
+                  isDialogOpen={isDialog}
+                  setDialogOpen={setIsDialog}
+                  investor_id={investor.investor_id}
+                />
+              </Suspense> */}
+    </>
   );
-}
+};
+
+export default SubAdminTable;
