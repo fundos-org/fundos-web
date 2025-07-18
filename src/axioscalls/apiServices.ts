@@ -707,12 +707,10 @@ export const getDealDocuments = async (
 };
 
 export const deleteInvestor = async (
+  subadmin_id: string,
   investor_id: string
 ): Promise<{ success: boolean; message: string }> => {
   try {
-    const { subadmin_id } = JSON.parse(
-      sessionStorage.getItem(AppEnums.SUBADMIN_SESSION) as string
-    );
     const response = await axios.delete(
       `${baseUrl}/api/v1/live/subadmin/investors/delete/${subadmin_id}/${investor_id}`
     );

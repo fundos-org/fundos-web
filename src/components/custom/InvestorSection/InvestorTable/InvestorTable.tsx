@@ -23,18 +23,47 @@ import {
 } from '@/components/ui/table';
 import { useInvestorDelete } from '@/hooks/customhooks/MembersHooks/useInvestorDelete';
 import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable';
-import { FileText, RefreshCw, SquareArrowOutUpRight } from 'lucide-react';
+import {
+  FileText,
+  UserPen,
+  RefreshCw,
+  SquareArrowOutUpRight,
+  Trash2,
+} from 'lucide-react';
 import { FC, lazy, Suspense, useEffect, useState } from 'react';
 import SwitchCustom from '@/components/ui/switchCustom';
-import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
 import { InvestorEntity } from '@/constants/membersConstant';
 import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { AppEnums } from '@/constants/enums';
+import { useLoader } from '@/hooks/useLoader';
 const InvestorFileDisplayDialog = lazy(
   () => import('../DialogItems/InvestorFileDisplayDialog')
 );
 const InvestorDetailsDialog = lazy(
   () => import('../DialogItems/InvestorDetailsDialog')
 );
+const InvestorEditDialog = lazy(
+  () => import('../DialogItems/InvestorEditDialog')
+);
+
+interface OpenEditDialog {
+  investor_id: string;
+  subadmin_id: string;
+}
+
+const sessCapture = () => {
+  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
+  const { subadmin_id } = subadminDetailsRaw
+    ? JSON.parse(subadminDetailsRaw)
+    : {};
+  return subadmin_id;
+};
 
 const test =
   'deals/pitch_decks/18e75944-883f-46b5-b716-22c61cc3a061_20250510134038.png'; //delete later
@@ -43,19 +72,23 @@ const pageSizesList = [6, 10, 20, 50];
 
 const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
   const [sendDetails, setSendDetails] = useState<InvestorEntity>();
+  const [editUser, setEditUser] = useState<OpenEditDialog | null>(null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { data: subadminIds } = useSubadminIds(isInvestor);
-  const [subAdminId, setSubAdminId] = useState<string | undefined>(undefined);
-  const { mutate: deleteInvestor } = useInvestorDelete();
-  const { data, isLoading, error, refetch } = useInvestors(
-    pageNumber,
-    pageSize,
-    subAdminId
-  );
+  const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
+  const [subAdminId, setSubAdminId] = useState<string | undefined>(sessCapture);
+  const { showLoader, hideLoader } = useLoader();
+  const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isInvestor);
+  const { mutate: deleteInvestor, isLoading: isDeleting } = useInvestorDelete();
+  const {
+    data,
+    isLoading: isFetching,
+    error,
+    refetch,
+  } = useInvestors(pageNumber, pageSize, subAdminId);
 
   useEffect(() => {
     // Suggestion: Only set subAdminId if it's undefined and subadminIds is available
@@ -76,7 +109,7 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
 
   if (error) return <div>Error occured please check api</div>;
 
-  if (!data && !isLoading) {
+  if (!data) {
     return <div>No data found. Check session or API.</div>;
   }
 
@@ -111,52 +144,86 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
       setTimeout(() => setIsRefreshing(false), 500); // Small delay for better UX
     }
   };
+  const handleRefreshIds = async () => {
+    setIsRefreshing1(true);
+    try {
+      await refetchIds();
+    } finally {
+      setTimeout(() => setIsRefreshing1(false), 500); // Small delay for better UX
+    }
+  };
 
   const goInsideDialog = (investor: InvestorEntity) => {
     setOpenDetails(true);
     setSendDetails(investor);
   };
-
   return (
     <>
+      {isDeleting ? showLoader() : hideLoader()}
+      {isFetching ? showLoader() : hideLoader()}
       <div className="w-full border border-[#2A2A2B]">
         <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
-          <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing || isLoading}
-            className="flex gap-3 p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
-            title="Refresh data"
-          >
-            {/* <span>Refresh:</span> */}
-            <RefreshCw
-              className={`w-5 h-5 text-zinc-400 ${
-                isRefreshing || isLoading ? 'animate-spin' : null
-              } transition-transform duration-200 hover:text-zinc-300`}
-            />
-          </button>
+          <div className="flex gap-2">
+            <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing || isFetching}
+                  className="flex gap-3 rounded-full items-center px-1.5 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
+                  title="Refresh data"
+                >
+                  <RefreshCw
+                    className={`w-5 h-5 text-zinc-400 ${
+                      isRefreshing || isFetching ? 'animate-spin' : null
+                    } transition-transform duration-200 hover:text-zinc-300`}
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="right"
+                className="bg-[#ffffff40] border border-[#ffffff70] rounded-none [&>svg]:fill-blue-900"
+              >
+                <strong>Refresh to get Fresh Data</strong>
+              </TooltipContent>
+            </Tooltip>
+          </div>
           {!isInvestor && (
-            <Select onValueChange={handleSubAdminIdChange} value={subAdminId}>
-              <SelectTrigger className="rounded-none w-[200px] cursor-pointer">
-                <SelectValue placeholder="Select Page Size" />
-              </SelectTrigger>
-              <SelectContent className="rounded-none">
-                {subadminIds?.subadmins?.map(subadmin => (
-                  <SelectItem
-                    key={subadmin?.subadmin_id}
-                    value={String(subadmin?.subadmin_id)}
-                  >
-                    {subadmin?.subadmin_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex">
+              <Select onValueChange={handleSubAdminIdChange} value={subAdminId}>
+                <SelectTrigger className="rounded-none w-[200px] cursor-pointer border border-[#383739] bg-black/40">
+                  <SelectValue placeholder="Select Page Size" />
+                </SelectTrigger>
+                <SelectContent className="rounded-none">
+                  {subadminIds?.subadmins?.map(subadmin => (
+                    <SelectItem
+                      key={subadmin?.subadmin_id}
+                      value={String(subadmin?.subadmin_id)}
+                    >
+                      {subadmin?.subadmin_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                onClick={handleRefreshIds}
+                disabled={isRefreshing1}
+                className="rounded-none border border-[#383739] cursor-pointer"
+                title="Refresh data"
+              >
+                <RefreshCw
+                  className={`w-5 h-5 text-zinc-400 ${
+                    isRefreshing1 ? 'animate-spin' : null
+                  } transition-transform duration-200 hover:text-zinc-300`}
+                />
+              </Button>
+            </div>
           )}
         </div>
         <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
-              <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom-0 after:border-zinc-400/60">
+              <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom after:border-zinc-400/60 border-zinc-400/60">
                 <TableHead className="text-zinc-400 pl-4">Action</TableHead>
                 <TableHead className="text-zinc-400">Name</TableHead>
                 <TableHead className="text-zinc-400">Mail</TableHead>
@@ -170,7 +237,12 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
                   Capital Commit(INR)
                 </TableHead>
                 <TableHead className="text-zinc-400">MCA</TableHead>
-                <TableHead className="text-zinc-400">Action</TableHead>
+                {subAdminId && (
+                  <TableHead className="text-zinc-400">Edit</TableHead>
+                )}
+                {subAdminId && (
+                  <TableHead className="text-zinc-400">Delete</TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
@@ -221,11 +293,32 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
                         className="cursor-pointer"
                       />
                     </TableCell>
-                    <AdvancedInvestorActionsCell
-                      key={investor.investor_id}
-                      investor={investor}
-                      deleteInvestor={deleteInvestor}
-                    />
+                    {subAdminId && (
+                      <TableCell
+                        className="font-medium"
+                        onClick={() =>
+                          setEditUser({
+                            investor_id: investor.investor_id,
+                            subadmin_id: subAdminId,
+                          })
+                        }
+                      >
+                        <UserPen className="text-blue-400" />
+                      </TableCell>
+                    )}
+                    {subAdminId && (
+                      <TableCell
+                        className="font-medium"
+                        onClick={() =>
+                          deleteInvestor({
+                            investor_id: investor.investor_id,
+                            subadmin_id: subAdminId,
+                          })
+                        }
+                      >
+                        <Trash2 className="text-red-400" />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
             </TableBody>
@@ -295,6 +388,12 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
           open={openDetails}
           onOpenChange={setOpenDetails}
           details={sendDetails}
+        />
+      </Suspense>
+      <Suspense fallback={<div className="spinner">Loading...</div>}>
+        <InvestorEditDialog
+          editDetailsOpen={editUser}
+          setEditDetailsOpen={setEditUser}
         />
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>

@@ -20,24 +20,37 @@ const ProfessionalBackground = lazy(
   () => import('../EditableItems/ProfessionalBackground')
 );
 
-export default function InvestorEditDialog({
-  isDialogOpen,
-  setDialogOpen,
-  investor_id,
-}: {
-  isDialogOpen: boolean;
-  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+interface OpenEditDialog {
   investor_id: string;
+  subadmin_id: string;
+}
+
+export default function InvestorEditDialog({
+  editDetailsOpen,
+  setEditDetailsOpen,
+}: {
+  editDetailsOpen: OpenEditDialog | null;
+  setEditDetailsOpen: Dispatch<SetStateAction<OpenEditDialog | null>>;
 }) {
   const [activeTab, setActiveTab] = useState<LocalEnum>(LocalEnum.PD);
-  const { data: investorDetails, error } = useInvestorDetails(investor_id);
-  const { mutate: updateInvestorDetails } = useInvestorEditDetails(investor_id);
+  const { data: investorDetails, error } = useInvestorDetails(
+    editDetailsOpen?.investor_id
+  );
+  const { mutate: updateInvestorDetails } =
+    useInvestorEditDetails(editDetailsOpen);
 
   const handleUpdateDetails = (details: Partial<UpdateInvestorRequest>) =>
     updateInvestorDetails(details);
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      open={
+        editDetailsOpen !== null && Object.keys(editDetailsOpen).length === 2
+      }
+      onOpenChange={open => {
+        if (!open) setEditDetailsOpen(null);
+      }}
+    >
       <DialogContent
         hideCloseButton={true}
         className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-4xl max-h-[90vh]"
@@ -66,7 +79,7 @@ export default function InvestorEditDialog({
               <Content
                 activeTab={activeTab}
                 investorDetails={investorDetails as InvestorDetailsResponse}
-                setDialogOpen={setDialogOpen}
+                setDialogOpen={() => setEditDetailsOpen(null)}
                 handleUpdateDetails={handleUpdateDetails}
               />
             </div>
@@ -126,7 +139,7 @@ const Content: React.FC<{
       {activeTab === LocalEnum.PD && (
         <Suspense fallback={<div>Loading...</div>}>
           <PersonalDetails
-            details={investorDetails.personal_details}
+            details={investorDetails?.personal_details}
             setDialogOpen={setDialogOpen}
             handleUpdateDetails={handleUpdateDetails}
           />
@@ -135,7 +148,7 @@ const Content: React.FC<{
       {activeTab === LocalEnum.BD && (
         <Suspense fallback={<div>Loading...</div>}>
           <BankDetails
-            details={investorDetails.bank_details}
+            details={investorDetails?.bank_details}
             setDialogOpen={setDialogOpen}
           />
         </Suspense>
@@ -143,7 +156,7 @@ const Content: React.FC<{
       {activeTab === LocalEnum.PB && (
         <Suspense fallback={<div>Loading...</div>}>
           <ProfessionalBackground
-            details={investorDetails.professional_background}
+            details={investorDetails?.professional_background}
             setDialogOpen={setDialogOpen}
             handleUpdateDetails={handleUpdateDetails}
           />

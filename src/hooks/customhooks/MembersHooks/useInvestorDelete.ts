@@ -3,11 +3,16 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
+interface OpenEditDialog {
+  investor_id: string;
+  subadmin_id: string;
+}
+
 export const useInvestorDelete = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (investor_id: string) => {
-      return deleteInvestor(investor_id);
+    mutationFn: ({ subadmin_id, investor_id }: OpenEditDialog) => {
+      return deleteInvestor(subadmin_id, investor_id);
     },
     onSuccess: (response, investor_id) => {
       toast.success(response?.message && 'Investors deleted successfully');

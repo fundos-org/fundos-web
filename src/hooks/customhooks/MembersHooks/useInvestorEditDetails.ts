@@ -1,20 +1,21 @@
 import { updateInvestorDetails } from '@/axioscalls/apiServices';
-import { AppEnums } from '@/constants/enums';
 import { UpdateInvestorRequest } from '@/constants/membersConstant';
 import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
-export const useInvestorEditDetails = (investor_id: string) => {
-  const queryClient = useQueryClient();
-  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  const { subadmin_id } = subadminDetailsRaw
-    ? JSON.parse(subadminDetailsRaw)
-    : {};
+interface OpenEditDialog {
+  investor_id: string;
+  subadmin_id: string;
+}
 
+export const useInvestorEditDetails = (params: OpenEditDialog | null) => {
+  const queryClient = useQueryClient();
+  const investor_id = params?.investor_id;
+  const subadmin_id = params?.subadmin_id;
   return useMutation({
     mutationFn: (details: UpdateInvestorRequest) =>
-      updateInvestorDetails(subadmin_id, investor_id, details),
+      updateInvestorDetails(subadmin_id!, investor_id!, details),
     onSuccess: response => {
       toast.success(
         response?.message && 'Investor Details updated successfully'
