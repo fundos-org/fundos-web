@@ -5,7 +5,8 @@ import { DialogTrigger, Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useInvestorsMetadata } from '@/hooks/customhooks/MembersHooks/useInvestorsMetadata';
 import toast from 'react-hot-toast';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
+import { AppEnums } from '@/constants/enums';
 const InvestorTable = lazy(
   () =>
     import('@/components/custom/InvestorSection/InvestorTable/InvestorTable')
@@ -13,6 +14,13 @@ const InvestorTable = lazy(
 
 export default function Members() {
   const { data: stats, error } = useInvestorsMetadata();
+  const [isInvestor] = useState<boolean>(() => {
+    const subadminDetailsRaw = sessionStorage.getItem(
+      AppEnums.SUBADMIN_SESSION
+    );
+    const raw = subadminDetailsRaw ? JSON.parse(subadminDetailsRaw) : {};
+    return raw?.role === 'subadmin';
+  });
   if (error) toast.error('Error while fetch statistics');
 
   return (
@@ -50,7 +58,7 @@ export default function Members() {
         <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
           <StatisticCardList stats={stats?.metadata} />
           <Suspense fallback={<div>Loading...</div>}>
-            <InvestorTable />
+            <InvestorTable isInvestor={isInvestor} />
           </Suspense>
         </TabsContent>
         <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">

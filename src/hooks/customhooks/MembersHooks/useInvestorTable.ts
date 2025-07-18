@@ -4,7 +4,11 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useQuery, useQueryClient } from 'react-query';
 
-export const useInvestors = (pageNumber: number, pageSize: number) => {
+export const useInvestors = (
+  pageNumber: number,
+  pageSize: number,
+  subAdminIdFromAdmin: string = ''
+) => {
   const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
   const { subadmin_id } = subadminDetailsRaw
     ? JSON.parse(subadminDetailsRaw)
@@ -12,9 +16,10 @@ export const useInvestors = (pageNumber: number, pageSize: number) => {
   const queryClient = useQueryClient();
   return useQuery(
     [QueryEnums.Investors, subadmin_id, pageNumber, pageSize],
-    () => getInvestors(subadmin_id, pageNumber, pageSize),
+    () =>
+      getInvestors(subadmin_id ?? subAdminIdFromAdmin, pageNumber, pageSize),
     {
-      enabled: !!subadmin_id,
+      enabled: !!subadmin_id || !!subAdminIdFromAdmin,
       refetchOnWindowFocus: false,
       retry: 2,
       keepPreviousData: true, // useful for pagination

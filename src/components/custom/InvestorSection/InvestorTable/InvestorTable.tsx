@@ -24,10 +24,11 @@ import {
 import { useInvestorDelete } from '@/hooks/customhooks/MembersHooks/useInvestorDelete';
 import { useInvestors } from '@/hooks/customhooks/MembersHooks/useInvestorTable';
 import { FileText, RefreshCw, SquareArrowOutUpRight } from 'lucide-react';
-import { lazy, Suspense, useState } from 'react';
+import { FC, lazy, Suspense, useEffect, useState } from 'react';
 import SwitchCustom from '@/components/ui/switchCustom';
 import AdvancedInvestorActionsCell from './AdvancedInvestorActionsCell';
 import { InvestorEntity } from '@/constants/membersConstant';
+import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
 const InvestorFileDisplayDialog = lazy(
   () => import('../DialogItems/InvestorFileDisplayDialog')
 );
@@ -40,18 +41,38 @@ const test =
 
 const pageSizesList = [6, 10, 20, 50];
 
-const InvestorTable = () => {
+const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
   const [sendDetails, setSendDetails] = useState<InvestorEntity>();
   const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const { data: subadminIds } = useSubadminIds(isInvestor);
+  const [subAdminId, setSubAdminId] = useState<string | undefined>(undefined);
   const { mutate: deleteInvestor } = useInvestorDelete();
   const { data, isLoading, error, refetch } = useInvestors(
     pageNumber,
-    pageSize
+    pageSize,
+    subAdminId
   );
+
+  useEffect(() => {
+    // Suggestion: Only set subAdminId if it's undefined and subadminIds is available
+    if (!subAdminId) {
+      setSubAdminId(subadminIds?.subadmins[0]?.subadmin_id);
+    }
+  }, [subAdminId, subadminIds]); // Removed subAdminId from dependencies
+
+  // Issue 2: No mechanism to reset pageNumber when subAdminId changes
+  // Suggestion: Add useEffect to reset pageNumber and trigger refetch when subAdminId changes
+  useEffect(() => {
+    // Only refetch if subAdminId is defined to avoid unnecessary API calls
+    if (subAdminId && subadminIds && subadminIds?.subadmins?.length > 0) {
+      setPageNumber(1); // Reset to first page when subAdminId changes
+      refetch(); // Trigger useInvestors hook
+    }
+  }, [subAdminId, refetch, subadminIds]);
 
   if (error) return <div>Error occured please check api</div>;
 
@@ -79,6 +100,8 @@ const InvestorTable = () => {
     setPageSize(Number(value));
     setPageNumber(1);
   };
+
+  const handleSubAdminIdChange = (id: string) => setSubAdminId(id);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -112,6 +135,23 @@ const InvestorTable = () => {
               } transition-transform duration-200 hover:text-zinc-300`}
             />
           </button>
+          {!isInvestor && (
+            <Select onValueChange={handleSubAdminIdChange} value={subAdminId}>
+              <SelectTrigger className="rounded-none w-[200px] cursor-pointer">
+                <SelectValue placeholder="Select Page Size" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none">
+                {subadminIds?.subadmins?.map(subadmin => (
+                  <SelectItem
+                    key={subadmin?.subadmin_id}
+                    value={String(subadmin?.subadmin_id)}
+                  >
+                    {subadmin?.subadmin_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
         <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">

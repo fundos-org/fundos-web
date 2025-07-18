@@ -14,3 +14,13 @@ export interface DashboardStatistics {
   onboardedInvestors?: number;
   dealsThisMonth?: number;
 }
+
+export interface SubadminId {
+  subadmin_id: string;
+  subadmin_name: string;
+}
+
+export interface SubadminIdsResponse {
+  subadmins: SubadminId[];
+  success: true;
+}

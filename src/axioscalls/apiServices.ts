@@ -1,4 +1,7 @@
-import { DashboardStatisticsResponse } from '@/constants/dashboardConstant';
+import {
+  DashboardStatisticsResponse,
+  SubadminIdsResponse,
+} from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
   CommonError,
@@ -525,6 +528,23 @@ export const getSubadmins = async (): Promise<SubadminsResponse> => {
       }
     }
     throw new Error('Failed to fetch deals');
+  }
+};
+
+export const getSubadminIdList = async (): Promise<SubadminIdsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/subadmin/subadminsIds`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data as CommonError;
+      if (errorData.isSuccess !== undefined && errorData.message) {
+        throw new Error(errorData.message);
+      }
+    }
+    throw new Error('Failed to fetch ids');
   }
 };
 
