@@ -41,7 +41,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { AppEnums } from '@/constants/enums';
-import { useLoader } from '@/hooks/useLoader';
+// import { useLoader } from '@/hooks/useLoader';
 const InvestorFileDisplayDialog = lazy(
   () => import('../DialogItems/InvestorFileDisplayDialog')
 );
@@ -70,7 +70,7 @@ const test =
 
 const pageSizesList = [6, 10, 20, 50];
 
-const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
+const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [sendDetails, setSendDetails] = useState<InvestorEntity>();
   const [editUser, setEditUser] = useState<OpenEditDialog | null>(null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
@@ -80,9 +80,9 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
   const [subAdminId, setSubAdminId] = useState<string | undefined>(sessCapture);
-  const { showLoader, hideLoader } = useLoader();
-  const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isInvestor);
-  const { mutate: deleteInvestor, isLoading: isDeleting } = useInvestorDelete();
+  // const { showLoader, hideLoader } = useLoader();
+  const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isSubadmin);
+  const { mutate: deleteInvestor } = useInvestorDelete();
   const {
     data,
     isLoading: isFetching,
@@ -159,8 +159,6 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
   };
   return (
     <>
-      {isDeleting ? showLoader() : hideLoader()}
-      {isFetching ? showLoader() : hideLoader()}
       <div className="w-full border border-[#2A2A2B]">
         <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
           <div className="flex gap-2">
@@ -188,11 +186,11 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
               </TooltipContent>
             </Tooltip>
           </div>
-          {!isInvestor && (
+          {!isSubadmin && (
             <div className="flex">
               <Select onValueChange={handleSubAdminIdChange} value={subAdminId}>
                 <SelectTrigger className="rounded-none w-[200px] cursor-pointer border border-[#383739] bg-black/40">
-                  <SelectValue placeholder="Select Page Size" />
+                  <SelectValue placeholder="Select Sub-Admin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-none">
                   {subadminIds?.subadmins?.map(subadmin => (
@@ -241,7 +239,7 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
                   <TableHead className="text-zinc-400">Edit</TableHead>
                 )}
                 {subAdminId && (
-                  <TableHead className="text-zinc-400">Delete</TableHead>
+                  <TableHead className="text-zinc-400">Bin</TableHead>
                 )}
               </TableRow>
             </TableHeader>
@@ -272,13 +270,13 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
                     <TableCell className="font-medium">
                       {investor.mail}
                     </TableCell>
-                    <TableCell className="font-medium capitalize">
+                    <TableCell className="font-medium uppercase">
                       {investor.type}
                     </TableCell>
                     <TableCell className="font-medium text-center">
                       {investor.deals_invested}
                     </TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium uppercase">
                       {investor.kyc_status}
                     </TableCell>
                     <TableCell className="font-medium">
@@ -316,7 +314,7 @@ const InvestorTable: FC<{ isInvestor: boolean }> = ({ isInvestor }) => {
                           })
                         }
                       >
-                        <Trash2 className="text-red-400" />
+                        <Trash2 className="text-red-400 text-center" />
                       </TableCell>
                     )}
                   </TableRow>

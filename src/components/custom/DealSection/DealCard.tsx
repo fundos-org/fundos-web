@@ -57,13 +57,13 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
 
   return (
     <>
-      <Card className="border-0 rounded-none bg-[#1a1a1a] text-white p-5 w-[413px] max-w-md">
-        <CardContent className="p-0 flex flex-col justify-between h-[45vh]">
+      <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] via-[#202022] to-[#120d0d] text-white p-5 w-[350px] max-w-md">
+        <CardContent className="p-0 flex flex-col justify-between h-[40vh]">
           <div>
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="">
-                  <div className="w-20 h-20 overflow-hidden">
+                  <div className="w-10 h-10 overflow-hidden">
                     <img
                       src={logo_url ?? ''}
                       className="w-full h-full object-cover"
@@ -86,10 +86,10 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                 </p>
               </div>
             </div>
-            <h2 className="text-2xl font-bold mt-4">
+            <h2 className="text-2xl font-bold mt-4 line-clamp-1">
               {title ? title : 'Default Deal Title'}
             </h2>
-            <small className="text-zinc-400 mt-1">
+            <small className="text-zinc-400 mt-1 line-clamp-2">
               {description
                 ? description
                 : 'Default description for the deal. This is a placeholder text.'}
@@ -131,7 +131,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
               </div>
               <Menubar className="rounded-none bg-[#1a1a1a] border-0 text-white">
                 <MenubarMenu>
-                  <MenubarTrigger className="rounded-none bg-[#1a1a1a] border-0 text-white font-medium cursor-pointer">
+                  <MenubarTrigger className="rounded-none bg-[#1a1a1a] border-l border-[#383739] text-white font-medium cursor-pointer">
                     Manage <ChevronDown className="ml-1 h-5 w-5" />
                   </MenubarTrigger>
                   <MenubarContent className="bg-[#1a1a1a] text-white rounded-none border border-[#383739]">

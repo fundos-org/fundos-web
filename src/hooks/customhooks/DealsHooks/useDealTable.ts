@@ -1,18 +1,13 @@
 import { getDeals } from '@/axioscalls/apiServices';
-import { AppEnums } from '@/constants/enums';
 import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
 // getDeals
-export const useDeals = () => {
-  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  const { subadmin_id } = subadminDetailsRaw
-    ? JSON.parse(subadminDetailsRaw)
-    : {};
+export const useDeals = (subadmin_id?: string) => {
   return useQuery(
     [QueryEnums.Deals, subadmin_id],
-    () => getDeals(subadmin_id),
+    () => getDeals(subadmin_id!),
     {
       enabled: !!subadmin_id,
       refetchOnWindowFocus: false,

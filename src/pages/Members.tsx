@@ -12,15 +12,15 @@ const InvestorTable = lazy(
     import('@/components/custom/InvestorSection/InvestorTable/InvestorTable')
 );
 
+const returnBool = () => {
+  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
+  const raw = subadminDetailsRaw ? JSON.parse(subadminDetailsRaw) : {};
+  return raw?.role === 'subadmin';
+};
+
 export default function Members() {
   const { data: stats, error } = useInvestorsMetadata();
-  const [isInvestor] = useState<boolean>(() => {
-    const subadminDetailsRaw = sessionStorage.getItem(
-      AppEnums.SUBADMIN_SESSION
-    );
-    const raw = subadminDetailsRaw ? JSON.parse(subadminDetailsRaw) : {};
-    return raw?.role === 'subadmin';
-  });
+  const [isSubadmin] = useState<boolean>(returnBool);
   if (error) toast.error('Error while fetch statistics');
 
   return (
@@ -58,7 +58,7 @@ export default function Members() {
         <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
           <StatisticCardList stats={stats?.metadata} />
           <Suspense fallback={<div>Loading...</div>}>
-            <InvestorTable isInvestor={isInvestor} />
+            <InvestorTable isSubadmin={isSubadmin} />
           </Suspense>
         </TabsContent>
         <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
