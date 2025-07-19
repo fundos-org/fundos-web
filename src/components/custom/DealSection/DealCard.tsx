@@ -131,7 +131,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
               </div>
               <Menubar className="rounded-none bg-[#1a1a1a] border-0 text-white">
                 <MenubarMenu>
-                  <MenubarTrigger className="rounded-none bg-[#1a1a1a] border-l border-[#383739] text-white font-medium cursor-pointer">
+                  <MenubarTrigger className="rounded-none bg-[#1a1a1a] border-l border-t border-[#383739] text-white font-medium cursor-pointer">
                     Manage <ChevronDown className="ml-1 h-5 w-5" />
                   </MenubarTrigger>
                   <MenubarContent className="bg-[#1a1a1a] text-white rounded-none border border-[#383739]">

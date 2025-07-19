@@ -40,22 +40,22 @@ const DealEditDialog: FC<{
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
-        {!error ? (
-          <>
-            <DialogHeader>
-              <DialogTitle className="text-3xl text-white flex items-center justify-between">
-                Edit Member
-                <DialogClose
-                  asChild
-                  className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
-                >
-                  <span className="p-1">
-                    <X />
-                  </span>
-                </DialogClose>
-              </DialogTitle>
-              <hr className="border-[#232A36] my-2" />
-            </DialogHeader>
+        <>
+          <DialogHeader>
+            <DialogTitle className="text-3xl text-white flex items-center justify-between">
+              Edit Member
+              <DialogClose
+                asChild
+                className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+              >
+                <span className="p-1">
+                  <X />
+                </span>
+              </DialogClose>
+            </DialogTitle>
+            <hr className="border-[#232A36] my-2" />
+          </DialogHeader>
+          {!error ? (
             <div className="w-full flex">
               <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
               <div className="border-r border-gray-800"></div>
@@ -66,10 +66,10 @@ const DealEditDialog: FC<{
                 handleUpdateDetails={handleUpdateDetails}
               />
             </div>
-          </>
-        ) : (
-          <div>Some Error occured</div>
-        )}
+          ) : (
+            <div>Some Error occured</div>
+          )}
+        </>
       </DialogContent>
     </Dialog>
   );
