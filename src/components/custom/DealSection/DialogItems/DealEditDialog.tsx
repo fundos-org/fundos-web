@@ -27,7 +27,6 @@ const DealEditDialog: FC<{
   const [activeTab, setActiveTab] = useState<LocalEnum>(LocalEnum.CD);
   const { data, error } = useDealDetails(deal_id);
   const { mutate: updateDealDetails } = useDealEditDetails(deal_id);
-
   const handleUpdateDetails = (
     details: Partial<Partial<DealDetailsInterface>>
   ) => updateDealDetails(details);

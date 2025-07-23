@@ -587,12 +587,11 @@ export const getDeals = async (
 };
 
 export const getDealDetails = async (
-  subadmin_id: string,
   deal_id: string
 ): Promise<DealDetailsResponse> => {
   try {
     const response = await axios.get(
-      `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_details/${subadmin_id}/${deal_id}`
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/deal_details/${deal_id}`
     );
     return response.data;
   } catch (error) {
@@ -605,13 +604,12 @@ export const getDealDetails = async (
 };
 
 export const updateDealDetails = async (
-  subadmin_id: string,
   deal_id: string,
   details: Partial<DealDetails>
 ): Promise<UpdateDealDetailsResponse> => {
   try {
     const response = await axios.put(
-      `${baseUrlStaging}/api/v1/live/subadmin/deals/edit_deals/${subadmin_id}/${deal_id}`,
+      `${baseUrlStaging}/api/v1/live/subadmin/deals/edit_deals/${deal_id}`,
       details
     );
     return response.data;
