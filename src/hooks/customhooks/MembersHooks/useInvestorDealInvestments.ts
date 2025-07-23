@@ -12,7 +12,7 @@ export const useInvestorDealInvestments = (investor_id: string) => {
       refetchOnWindowFocus: false,
       retry: 2,
       keepPreviousData: true, // useful for pagination
-      staleTime: 1000 * 60 * 60, // 1 hour
+      // staleTime: 1000 * 60 * 60, // 1 hour
       onSuccess: () =>
         toast.success('Investor Investments fetched successfully'),
       onError: (error: Error) => {

@@ -17,7 +17,7 @@ export const useInvestorsMetadata = () => {
       refetchOnWindowFocus: false,
       retry: 2,
       keepPreviousData: true, // useful for pagination
-      staleTime: 1000 * 60 * 60 * 6, // 6 hours
+      // staleTime: 1000 * 60 * 60 * 6, // 6 hours
       onSuccess: () => toast.success('Investors fetched successfully'),
       onError: (error: Error) => {
         toast.error(`Fetch investors failed: ${error.message}`);

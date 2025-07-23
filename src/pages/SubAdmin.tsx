@@ -1,5 +1,5 @@
+import SubAdminTable from '@/components/custom/AdminSection/SubAdminTable/SubAdminTable';
 import CreateSubAdminDialog from '@/components/custom/modals/CreateSubAdminDialog';
-import SubAdminTable from '@/components/custom/tables/SubAdminTable';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
 function SubAdmin() {

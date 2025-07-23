@@ -15,6 +15,7 @@ import {
   LoginFormData,
   SignInSubAdminResponse,
   StatisticsResponse,
+  SubadminDetailsResponse,
   SubadminsResponse,
   UpdateDealDetailsResponse,
 } from '@/constants/dealsConstant';
@@ -37,7 +38,7 @@ import { z } from 'zod';
 
 const baseRaw = import.meta.env.VITE_BASE_ORIGIN;
 const baseStagingRaw = import.meta.env.VITE_BASE_ORIGIN_STAGING;
-const apiSchema = z.string().url();
+const apiSchema = z.url();
 const baseUrl = apiSchema.parse(baseRaw);
 const baseUrlStaging = apiSchema.parse(baseStagingRaw);
 
@@ -296,30 +297,6 @@ export const getSubAdminById = async (subadmin_id: string) => {
   return response.data;
 };
 
-// export const fetchAllSubAdmins = createAsyncThunk<
-//   SubadminsResponse,
-//   void,
-//   { rejectValue: CommonError }
-// >('subAdmins/fetchAllDeals', async (_, { rejectWithValue }) => {
-//   try {
-//     const response = await axios.get(`${baseUrl}/api/v1/live/admin/subadmins/`);
-//     return response.data;
-//   } catch (error: unknown) {
-//     // Handle axios or network errors
-//     if (axios.isAxiosError(error) && error.response?.data) {
-//       const errorData = error.response.data as CommonError;
-//       if (errorData.isSuccess !== undefined && errorData.message) {
-//         return rejectWithValue(errorData);
-//       }
-//     }
-//     // Fallback for unexpected errors
-//     return rejectWithValue({
-//       isSuccess: false,
-//       message: 'Failed to fetch deals',
-//     });
-//   }
-// });
-
 export const fetchDealStatistics = createAsyncThunk<
   StatisticsResponse,
   void,
@@ -514,10 +491,13 @@ export const shareDetails = async (subadmin_id: string) => {
 };
 
 // React Query Tanstack
-export const getSubadmins = async (): Promise<SubadminsResponse> => {
+export const getSubadmins = async (
+  pageNumber: number,
+  pageSize: number
+): Promise<SubadminsResponse> => {
   try {
     const response = await axios.get(
-      `${baseUrlStaging}/api/v1/live/admin/subadmins/`
+      `${baseUrlStaging}/api/v1/live/admin/subadmins?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error: unknown) {
@@ -528,6 +508,42 @@ export const getSubadmins = async (): Promise<SubadminsResponse> => {
       }
     }
     throw new Error('Failed to fetch deals');
+  }
+};
+
+export const getSubAdminDetails = async (
+  subadmin_id: string
+): Promise<SubadminDetailsResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrlStaging}/api/v1/live/admin/subadmin_details/${subadmin_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const updateSubAdminDetails = async (
+  subadmin_id: string,
+  details: Partial<Omit<SubadminDetailsResponse, 'subadmin_id' | 'success'>>
+): Promise<{ subadmin_id: string; message: string; success: boolean }> => {
+  try {
+    const response = await axios.put(
+      `${baseUrlStaging}/api/v1/live/admin/subadmin_details/${subadmin_id}`,
+      details
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
   }
 };
 

@@ -21,18 +21,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { UserPen, RefreshCw } from 'lucide-react';
-import { FC, useState } from 'react';
+import { UserPen, RefreshCw, ArchiveX } from 'lucide-react';
+import { FC, lazy, Suspense, useState } from 'react';
 import SwitchCustom from '@/components/ui/switchCustom';
 import { useSubadmins } from '@/hooks/customhooks/SubAdminsHooks/useSubadminTable';
 import { Subadmin } from '@/constants/dealsConstant';
-// const InvestorEditDialog = lazy(
-//   () => import('../InvestorSection/DialogItems/InvestorEditDialog')
-// );
+const SubAdminEditDialog = lazy(
+  () => import('../DialogItems/SubAdminEditDialog')
+);
 
 const pageSizesList = [6, 10, 20, 50];
 
 const SubAdminTable: FC = () => {
+  const [subAadminId, setSubAadminId] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -100,14 +101,15 @@ const SubAdminTable: FC = () => {
           <Table className="rounded-none">
             <TableHeader>
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:absolute bottom-0 border-zinc-700">
-                <TableHead className="text-zinc-400 pl-4">Archive</TableHead>
+                <TableHead className="text-zinc-400 pl-4">Action</TableHead>
                 <TableHead className="text-zinc-400">Sub-AdminName</TableHead>
                 <TableHead className="text-zinc-400">Email</TableHead>
                 <TableHead className="text-zinc-400">Invitation Code</TableHead>
                 <TableHead className="text-zinc-400">Total Users</TableHead>
                 <TableHead className="text-zinc-400">Active Deals</TableHead>
                 <TableHead className="text-zinc-400">Onboarding Date</TableHead>
-                <TableHead className="text-zinc-400">Action</TableHead>
+                <TableHead className="text-zinc-400">Edit</TableHead>
+                <TableHead className="text-zinc-400">Archive</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
@@ -121,13 +123,13 @@ const SubAdminTable: FC = () => {
                       <SwitchCustom />
                     </TableCell>
                     <TableCell className="font-medium capitalize">
-                      {subadmin.name}
+                      {subadmin.subadmin_name}
                     </TableCell>
                     <TableCell className="font-medium">
                       {subadmin.email}
                     </TableCell>
                     <TableCell className="font-medium capitalize">
-                      {subadmin.invite_code}
+                      {subadmin.invitation_code}
                     </TableCell>
                     <TableCell className="font-medium px-10">
                       {subadmin.total_users}
@@ -138,8 +140,14 @@ const SubAdminTable: FC = () => {
                     <TableCell className="font-medium">
                       {subadmin.onboarding_date}
                     </TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell
+                      className="font-medium"
+                      onClick={() => setSubAadminId(subadmin.subadmin_id)}
+                    >
                       <UserPen className="text-blue-400" />
+                    </TableCell>
+                    <TableCell align="center" className="font-medium">
+                      <ArchiveX className="text-red-500 text-center" />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -205,13 +213,12 @@ const SubAdminTable: FC = () => {
           </div>
         </Pagination>
       </div>
-      {/* <Suspense fallback={<div className="spinner">Loading...</div>}>
-                <InvestorEditDialog
-                  isDialogOpen={isDialog}
-                  setDialogOpen={setIsDialog}
-                  investor_id={investor.investor_id}
-                />
-              </Suspense> */}
+      <Suspense fallback={<div className="spinner">Loading...</div>}>
+        <SubAdminEditDialog
+          subadminId={subAadminId}
+          setSubadminId={setSubAadminId}
+        />
+      </Suspense>
     </>
   );
 };

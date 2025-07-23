@@ -146,11 +146,27 @@ export interface DraftResponse {
   success: boolean;
 }
 
-export interface Subadmin {
+export interface SubadminDetailsResponse {
   subadmin_id: string;
+  logo: string;
   name: string;
   email: string;
+  contact: string;
+  about: string;
+  username: string;
+  password: string;
+  reenter_password: string;
+  app_name: string;
   invite_code: string;
+  app_theme: string;
+  success: boolean;
+}
+
+export interface Subadmin {
+  subadmin_id: string;
+  subadmin_name: string;
+  email: string;
+  invitation_code: string;
   total_users: number;
   active_deals: number;
   onboarding_date: string;
@@ -168,6 +184,7 @@ interface Pagination {
 export interface SubadminsResponse {
   subadmins: Subadmin[];
   pagination: Pagination;
+  success: boolean;
 }
 
 export interface SignInSubAdminResponse {

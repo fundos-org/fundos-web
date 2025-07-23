@@ -13,7 +13,7 @@ export const useDeals = (subadmin_id?: string) => {
       refetchOnWindowFocus: false,
       retry: 2,
       keepPreviousData: true, // useful for pagination
-      staleTime: 1000 * 60 * 60, // 1 hour
+      // staleTime: 1000 * 60 * 60, // 1 hour
       onSuccess: () => toast.success('Investors fetched successfully'),
       onError: (error: Error) => {
         toast.error(`Fetch investors failed: ${error.message}`);
