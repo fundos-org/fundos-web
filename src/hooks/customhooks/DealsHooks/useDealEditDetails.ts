@@ -4,12 +4,12 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 
-export const useDealEditDetails = (deal_id: string) => {
+export const useDealEditDetails = (deal_id: string | null) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (details: Partial<DealDetails>) =>
-      updateDealDetails(deal_id, details),
+      updateDealDetails(deal_id!, details),
     onSuccess: response => {
       toast.success(response?.message && 'Deal Details updated successfully');
       queryClient.invalidateQueries({

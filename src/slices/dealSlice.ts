@@ -1,24 +1,14 @@
-import {
-  createDraft,
-  fetchAllDeals,
-  fetchDealStatistics,
-} from '@/axioscalls/apiServices';
+import { createDraft, fetchDealStatistics } from '@/axioscalls/apiServices';
 import {
   CommonError,
   DraftResponse,
   StatisticsState,
   StatisticsResponse,
-  AllDealsResponse,
 } from '@/constants/dealsConstant';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the Deals state
 export interface DealsState {
-  allDeals?: {
-    activeDeals: AllDealsResponse['active_deals'] | null;
-    closedDeals: AllDealsResponse['closed_deals'] | null;
-    onholdDeals: AllDealsResponse['onhold_deals'] | null;
-  };
   draft?: DraftResponse;
   statistics?: StatisticsState;
   loading: boolean;
@@ -27,11 +17,6 @@ export interface DealsState {
 
 // Define initial state
 const initialState: DealsState = {
-  allDeals: {
-    activeDeals: null,
-    closedDeals: null,
-    onholdDeals: null,
-  },
   statistics: {
     liveDeals: null,
     closedDeals: null,
@@ -47,14 +32,6 @@ const dealsSlice = createSlice({
   name: 'deals',
   initialState,
   reducers: {
-    resetDeals(state) {
-      if (state.allDeals) {
-        state.allDeals.activeDeals = null;
-        state.allDeals.closedDeals = null;
-      }
-      state.loading = false;
-      state.error = null;
-    },
     resetDealId(state) {
       if (state.draft && state.draft.deal_data) {
         state.draft.deal_data.id = '';
@@ -63,27 +40,6 @@ const dealsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchAllDeals.pending, state => {
-        state.loading = true;
-      })
-      .addCase(
-        fetchAllDeals.fulfilled,
-        (state, action: PayloadAction<AllDealsResponse>) => {
-          state.loading = false;
-          if (state.allDeals) {
-            state.allDeals.activeDeals = action.payload.active_deals;
-            state.allDeals.closedDeals = action.payload.closed_deals;
-            state.allDeals.onholdDeals = action.payload.onhold_deals;
-          }
-        }
-      )
-      .addCase(
-        fetchAllDeals.rejected,
-        (state, action: PayloadAction<CommonError | undefined>) => {
-          state.loading = false;
-          state.error = action.payload?.message || 'Failed to fetch deals';
-        }
-      )
       .addCase(createDraft.pending, state => {
         state.loading = true;
         state.error = null;
@@ -130,7 +86,7 @@ const dealsSlice = createSlice({
 });
 
 // Export actions
-export const { resetDeals, resetDealId } = dealsSlice.actions;
+export const { resetDealId } = dealsSlice.actions;
 
 // Export reducer
 export default dealsSlice.reducer;

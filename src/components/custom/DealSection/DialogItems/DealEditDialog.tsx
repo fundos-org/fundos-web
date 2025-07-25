@@ -20,19 +20,23 @@ interface Tab {
 }
 
 const DealEditDialog: FC<{
-  show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>;
-  deal_id: string;
-}> = ({ show, setShow, deal_id }) => {
+  dealId: string | null;
+  setDealId: Dispatch<SetStateAction<string | null>>;
+}> = ({ dealId, setDealId }) => {
   const [activeTab, setActiveTab] = useState<LocalEnum>(LocalEnum.CD);
-  const { data, error } = useDealDetails(deal_id);
-  const { mutate: updateDealDetails } = useDealEditDetails(deal_id);
+  const { data, error } = useDealDetails(dealId);
+  const { mutate: updateDealDetails } = useDealEditDetails(dealId);
   const handleUpdateDetails = (
     details: Partial<Partial<DealDetailsInterface>>
   ) => updateDealDetails(details);
 
   return (
-    <Dialog open={show} onOpenChange={setShow}>
+    <Dialog
+      open={dealId !== null && dealId !== undefined}
+      onOpenChange={open => {
+        if (!open) setDealId(null);
+      }}
+    >
       <DialogContent
         hideCloseButton={true}
         className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-5xl max-h-[90vh]"
@@ -61,7 +65,7 @@ const DealEditDialog: FC<{
               <Content
                 activeTab={activeTab}
                 dealDetails={data?.deal_details as DealDetailsInterface}
-                setDialogOpen={setShow}
+                setDealId={setDealId}
                 handleUpdateDetails={handleUpdateDetails}
               />
             </div>
@@ -110,18 +114,16 @@ const Sidebar: React.FC<{
 const Content: FC<{
   activeTab: LocalEnum;
   dealDetails: DealDetailsInterface;
-  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+  setDealId: Dispatch<SetStateAction<string | null>>;
   handleUpdateDetails: (value: Partial<DealDetailsInterface>) => void;
-}> = ({ activeTab, dealDetails, setDialogOpen, handleUpdateDetails }) => {
-  console.log(dealDetails, handleUpdateDetails, setDialogOpen);
-
+}> = ({ activeTab, dealDetails, setDealId, handleUpdateDetails }) => {
   return (
     <div className="flex-1">
       {activeTab === LocalEnum.CD && (
         <Suspense fallback={<div>Loading...</div>}>
           <CompanyDetails
             details={dealDetails}
-            setDialogOpen={setDialogOpen}
+            setDealId={setDealId}
             handleUpdateDetails={handleUpdateDetails}
           />
         </Suspense>
@@ -130,7 +132,7 @@ const Content: FC<{
         <Suspense fallback={<div>Loading...</div>}>
           <MarketDetails
             details={dealDetails}
-            setDialogOpen={setDialogOpen}
+            setDealId={setDealId}
             handleUpdateDetails={handleUpdateDetails}
           />
         </Suspense>
@@ -139,7 +141,7 @@ const Content: FC<{
         <Suspense fallback={<div>Loading...</div>}>
           <DealDetails
             details={dealDetails}
-            setDialogOpen={setDialogOpen}
+            setDealId={setDealId}
             handleUpdateDetails={handleUpdateDetails}
           />
         </Suspense>

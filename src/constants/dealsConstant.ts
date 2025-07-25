@@ -172,7 +172,7 @@ export interface Subadmin {
   onboarding_date: string;
 }
 
-interface Pagination {
+export interface Pagination {
   page: number;
   per_page: number;
   total_records: number;
@@ -220,24 +220,21 @@ export interface LoginFormData {
   password: string;
 }
 
+export type DealStatus = 'open' | 'closed' | 'on_hold';
 export interface DealCard {
   deal_id: string;
-  description: string | null;
-  title: string | null;
-  deal_status: DealStatus;
-  current_valuation: number | null;
-  round_size: number | null;
-  commitment: number | null;
-  business_model: string | null;
-  company_stage: string | null;
-  logo_url: string | null;
+  description: string;
+  title: string;
+  deal_status: string;
+  current_valuation: number;
+  round_size: number;
+  commitment: number;
+  business_model: string;
+  company_stage: string;
+  logo_url: string;
   created_at: string;
-  fund_raised_till_now: number | null;
-  instruments: string;
-  minimum_investment: number | null;
+  fund_raised_till_now?: number | null;
 }
-
-export type DealStatus = 'open' | 'closed' | 'on_hold';
 
 export interface AllDealsResponse {
   subadmin_id: string;
@@ -245,6 +242,9 @@ export interface AllDealsResponse {
   active_deals: DealCard[];
   closed_deals: DealCard[];
   onhold_deals: DealCard[];
+  active_pagination: Pagination;
+  closed_pagination: Pagination;
+  onhold_pagination: Pagination;
   success: boolean;
 }
 
@@ -292,15 +292,6 @@ export interface InvestorForDeals {
   deal_investor_status: number;
 }
 
-interface Pagination {
-  page: number;
-  per_page: number;
-  total_records: number;
-  total_pages: number;
-  has_next: boolean;
-  has_prev: boolean;
-}
-
 export interface DealInvestorsResponse {
   deal_id: string;
   investors: InvestorForDeals[];
@@ -315,15 +306,6 @@ export interface DealTransaction {
   amount: number;
   created_at: string;
   status: string;
-}
-
-interface Pagination {
-  page: number;
-  per_page: number;
-  total_records: number;
-  total_pages: number;
-  has_next: boolean;
-  has_prev: boolean;
 }
 
 export interface DealTransactionsResponse {

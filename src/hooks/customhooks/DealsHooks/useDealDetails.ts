@@ -3,10 +3,10 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
-export const useDealDetails = (deal_id: string) => {
+export const useDealDetails = (deal_id: string | null) => {
   return useQuery(
     [QueryEnums.DealDetails, deal_id],
-    () => getDealDetails(deal_id),
+    () => getDealDetails(deal_id!),
     {
       enabled: !!deal_id,
       refetchOnWindowFocus: false,

@@ -38,7 +38,7 @@ function getCompanyStage(companyStage: string | null): string {
 }
 
 export default function CardDeal({ deal }: { deal: DealCard }) {
-  const [show, setShow] = useState(false);
+  const [dealId, setDealId] = useState<string | null>(null);
   const [details, setDetails] = useState<DealCard | null>(null);
   const {
     deal_id,
@@ -57,8 +57,8 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
 
   return (
     <>
-      <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] via-[#202022] to-[#120d0d] text-white p-5 w-[350px] max-w-md">
-        <CardContent className="p-0 flex flex-col justify-between h-[40vh]">
+      <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] to-[#202022] text-white p-5 w-[350px] max-w-md">
+        <CardContent className="p-0 flex flex-col justify-between">
           <div>
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
@@ -95,10 +95,10 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                 : 'Default description for the deal. This is a placeholder text.'}
             </small>
             <div className="flex gap-2 mt-3">
-              <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
+              <span className="bg-zinc-700 text-white px-3 py-1 rounded-xs text-sm border border-[#a1a1a140]">
                 {getIndustryType(business_model)}
               </span>
-              <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm">
+              <span className="bg-zinc-700 text-white px-3 py-1 rounded-xs text-sm border border-[#a1a1a140]">
                 {getCompanyStage(company_stage)}
               </span>
             </div>
@@ -143,7 +143,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                     </MenubarItem>
                     <MenubarSeparator className="border-b border-[#383739]" />
                     <MenubarItem
-                      onClick={() => setShow(true)}
+                      onClick={() => setDealId(deal_id)}
                       className="rounded-none cursor-pointer"
                     >
                       <PenLine />
@@ -164,12 +164,16 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
           </div>
         </CardContent>
       </Card>
-      <Suspense fallback={<div>Dialog Opening...</div>}>
-        <DealEditDialog show={show} setShow={setShow} deal_id={deal_id} />
-      </Suspense>
-      <Suspense fallback={<div>Dialog Opening...</div>}>
-        <DealDetailsDialog details={details} setDetails={setDetails} />
-      </Suspense>
+      {dealId !== null && (
+        <Suspense fallback={<div>Dialog Opening...</div>}>
+          <DealEditDialog dealId={dealId} setDealId={setDealId} />
+        </Suspense>
+      )}
+      {details !== null && (
+        <Suspense fallback={<div>Dialog Opening...</div>}>
+          <DealDetailsDialog details={details} setDetails={setDetails} />
+        </Suspense>
+      )}
     </>
   );
 }

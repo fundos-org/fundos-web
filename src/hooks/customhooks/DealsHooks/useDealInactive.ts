@@ -19,7 +19,7 @@ export const useDealInactive = () => {
       });
     },
     onError: (error: Error) => {
-      toast.error(`Delete investor failed: ${error.message}`);
+      toast.error(`Unable to mark this deal: ${error.message}`);
     },
   });
 };

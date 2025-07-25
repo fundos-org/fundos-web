@@ -13,16 +13,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-// import { Step, Stepper } from 'react-form-stepper';
 import createDraft, {
   companyDetailsTrigger,
   customerSegmentTrigger,
-  fetchAllDeals,
   industryProblemTrigger,
   securitiesTrigger,
   valuationTrigger,
 } from '@/axioscalls/apiServices';
-// import { stepsList, styleConfig } from '@/constants/dealsConstant';
 import Step1 from '../stepComponents/Step1';
 import { FormProvider, useForm } from 'react-hook-form';
 import Step2 from '../stepComponents/Step2';
@@ -37,6 +34,7 @@ import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoader } from '@/hooks/useLoader';
 import StepperDemo from './StepperDemo';
+import { invalidateDealsTableQuery } from '@/hooks/customhooks/DealsHooks/useDealTable';
 
 export interface FormData {
   companyName: string;
@@ -72,6 +70,7 @@ export default function CreateDealDialog({
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
+  // const { refetch } = useDealTable(subadmin_id);
   const methods = useForm<FormData>({
     defaultValues: {
       companyName: '',
@@ -250,7 +249,7 @@ export default function CreateDealDialog({
           setSubmittedData({});
           methods.reset();
           setIsDialogOpen(false);
-          dispatch(fetchAllDeals());
+          invalidateDealsTableQuery(); // dispatch(fetchAllDeals());
           await callDraftApi();
           break;
       }
@@ -285,15 +284,6 @@ export default function CreateDealDialog({
         </DialogTitle>
         <hr />
       </DialogHeader>
-      {/* <Stepper
-        activeStep={activeStep}
-        styleConfig={styleConfig}
-        style={{ padding: 0 }}
-      >
-        {stepsList.map(step => (
-          <Step key={step.index} label={step.label} index={step.index} />
-        ))}
-      </Stepper> */}
       <div className="flex">
         <StepperDemo activeStep={activeStep} setActiveStep={setActiveStep} />
         <div className="flex flex-col w-full">

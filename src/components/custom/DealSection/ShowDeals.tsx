@@ -1,8 +1,6 @@
 import { FC, lazy, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
-const Dealcard = lazy(() => import('./DealCard'));
-import { DealCard } from '@/constants/dealsConstant';
-import { useDeals } from '@/hooks/customhooks/DealsHooks/useDealTable';
+import { useDealTable } from '@/hooks/customhooks/DealsHooks/useDealTable';
 import { RefreshCw } from 'lucide-react';
 import { AppEnums } from '@/constants/enums';
 import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
@@ -14,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+const DealsTable = lazy(() => import('./DealsTable'));
 
 const sessCapture = () => {
   const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
@@ -24,11 +23,26 @@ const sessCapture = () => {
 };
 
 const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
+  const [activePageNumber, setActivePageNumber] = useState<number>(1);
+  const [activePageSize, setActivePageSize] = useState<number>(3);
+  const [closedPageNumber, setClosedPageNumber] = useState<number>(1);
+  const [closedPageSize, setClosedPageSize] = useState<number>(3);
+  const [onholdPageNumber, setOnholdPageNumber] = useState<number>(1);
+  const [onholdPageSize, setOnholdPageSize] = useState<number>(3);
   const [subadmin_id, setSubadmin_id] = useState<string | undefined>(
     sessCapture
   );
-  const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isSubadmin);
-  const { data: deals, refetch, isLoading } = useDeals(subadmin_id);
+  const { data: subadminIds, refetch: refetchIds } =
+    useSubadminIds(!isSubadmin);
+  const { data, refetch, isLoading } = useDealTable(
+    activePageNumber,
+    activePageSize,
+    closedPageNumber,
+    closedPageSize,
+    onholdPageNumber,
+    onholdPageSize,
+    subadmin_id
+  );
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
   const handleRefresh = async () => {
@@ -59,7 +73,7 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
 
   return (
     <>
-      {!isSubadmin && (
+      {isSubadmin && (
         <div className="flex mt-5">
           <Select onValueChange={handleSubAdminIdChange} value={subadmin_id}>
             <SelectTrigger className="rounded-none w-[444px] cursor-pointer border border-[#383739] bg-black/40">
@@ -128,20 +142,56 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
           </button>
         </div>
 
-        <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
-          {deals?.active_deals?.map((deal: DealCard, index: number) => (
-            <Dealcard deal={deal} key={index + 1} />
-          ))}
+        <TabsContent
+          value="active"
+          className="w-full flex gap-5 pt-3 flex-wrap"
+        >
+          {data?.active_deals ? (
+            <DealsTable
+              deals={data?.active_deals}
+              pageNumber={activePageNumber}
+              setPageNumber={setActivePageNumber}
+              pageSize={activePageSize}
+              setPageSize={setActivePageSize}
+              pagination={data?.active_pagination}
+            />
+          ) : (
+            <div>No deal found! Create one!</div>
+          )}
         </TabsContent>
-        <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
-          {deals?.closed_deals?.map((deal: DealCard, index: number) => (
-            <Dealcard deal={deal} key={index + 1} />
-          ))}
+        <TabsContent
+          value="closed"
+          className="w-full flex gap-5 pt-3 flex-wrap"
+        >
+          {data?.closed_deals ? (
+            <DealsTable
+              deals={data?.closed_deals}
+              pageNumber={closedPageNumber}
+              setPageNumber={setClosedPageNumber}
+              pageSize={closedPageSize}
+              setPageSize={setClosedPageSize}
+              pagination={data?.closed_pagination}
+            />
+          ) : (
+            <div>No deal found! Create one!</div>
+          )}
         </TabsContent>
-        <TabsContent value="on_hold" className="w-full flex gap-5 flex-wrap">
-          {deals?.onhold_deals?.map((deal: DealCard, index: number) => (
-            <Dealcard deal={deal} key={index + 1} />
-          ))}
+        <TabsContent
+          value="on_hold"
+          className="w-full flex gap-5 pt-3 flex-wrap"
+        >
+          {data?.onhold_deals ? (
+            <DealsTable
+              deals={data?.onhold_deals}
+              pageNumber={onholdPageNumber}
+              setPageNumber={setOnholdPageNumber}
+              pageSize={onholdPageSize}
+              setPageSize={setOnholdPageSize}
+              pagination={data?.onhold_pagination}
+            />
+          ) : (
+            <div>No deal found! Create one!</div>
+          )}
         </TabsContent>
       </Tabs>
     </>
