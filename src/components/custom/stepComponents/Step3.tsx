@@ -19,9 +19,9 @@ const Step3: React.FC = () => {
           Company Stage
         </Label>
         <NewCustomRadioGroup
-          value={watch('company_stage') ?? ''}
+          value={watch('companyStage')}
           setValue={(value: string) =>
-            setValue('company_stage', value, { shouldValidate: true })
+            setValue('companyStage', value, { shouldValidate: true })
           }
           stages={stages}
         />

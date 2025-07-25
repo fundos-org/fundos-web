@@ -66,6 +66,7 @@ interface SessionData {
   name: string;
   invite_code: string;
   role: Role;
+  logo: string;
 }
 
 const routes: Routes = {
@@ -137,7 +138,7 @@ export default function AppSidebar() {
   return (
     <Sidebar className="p-3 bg-gray-900">
       <SidebarHeader className="text-3xl font-bold text-white bg-gray-900">
-        FundOS
+        <img src={'/fundosImg.jpeg'} width="150" alt="Fundos" />
       </SidebarHeader>
       <SidebarContent className="bg-gray-900 text-white">
         <SidebarGroup>
@@ -180,15 +181,18 @@ export default function AppSidebar() {
         <Card className="bg-gray-800 rounded-none border-0 p-5 text-white flex items-center justify-between">
           <div className="flex items-center gap-4 w-full">
             <div className="relative">
-              <Avatar className="w-10 h-10">
+              <Avatar className="w-10 h-10 rounded-full">
                 <AvatarImage
-                  src="/favicon/apple-touch-icon.png"
+                  src={
+                    sessionData?.logo
+                      ? sessionData?.logo
+                      : '/favicon/apple-touch-icon.png'
+                  }
                   width="40"
                   alt={sessionData?.name ?? 'Fund Manager'}
                 />
                 <AvatarFallback>BS</AvatarFallback>
               </Avatar>
-              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-gray-800" />
             </div>
             <div className="flex-1">
               <h4 className="text-white font-medium">

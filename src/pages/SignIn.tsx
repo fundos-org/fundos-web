@@ -151,9 +151,10 @@ export default function SignIn() {
       case 'subadmin': {
         dispatch(loginSubAdmin(data))
           .unwrap()
-          .then(({ invite_code, name, subadmin_id, message }) => {
+          .then(({ invite_code, name, subadmin_id, message, logo }) => {
             const sessData = JSON.stringify({
               invite_code,
+              logo,
               name,
               subadmin_id,
               role: 'subadmin',

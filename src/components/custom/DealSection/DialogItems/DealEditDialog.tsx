@@ -42,7 +42,7 @@ const DealEditDialog: FC<{
         <>
           <DialogHeader>
             <DialogTitle className="text-3xl text-white flex items-center justify-between">
-              Edit Member
+              Edit Deal
               <DialogClose
                 asChild
                 className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"

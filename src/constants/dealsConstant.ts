@@ -190,6 +190,7 @@ export interface SubadminsResponse {
 export interface SignInSubAdminResponse {
   message: string;
   subadmin_id: string;
+  logo: string;
   name: string;
   username: string;
   password: string;
