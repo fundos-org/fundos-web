@@ -21,7 +21,9 @@ import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive'
 import { convertToCrores } from '@/lib/currencyToWords';
 import DealStatusSelect from './DealStatusSelect'; // Added import for DealStatusSelect
 const DealEditDialog = lazy(() => import('../DialogItems/DealEditDialog'));
-const DealDetailsDialog = lazy(() => import('../DialogItems/DealDetailsDialog'));
+const DealDetailsDialog = lazy(
+  () => import('../DialogItems/DealDetailsDialog')
+);
 
 function getIndustryType(industry: string | null): string {
   return (
