@@ -6,7 +6,7 @@ import StatisticCardList from '@/components/custom/StatisticCardList';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { lazy, useState, Suspense } from 'react';
 const ShowDeals = lazy(
-  () => import('@/components/custom/DealSection/ShowDeals')
+  () => import('@/components/custom/DealSection/DealTable/ShowDeals')
 );
 
 function Deals() {

@@ -11,7 +11,7 @@ import { Dispatch, FC, SetStateAction, lazy, Suspense } from 'react';
 import { DealCard, DealStatus } from '@/constants/dealsConstant';
 import { convertToCrores } from '@/lib/currencyToWords';
 import { Progress } from '@/components/ui/progress';
-import DealStatusSelect from '../DealStatusSelect';
+import DealStatusSelect from '../DealTable/DealStatusSelect';
 import { Button } from '@/components/ui/button';
 const DealMainTab = lazy(() => import('../TabItems/DealMainTab'));
 

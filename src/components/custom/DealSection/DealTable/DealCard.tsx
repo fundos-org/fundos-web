@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronDown, Eye, EyeOff, PenLine } from 'lucide-react';
-import { Progress } from '../../ui/progress';
+import { Progress } from '../../../ui/progress';
 import {
   businessModels,
   DealCard,
@@ -16,12 +16,12 @@ import {
   MenubarMenu,
   MenubarSeparator,
   MenubarTrigger,
-} from '../../ui/menubar';
+} from '../../../ui/menubar';
 import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive';
 import { convertToCrores } from '@/lib/currencyToWords';
 import DealStatusSelect from './DealStatusSelect'; // Added import for DealStatusSelect
-const DealEditDialog = lazy(() => import('./DialogItems/DealEditDialog'));
-const DealDetailsDialog = lazy(() => import('./DialogItems/DealDetailsDialog'));
+const DealEditDialog = lazy(() => import('../DialogItems/DealEditDialog'));
+const DealDetailsDialog = lazy(() => import('../DialogItems/DealDetailsDialog'));
 
 function getIndustryType(industry: string | null): string {
   return (

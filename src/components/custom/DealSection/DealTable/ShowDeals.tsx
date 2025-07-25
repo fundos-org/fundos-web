@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui/tabs';
 import { useDealTable } from '@/hooks/customhooks/DealsHooks/useDealTable';
 import { RefreshCw } from 'lucide-react';
 import { AppEnums } from '@/constants/enums';
@@ -32,8 +32,7 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [subadmin_id, setSubadmin_id] = useState<string | undefined>(
     sessCapture
   );
-  const { data: subadminIds, refetch: refetchIds } =
-    useSubadminIds(!isSubadmin);
+  const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isSubadmin);
   const { data, refetch, isLoading } = useDealTable(
     activePageNumber,
     activePageSize,
@@ -73,7 +72,7 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
 
   return (
     <>
-      {isSubadmin && (
+      {!isSubadmin && (
         <div className="flex mt-5">
           <Select onValueChange={handleSubAdminIdChange} value={subadmin_id}>
             <SelectTrigger className="rounded-none w-[444px] cursor-pointer border border-[#383739] bg-black/40">
