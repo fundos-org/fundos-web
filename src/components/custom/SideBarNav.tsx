@@ -78,11 +78,6 @@ const routes: Routes = {
     },
     { title: 'Deals', url: AppRoute.SUBADMIN_DEALS, icon: ScrollText },
     { title: 'Members', url: AppRoute.SUBADMIN_MEMBERS, icon: Users },
-    {
-      title: 'Communications',
-      url: AppRoute.SUBADMIN_COMMUNICATION,
-      icon: Mail,
-    },
     { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
   ],
   admin: [
@@ -94,6 +89,11 @@ const routes: Routes = {
     { title: 'Sub Admin', url: AppRoute.ADMIN_SUBADMIN, icon: UserRoundPen },
     { title: 'Users', url: AppRoute.ADMIN_MEMBERS, icon: Users },
     { title: 'Deals', url: AppRoute.ADMIN_DEALS, icon: ScrollText },
+    {
+      title: 'Communications',
+      url: AppRoute.SUBADMIN_COMMUNICATION,
+      icon: Mail,
+    },
   ],
   kyc: [{ title: 'KYC Dashboard', url: AppRoute.KYC_DASHBOARD, icon: Users }],
 };

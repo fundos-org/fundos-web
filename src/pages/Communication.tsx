@@ -1,4 +1,4 @@
-import AccordionDemo from '@/components/custom/CommunicationSection/AccordionDemo';
+import CommunicationEmails from '@/components/custom/CommunicationSection/CommunicationEmails';
 import { FC } from 'react';
 
 const Communication: FC = () => {
@@ -6,7 +6,7 @@ const Communication: FC = () => {
     <>
       <h2 className="text-4xl">Communication</h2>
       <div className="mb-8"></div>
-      <AccordionDemo />
+      <CommunicationEmails />
     </>
   );
 };

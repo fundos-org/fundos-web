@@ -1,5 +1,6 @@
 import {
   DashboardStatisticsResponse,
+  EmailTemplatesResponse,
   SubadminIdsResponse,
 } from '@/constants/dashboardConstant';
 import {
@@ -855,6 +856,42 @@ export const updateInvestorDetails = async (
   try {
     const response = await axios.put(
       `${baseUrl}/api/v1/live/subadmin/investors/update/${subadmin_id}/${investor_id}`,
+      details
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getCommunicationEmails = async (
+  subadmin_id: string
+): Promise<EmailTemplatesResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/api/v1/live/subadmin/communication/emails/${subadmin_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const updateCommunicationEmails = async (
+  subadmin_id: string,
+  details: Partial<Omit<EmailTemplatesResponse, 'subadmin_id' | 'success'>>
+): Promise<{ subadmin_id: string; message: string; success: boolean }> => {
+  try {
+    const response = await axios.put(
+      `${baseUrl}/api/v1/live/subadmin/communication/emails/${subadmin_id}`,
       details
     );
     return response.data;

@@ -24,3 +24,16 @@ export interface SubadminIdsResponse {
   subadmins: SubadminId[];
   success: true;
 }
+
+export interface EmailTemplate {
+  subject: string;
+  body: string;
+}
+
+export interface EmailTemplatesResponse {
+  subadmin_id: string;
+  welcome_mail: EmailTemplate;
+  onboarding_mail: EmailTemplate;
+  consent_mail: EmailTemplate;
+  success: boolean;
+}
