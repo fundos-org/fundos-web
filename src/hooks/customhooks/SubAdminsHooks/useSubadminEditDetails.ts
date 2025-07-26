@@ -17,11 +17,15 @@ export const useSubadminEditDetails = (subadmin_id: string) => {
       queryClient.invalidateQueries({
         queryKey: [QueryEnums.SubAdminDetails, subadmin_id],
       });
-      queryClient.removeQueries({
-        queryKey: [QueryEnums.SubAdminDetails, subadmin_id],
-      });
       queryClient.invalidateQueries({
         queryKey: [QueryEnums.SubAdminDetails, subadmin_id],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryEnums.SubAdmins],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryEnums.SubAdmins],
         exact: false,
       });
     },

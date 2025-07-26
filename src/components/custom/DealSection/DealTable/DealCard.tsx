@@ -59,7 +59,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
 
   return (
     <>
-      <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] to-[#202022] text-white p-5 w-[350px] max-w-md">
+      <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] to-[#202022] text-white p-5 w-[380px] max-w-md">
         <CardContent className="p-0 flex flex-col justify-between">
           <div>
             <div className="flex justify-between items-start">

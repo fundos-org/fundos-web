@@ -56,7 +56,7 @@ export default function Members() {
           </TabsList>
         </div>
         <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
-          <StatisticCardList stats={stats?.metadata} />
+          {isSubadmin && <StatisticCardList stats={stats?.metadata} />}
           <Suspense fallback={<div>Loading...</div>}>
             <InvestorTable isSubadmin={isSubadmin} />
           </Suspense>
