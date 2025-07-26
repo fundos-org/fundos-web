@@ -124,11 +124,14 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             <div className="w-full mt-4 flex justify-between items-center">
               <div>
                 <p className="text-sm text-zinc-400 mb-1">
-                  {fund_raised_till_now}% raised
+                  {(((fund_raised_till_now ?? 1) / commitment) * 100).toFixed(
+                    2
+                  )}
+                  % raised
                 </p>
                 <Progress
                   className="bg-white border border-zinc-600 w-30 rounded-none"
-                  value={fund_raised_till_now}
+                  value={((fund_raised_till_now ?? 1) / commitment) * 100}
                 />
               </div>
               <Menubar className="rounded-none bg-[#1a1a1a] border-0 text-white">

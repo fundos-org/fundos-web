@@ -10,7 +10,7 @@ export const useInvestorsMetadata = () => {
     ? JSON.parse(subadminDetailsRaw)
     : {};
   return useQuery(
-    [QueryEnums.InvestorsMetadata],
+    [QueryEnums.InvestorMetadata],
     () => getInvestorMetadata(subadmin_id),
     {
       enabled: !!subadmin_id,
@@ -19,8 +19,8 @@ export const useInvestorsMetadata = () => {
       keepPreviousData: true, // useful for pagination
       // staleTime: 1000 * 60 * 60 * 6, // 6 hours
       onSuccess: () => toast.success('Investors fetched successfully'),
-      onError: (error: Error) => {
-        toast.error(`Fetch investors failed: ${error.message}`);
+      onError: () => {
+        toast.error(`Fetching Stats failed!`);
       },
     }
   );

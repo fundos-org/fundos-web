@@ -1,5 +1,24 @@
+import StatisticCardList from '@/components/custom/StatisticCardList';
+import { useAdminDashboardStats } from '@/hooks/customhooks/AdminHooks/useAdminDashboardStats';
+
 function AdminDashboard() {
-  return <div>AdminDashboard - It is still under development</div>;
+  const { data } = useAdminDashboardStats();
+  const { success, ...rest } = data ?? {};
+  void success;
+  const stats = rest;
+  return (
+    <>
+      <header className="flex justify-between items-center">
+        <div>
+          <h2 className="text-4xl">Dashboard</h2>
+        </div>
+      </header>
+      <div className="mb-8">
+        <small className="text-gray-500">Track whom you are onboarding</small>
+      </div>
+      <StatisticCardList stats={stats} />
+    </>
+  );
 }
 
 export default AdminDashboard;

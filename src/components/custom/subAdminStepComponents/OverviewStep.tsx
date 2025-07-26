@@ -36,7 +36,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   };
 
   return (
-    <div className="relative text-white w-full max-w-md">
+    <div className="relative text-white w-full">
       <div className="flex items-center gap-3 p-3 mb-4">
         <img width="50" src="/fund.svg" alt="image" />
         <div>

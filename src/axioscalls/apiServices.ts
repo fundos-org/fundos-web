@@ -1,4 +1,5 @@
 import {
+  AdminDashboardStats,
   DashboardStatisticsResponse,
   EmailTemplatesResponse,
   SubadminIdsResponse,
@@ -425,7 +426,8 @@ export const loginSubAdmin = createAsyncThunk<
   async ({ username, password }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${baseUrl}/api/v1/live/subadmin/signin?username=${username}&password=${password}`
+        `${baseUrl}/api/v1/live/subadmin/signin`,
+        { username, password }
       );
       return response.data;
     } catch (error: unknown) {
@@ -867,6 +869,22 @@ export const updateInvestorDetails = async (
     }
   }
 };
+
+export const getAdminDashboardStats =
+  async (): Promise<AdminDashboardStats> => {
+    try {
+      const response = await axios.get(
+        `${baseUrl}/testing/api/v1/live/admin/dashboard/metadata`
+      );
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('An unexpected error occurred');
+      }
+    }
+  };
 
 export const getCommunicationEmails = async (
   subadmin_id: string

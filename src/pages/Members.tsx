@@ -4,7 +4,6 @@ import StatisticCardList from '@/components/custom/StatisticCardList';
 import { DialogTrigger, Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useInvestorsMetadata } from '@/hooks/customhooks/MembersHooks/useInvestorsMetadata';
-import toast from 'react-hot-toast';
 import { lazy, Suspense, useState } from 'react';
 import { AppEnums } from '@/constants/enums';
 const InvestorTable = lazy(
@@ -19,9 +18,8 @@ const returnBool = () => {
 };
 
 export default function Members() {
-  const { data: stats, error } = useInvestorsMetadata();
+  const { data: stats } = useInvestorsMetadata();
   const [isSubadmin] = useState<boolean>(returnBool);
-  if (error) toast.error('Error while fetch statistics');
 
   return (
     <Dialog>
@@ -29,11 +27,13 @@ export default function Members() {
         <div>
           <h2 className="text-4xl">Members</h2>
         </div>
-        <DialogTrigger asChild>
-          <button className="bg-white text-black px-4 py-2 rounded-none">
-            Add member
-          </button>
-        </DialogTrigger>
+        {isSubadmin && (
+          <DialogTrigger asChild>
+            <button className="bg-white text-black px-4 py-2 rounded-none">
+              Add member
+            </button>
+          </DialogTrigger>
+        )}
       </header>
       <div className="mb-8">
         <small className="text-gray-500">Track whom you are onboarding</small>

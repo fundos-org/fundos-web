@@ -164,7 +164,7 @@ function CreateSubAdminDialog() {
   return (
     <DialogContent
       hideCloseButton={true}
-      className="rounded-none bg-[#1a1a1a] text-white border-none sm:max-w-4xl"
+      className="rounded-none bg-[#1a1a1a] text-white border-none sm:max-w-3xl"
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >

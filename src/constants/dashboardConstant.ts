@@ -37,3 +37,11 @@ export interface EmailTemplatesResponse {
   consent_mail: EmailTemplate;
   success: boolean;
 }
+
+export interface AdminDashboardStats {
+  total_admin_onboarded: number;
+  total_users: number;
+  active_deals: number;
+  new_user_this_month: number;
+  success: boolean;
+}

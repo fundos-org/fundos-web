@@ -109,9 +109,9 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
 
   if (error) return <div>Error occured please check api</div>;
 
-  if (!data) {
-    return <div>No data found. Check session or API.</div>;
-  }
+  // if (!data) {
+  //   return <div>No data found. Check session or API.</div>;
+  // }
 
   const pagination = data?.pagination;
 

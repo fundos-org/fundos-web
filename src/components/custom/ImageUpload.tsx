@@ -47,7 +47,7 @@ const ImageInput = ({
               src={previewUrl}
               width={50}
               alt="Preview"
-              className="max-w-full h-auto rounded-md border"
+              className="max-w-full h-auto"
             />
           ) : null
         ) : (
