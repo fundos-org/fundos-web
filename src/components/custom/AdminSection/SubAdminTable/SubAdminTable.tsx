@@ -24,7 +24,7 @@ import {
 import { UserPen, RefreshCw, ArchiveX } from 'lucide-react';
 import { FC, lazy, Suspense, useState } from 'react';
 import SwitchCustom from '@/components/ui/switchCustom';
-import { useSubadmins } from '@/hooks/customhooks/SubAdminsHooks/useSubadminTable';
+import { useSubadminsTable } from '@/hooks/customhooks/SubAdminsHooks/useSubadminTable';
 import { Subadmin } from '@/constants/dealsConstant';
 const SubAdminEditDialog = lazy(
   () => import('../DialogItems/SubAdminEditDialog')
@@ -37,7 +37,7 @@ const SubAdminTable: FC = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const { data, isLoading, error, refetch } = useSubadmins(
+  const { data, isLoading, error, refetch } = useSubadminsTable(
     pageNumber,
     pageSize
   );
