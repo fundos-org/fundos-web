@@ -1,4 +1,3 @@
-//getAdminDashboardStats
 import { getAdminDashboardStats } from '@/axioscalls/apiServices';
 import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';

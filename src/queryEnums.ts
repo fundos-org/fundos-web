@@ -1,5 +1,6 @@
 export enum QueryEnums {
   AdminMetadata = 'adminMetadata',
+  AdminOverview = 'adminOverview',
 
   SubAdmins = 'subAdmins',
   SubadminIds = 'subadminIds',

@@ -1,3 +1,4 @@
+import AdminOverviewTable from '@/components/custom/AdminSection/AdminOverviewTable';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import { useAdminDashboardStats } from '@/hooks/customhooks/AdminHooks/useAdminDashboardStats';
 
@@ -17,6 +18,7 @@ function AdminDashboard() {
         <small className="text-gray-500">Track whom you are onboarding</small>
       </div>
       <StatisticCardList stats={stats} />
+      <AdminOverviewTable />
     </>
   );
 }

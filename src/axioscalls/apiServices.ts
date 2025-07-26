@@ -1,5 +1,6 @@
 import {
   AdminDashboardStats,
+  AdminsOverviewListResponse,
   DashboardStatisticsResponse,
   EmailTemplatesResponse,
   SubadminIdsResponse,
@@ -885,6 +886,24 @@ export const getAdminDashboardStats =
       }
     }
   };
+
+export const getAdminOverview = async (
+  pageNumber: number,
+  pageSize: number
+): Promise<AdminsOverviewListResponse> => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/testing/api/v1/live/admin/overview?page=${pageNumber}&per_page=${pageSize}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
 
 export const getCommunicationEmails = async (
   subadmin_id: string

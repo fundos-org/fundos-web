@@ -1,3 +1,5 @@
+import { Pagination } from './dealsConstant';
+
 export interface DashboardStatisticsResponse {
   subadmin_id: string;
   subadmin_name: string;
@@ -43,5 +45,21 @@ export interface AdminDashboardStats {
   total_users: number;
   active_deals: number;
   new_user_this_month: number;
+  success: boolean;
+}
+
+interface Admin {
+  admin_id: string;
+  admin_name: string;
+  email: string;
+  invitation_code: string;
+  total_users: number;
+  active_deals: number;
+  onboarding_date: string;
+}
+
+export interface AdminsOverviewListResponse {
+  admins: Admin[];
+  pagination: Pagination;
   success: boolean;
 }
