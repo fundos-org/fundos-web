@@ -47,7 +47,7 @@ function getCompanyStage(companyStage: string | null): string {
 }
 
 export default function CardDeal({ deal }: { deal: DealCard }) {
-  const [show, setShow] = useState(false);
+  const [dealId, setDealId] = useState<string | null>(null);
   const [details, setDetails] = useState<DealCard | null>(null);
   const [isRotated, setIsRotated] = useState(false);
   const {
@@ -106,7 +106,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                       </MenubarItem>
                       <MenubarSeparator className="border-b border-[#383739]" />
                       <MenubarItem
-                        onClick={() => setShow(true)}
+                        onClick={() => setDealId(deal.deal_id)}
                         className="rounded-none cursor-pointer"
                       >
                         <PenLine />
@@ -184,7 +184,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
         </CardContent>
       </Card>
       <Suspense fallback={<div>Dialog Opening...</div>}>
-        <DealEditDialog show={show} setShow={setShow} deal_id={deal_id} />
+        <DealEditDialog dealId={dealId} setDealId={setDealId} />
       </Suspense>
       <Suspense fallback={<div>Dialog Opening...</div>}>
         <DealDetailsDialog details={details} setDetails={setDetails} />
