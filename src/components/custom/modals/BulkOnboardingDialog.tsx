@@ -8,10 +8,12 @@ import {
 } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { X, Pencil, Trash2 } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 import { Dispatch, SetStateAction, memo, useEffect, useState } from 'react';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
+import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
+import { useBulkOnboarding } from '@/hooks/customhooks/AdminHooks/useBulkOnboarding';
 
 const userSchema = z.object({
   email: z
@@ -19,19 +21,19 @@ const userSchema = z.object({
     .min(1, 'Email is required')
     .or(z.literal('').transform(() => undefined))
     .or(z.literal(null).transform(() => undefined)),
-  panNumber: z
+  pan_number: z
     .string()
     .min(1, 'PAN is required')
     .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN')
     .or(z.literal('').transform(() => undefined))
     .or(z.literal(null).transform(() => undefined)),
-  phoneNumber: z
+  phone: z
     .string()
     .min(1, 'Phone number is required')
     .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
     .or(z.literal('').transform(() => undefined))
     .or(z.literal(null).transform(() => undefined)),
-  capitalCommitment: z
+  capital_commitment: z
     .string()
     .min(1, 'Capital commitment is required')
     .regex(/^\d+(\.\d{1,2})?$/, 'Invalid capital commitment')
@@ -40,38 +42,26 @@ const userSchema = z.object({
   remark: z.string().optional(),
 });
 
-type UserData = {
-  email: string | null | undefined;
-  panNumber: string | null | undefined;
-  phoneNumber: string | null | undefined;
-  capitalCommitment: string | null | undefined;
-  remark?: string;
-};
-
 interface Props {
-  data: UserData[];
+  data: BulkOnboardingUserData[];
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
-  const [rows, setRows] = useState<UserData[]>([]);
+  const [rows, setRows] = useState<BulkOnboardingUserData[]>([]);
   const [selected, setSelected] = useState<boolean[]>([]);
-  const [editing, setEditing] = useState<{ [key: string]: boolean }>({});
-  console.log(editing);
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
+  const { mutateAsync } = useBulkOnboarding();
 
   useEffect(() => {
     setRows(
       data.map(row => ({
         ...row,
         remark: row.remark ?? '',
-        phoneNumber: row.phoneNumber ?? '',
-        capitalCommitment: row.capitalCommitment ?? '',
       }))
     );
     setSelected(data.map(() => true));
-    setEditing({});
     setInputErrors({});
   }, [data]);
 
@@ -79,7 +69,10 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     setSelected(prev => prev.map((val, i) => (i === idx ? !val : val)));
   };
 
-  const validateField = (field: keyof UserData, value: string) => {
+  const validateField = (
+    field: keyof BulkOnboardingUserData,
+    value: string
+  ) => {
     const schema = userSchema.shape[field];
     const result = schema.safeParse(value || '');
     return result.success
@@ -89,7 +82,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
 
   const handleInputChange = (
     idx: number,
-    field: keyof UserData,
+    field: keyof BulkOnboardingUserData,
     value: string
   ) => {
     setRows(prev =>
@@ -104,14 +97,10 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     }));
   };
 
-  const handleBlur = (idx: number, field: keyof UserData) => {
+  const handleBlur = (idx: number, field: keyof BulkOnboardingUserData) => {
     const value = rows[idx][field] ?? '';
     const error = validateField(field, value);
     if (!error) {
-      setEditing(prev => ({
-        ...prev,
-        [`${idx}-${field}`]: false,
-      }));
       setInputErrors(prev => ({
         ...prev,
         [`${idx}-${field}`]: '',
@@ -138,13 +127,13 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     });
   };
 
-  const getValidation = (row: UserData) => {
+  const getValidation = (row: BulkOnboardingUserData) => {
     const safeRow = {
       ...row,
       email: row.email ?? '',
-      panNumber: row.panNumber ?? '',
-      phoneNumber: row.phoneNumber ?? '',
-      capitalCommitment: row.capitalCommitment ?? '',
+      pan_number: row.pan_number ?? '',
+      phone: row.phone ?? '',
+      capital_commitment: row.capital_commitment ?? '',
     };
     const result = userSchema.safeParse(safeRow);
     return {
@@ -158,9 +147,9 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
       const { errors } = getValidation(row);
       if (
         !errors.email &&
-        !errors.panNumber &&
-        !errors.phoneNumber &&
-        !errors.capitalCommitment
+        !errors.pan_number &&
+        !errors.phone &&
+        !errors.capital_commitment
       ) {
         acc.ready += 1;
       } else {
@@ -171,14 +160,14 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     { ready: 0, invalid: 0, total: 0 }
   );
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const invalidRows = rows.filter(row => {
       const safeRow = {
         ...row,
         email: row.email ?? '',
-        panNumber: row.panNumber ?? '',
-        phoneNumber: row.phoneNumber ?? '',
-        capitalCommitment: row.capitalCommitment ?? '',
+        pan_number: row.pan_number ?? '',
+        phone: row.phone ?? '',
+        capital_commitment: row.capital_commitment ?? '',
       };
       return !userSchema.safeParse(safeRow).success;
     });
@@ -187,8 +176,12 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
       toast.error('Please fix all invalid entries before confirming.');
       return;
     }
-
-    console.log(rows);
+    const data = rows.map(({ remark, ...row }) => {
+      void remark;
+      return row;
+    });
+    const result = await mutateAsync(data);
+    console.log(rows, result);
     setOpen(false);
   };
 
@@ -258,17 +251,17 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                   const emailInvalid =
                     !!errors.email || !!inputErrors[`${idx}-email`];
                   const panInvalid =
-                    !!errors.panNumber || !!inputErrors[`${idx}-panNumber`];
+                    !!errors.pan_number || !!inputErrors[`${idx}-panNumber`];
                   const phoneInvalid =
-                    !!errors.phoneNumber || !!inputErrors[`${idx}-phoneNumber`];
+                    !!errors.phone || !!inputErrors[`${idx}-phoneNumber`];
                   const capitalInvalid =
-                    !!errors.capitalCommitment ||
+                    !!errors.capital_commitment ||
                     !!inputErrors[`${idx}-capitalCommitment`];
                   const remark =
                     !user.email ||
-                    !user.panNumber ||
-                    !user.phoneNumber ||
-                    !user.capitalCommitment
+                    !user.pan_number ||
+                    !user.phone ||
+                    !user.capital_commitment
                       ? 'Empty Values'
                       : emailInvalid
                         ? 'Invalid Email'
@@ -308,20 +301,6 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                               }
                               onBlur={() => handleBlur(idx, 'email')}
                             />
-                            <button
-                              type="button"
-                              className="text-gray-400 hover:text-blue-400"
-                              tabIndex={-1}
-                              onMouseDown={e => {
-                                e.preventDefault();
-                                setEditing(prev => ({
-                                  ...prev,
-                                  [`${idx}-email`]: true,
-                                }));
-                              }}
-                            >
-                              <Pencil size={16} />
-                            </button>
                           </div>
                         </div>
                       </td>
@@ -335,31 +314,17 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                                   ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
                                   : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
                               }`}
-                              value={user.panNumber ?? ''}
+                              value={user.pan_number ?? ''}
                               placeholder="Enter PAN"
                               onChange={e =>
                                 handleInputChange(
                                   idx,
-                                  'panNumber',
+                                  'pan_number',
                                   e.target.value
                                 )
                               }
-                              onBlur={() => handleBlur(idx, 'panNumber')}
+                              onBlur={() => handleBlur(idx, 'pan_number')}
                             />
-                            <button
-                              type="button"
-                              className="text-gray-400 hover:text-blue-400"
-                              tabIndex={-1}
-                              onMouseDown={e => {
-                                e.preventDefault();
-                                setEditing(prev => ({
-                                  ...prev,
-                                  [`${idx}-panNumber`]: true,
-                                }));
-                              }}
-                            >
-                              <Pencil size={16} />
-                            </button>
                           </div>
                         </div>
                       </td>
@@ -375,31 +340,13 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                                   ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
                                   : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
                               }`}
-                              value={user.phoneNumber ?? ''}
+                              value={user.phone ?? ''}
                               placeholder="Enter phone number"
                               onChange={e =>
-                                handleInputChange(
-                                  idx,
-                                  'phoneNumber',
-                                  e.target.value
-                                )
+                                handleInputChange(idx, 'phone', e.target.value)
                               }
-                              onBlur={() => handleBlur(idx, 'phoneNumber')}
+                              onBlur={() => handleBlur(idx, 'phone')}
                             />
-                            <button
-                              type="button"
-                              className="text-gray-400 hover:text-blue-400"
-                              tabIndex={-1}
-                              onMouseDown={e => {
-                                e.preventDefault();
-                                setEditing(prev => ({
-                                  ...prev,
-                                  [`${idx}-phoneNumber`]: true,
-                                }));
-                              }}
-                            >
-                              <Pencil size={16} />
-                            </button>
                           </div>
                         </div>
                       </td>
@@ -413,33 +360,19 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                                   ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
                                   : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
                               }`}
-                              value={user.capitalCommitment ?? ''}
+                              value={user.capital_commitment ?? ''}
                               placeholder="Enter capital commitment"
                               onChange={e =>
                                 handleInputChange(
                                   idx,
-                                  'capitalCommitment',
+                                  'capital_commitment',
                                   e.target.value
                                 )
                               }
                               onBlur={() =>
-                                handleBlur(idx, 'capitalCommitment')
+                                handleBlur(idx, 'capital_commitment')
                               }
                             />
-                            <button
-                              type="button"
-                              className="text-gray-400 hover:text-blue-400"
-                              tabIndex={-1}
-                              onMouseDown={e => {
-                                e.preventDefault();
-                                setEditing(prev => ({
-                                  ...prev,
-                                  [`${idx}-capitalCommitment`]: true,
-                                }));
-                              }}
-                            >
-                              <Pencil size={16} />
-                            </button>
                           </div>
                         </div>
                       </td>
@@ -457,7 +390,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                       <td className={fintechTd + ' text-center'}>
                         <button
                           type="button"
-                          className="text-red-400 hover:text-red-600"
+                          className="text-red-400 hover:text-red-600 cursor-pointer"
                           onClick={() => handleDeleteRow(idx)}
                           title="Delete row"
                         >

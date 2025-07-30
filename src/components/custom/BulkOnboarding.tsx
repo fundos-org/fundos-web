@@ -10,17 +10,11 @@ import {
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import BulkOnboardingDialog from './modals/BulkOnboardingDialog';
-
-type UserData = {
-  email: string | null | undefined;
-  panNumber: string | null | undefined;
-  phoneNumber: string | null | undefined;
-  capitalCommitment: string | null | undefined;
-};
+import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
 
 export default function BulkOnboarding() {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
-  const [parsedData, setParsedData] = useState<UserData[]>([]);
+  const [parsedData, setParsedData] = useState<BulkOnboardingUserData[]>([]);
   const [fileName, setFileName] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -73,11 +67,9 @@ export default function BulkOnboarding() {
                 );
                 return {
                   email: emailKey ? String(row[emailKey] ?? '').trim() : '',
-                  panNumber: panKey ? String(row[panKey] ?? '').trim() : '',
-                  phoneNumber: phoneKey
-                    ? String(row[phoneKey] ?? '').trim()
-                    : '',
-                  capitalCommitment: capitalKey
+                  pan_number: panKey ? String(row[panKey] ?? '').trim() : '',
+                  phone: phoneKey ? String(row[phoneKey] ?? '').trim() : '',
+                  capital_commitment: capitalKey
                     ? String(row[capitalKey] ?? '').trim()
                     : '',
                 };
@@ -148,9 +140,9 @@ export default function BulkOnboarding() {
               );
               return {
                 email: emailKey ? String(row[emailKey] ?? '').trim() : '',
-                panNumber: panKey ? String(row[panKey] ?? '').trim() : '',
-                phoneNumber: phoneKey ? String(row[phoneKey] ?? '').trim() : '',
-                capitalCommitment: capitalKey
+                pan_number: panKey ? String(row[panKey] ?? '').trim() : '',
+                phone: phoneKey ? String(row[phoneKey] ?? '').trim() : '',
+                capital_commitment: capitalKey
                   ? String(row[capitalKey] ?? '').trim()
                   : '',
               };

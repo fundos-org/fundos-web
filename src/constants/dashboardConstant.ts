@@ -63,3 +63,11 @@ export interface AdminsOverviewListResponse {
   pagination: Pagination;
   success: boolean;
 }
+
+export interface BulkOnboardingUserData {
+  email: string | null | undefined;
+  pan_number: string | null | undefined;
+  phone: string | null | undefined;
+  capital_commitment: string | null | undefined;
+  remark?: string;
+}

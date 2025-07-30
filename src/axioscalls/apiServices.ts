@@ -1,6 +1,7 @@
 import {
   AdminDashboardStats,
   AdminsOverviewListResponse,
+  BulkOnboardingUserData,
   DashboardStatisticsResponse,
   EmailTemplatesResponse,
   SubadminIdsResponse,
@@ -213,6 +214,29 @@ export const dealWithIdTrigger = async (dealId: string) => {
     `${baseUrl}/v1/deals/mobile/${dealId}`
   );
   return response.data;
+};
+
+export const bulkOnboarding = async (
+  data: Omit<BulkOnboardingUserData, 'remark'>[]
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/bulk-onboarding`,
+      data
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (isAxiosError(error) && error.response?.data) {
+      const errorData = error.response.data as CommonError;
+      if (errorData.isSuccess !== undefined && errorData.message) {
+        throw errorData;
+      }
+    }
+    throw {
+      isSuccess: false,
+      message: 'Failed to create draft',
+    } as CommonError;
+  }
 };
 
 export const createProfile = async (
