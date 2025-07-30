@@ -194,7 +194,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         hideCloseButton={true}
-        className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-7xl max-h-[95vh]"
+        className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-8xl"
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
@@ -257,21 +257,12 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                   const capitalInvalid =
                     !!errors.capital_commitment ||
                     !!inputErrors[`${idx}-capitalCommitment`];
-                  const remark =
-                    !user.email ||
-                    !user.pan_number ||
-                    !user.phone ||
-                    !user.capital_commitment
-                      ? 'Empty Values'
-                      : emailInvalid
-                        ? 'Invalid Email'
-                        : panInvalid
-                          ? 'Invalid PAN'
-                          : phoneInvalid
-                            ? 'Invalid Phone Number'
-                            : capitalInvalid
-                              ? 'Invalid Capital Commitment'
-                              : 'Valid Values';
+                  const remark = getRemark(user, {
+                    emailInvalid,
+                    panInvalid,
+                    phoneInvalid,
+                    capitalInvalid,
+                  });
 
                   return (
                     <tr
@@ -422,3 +413,24 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
 });
 
 export default BulkOnboardingDialog;
+
+const getRemark = (
+  user: BulkOnboardingUserData,
+  validationFlags: Record<string, boolean>
+) => {
+  if (
+    !user.email ||
+    !user.pan_number ||
+    !user.phone ||
+    !user.capital_commitment
+  ) {
+    return 'Empty Values';
+  }
+
+  if (validationFlags.emailInvalid) return 'Invalid Email';
+  if (validationFlags.panInvalid) return 'Invalid PAN';
+  if (validationFlags.phoneInvalid) return 'Invalid Phone';
+  if (validationFlags.capitalInvalid) return 'Invalid CC';
+
+  return 'Valid Values';
+};
