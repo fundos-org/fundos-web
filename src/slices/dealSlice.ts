@@ -1,4 +1,4 @@
-import { createDraft, fetchDealStatistics } from '@/axioscalls/apiServices';
+import { fetchDealStatistics } from '@/axioscalls/apiServices';
 import {
   CommonError,
   DraftResponse,
@@ -40,24 +40,6 @@ const dealsSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(createDraft.pending, state => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(
-        createDraft.fulfilled,
-        (state, action: PayloadAction<DraftResponse>) => {
-          state.loading = false;
-          state.draft = action.payload;
-        }
-      )
-      .addCase(
-        createDraft.rejected,
-        (state, action: PayloadAction<CommonError | undefined>) => {
-          state.loading = false;
-          state.error = action.payload?.message || 'Failed to create draft';
-        }
-      )
       .addCase(fetchDealStatistics.pending, state => {
         state.loading = true;
         state.error = null;

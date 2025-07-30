@@ -218,6 +218,7 @@ export interface StatisticsState {
 export interface LoginFormData {
   username: string;
   password: string;
+  role: 'ADMIN' | 'SUBADMIN' | 'INVESTOR' | 'KYC';
 }
 
 export type DealStatus = 'open' | 'closed' | 'on_hold';

@@ -16,7 +16,6 @@ import {
   DealTransactionsResponse,
   DraftResponse,
   LoginFormData,
-  SignInSubAdminResponse,
   StatisticsResponse,
   SubadminDetailsResponse,
   SubadminsResponse,
@@ -35,9 +34,10 @@ import {
   UpdateInvestorResponse,
 } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+import { AxiosError, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
+import axiosInstance from './axiosConfig';
 
 const baseOrigin = import.meta.env.VITE_BASE_ORIGIN;
 const reverseProxyPath = import.meta.env.VITE_REVERSE_PROXY_ENV;
@@ -48,36 +48,25 @@ const baseUrl = reverseProxyPath
   : validatedBaseUrl;
 
 // Create async thunk for creating a draft deal
-export const createDraft = createAsyncThunk<
-  DraftResponse,
-  void,
-  { rejectValue: CommonError }
->('draft/createDraft', async (_, { rejectWithValue }) => {
-  const { subadmin_id } = JSON.parse(
-    sessionStorage.getItem('subadmindetails') as string
-  );
-  await new Promise(r => setTimeout(r, 2000));
+export const createDraft = async (): Promise<DraftResponse> => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/deals/web/create/draft`,
-      {
-        fund_manager_id: subadmin_id,
-      }
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/deal/web/create/draft`
     );
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
-        return rejectWithValue(errorData);
+        throw errorData;
       }
     }
-    return rejectWithValue({
+    throw {
       isSuccess: false,
       message: 'Failed to create draft',
-    });
+    } as CommonError;
   }
-});
+};
 
 export const companyDetailsTrigger = async (
   companyName: string,
@@ -90,8 +79,8 @@ export const companyDetailsTrigger = async (
   if (logo) {
     formData.append('logo', logo);
   }
-  const response = await axios.post(
-    `${baseUrl}/api/v1/live/deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
     formData
   );
   toast.success(response.data.message);
@@ -104,8 +93,8 @@ export const industryProblemTrigger = async (
   businessModel: string,
   dealId?: string
 ) => {
-  const response = await axios.post(
-    `${baseUrl}/api/v1/live/deals/web/industry-problem`,
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/deals/web/industry-problem`,
     {
       deal_id: dealId,
       industry: industry,
@@ -122,8 +111,8 @@ export const customerSegmentTrigger = async (
   targetCustomerSegment: string,
   dealId?: string
 ) => {
-  const response = await axios.post(
-    `${baseUrl}/api/v1/live/deals/web/customer-segment`,
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/deals/web/customer-segment`,
     {
       deal_id: dealId,
       company_stage: companyStage,
@@ -154,8 +143,8 @@ export const valuationTrigger = async (
   if (investmentSchemeAppendix && investmentSchemeAppendix instanceof File) {
     formData.append('investment_scheme_appendix', investmentSchemeAppendix);
   }
-  const response = await axios.post(
-    `${baseUrl}/api/v1/live/deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
     formData
   );
   toast.success(response.data.message);
@@ -171,8 +160,8 @@ export const securitiesTrigger = async (
   carryPercentage?: number | null
 ) => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/deals/web/securities`,
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/deals/web/securities`,
       {
         deal_id: dealId,
         instrument_type: instrumentType,
@@ -186,7 +175,7 @@ export const securitiesTrigger = async (
     toast.success(response.data.message);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       const axiosError = error as AxiosError<{
         message: string;
         code?: string;
@@ -219,40 +208,8 @@ export const securitiesTrigger = async (
   }
 };
 
-// Create async thunk for fetching all deals
-// export const fetchAllDeals = createAsyncThunk<
-//   AllDealsResponse,
-//   void,
-//   { rejectValue: CommonError }
-// >('deals/fetchAllDeals', async (_, { rejectWithValue }) => {
-//   try {
-//     const { subadmin_id } = JSON.parse(
-//       sessionStorage.getItem('subadmindetails') as string
-//     );
-//     const response = await axios.get(
-//       `${baseUrl}/api/v1/live/subadmin/deals/overview/${subadmin_id}`
-//     );
-//     return response.data;
-//   } catch (error: unknown) {
-//     // Handle axios or network errors
-//     if (axios.isAxiosError(error) && error.response?.data) {
-//       const errorData = error.response.data as CommonError;
-//       if (errorData.isSuccess !== undefined && errorData.message) {
-//         return rejectWithValue(errorData);
-//       }
-//     }
-//     // Fallback for unexpected errors
-//     return rejectWithValue({
-//       isSuccess: false,
-//       message: 'Failed to fetch deals',
-//     });
-//   }
-// });
-
 export const dealWithIdTrigger = async (dealId: string) => {
-  const response = await axios.get(
-    `${baseUrl}/api/v1/live/deals/mobile/${dealId}`
-  );
+  const response = await axiosInstance.get(`${baseUrl}/v1/deals/mobile/${dealId}`);
   return response.data;
 };
 
@@ -265,8 +222,8 @@ export const createProfile = async (
 ) => {
   const formData = new FormData();
   if (logo) formData.append('logo', logo);
-  const response = await axios.post(
-    `${baseUrl}/api/v1/live/admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`,
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`,
     formData
   );
   return response.data;
@@ -280,8 +237,8 @@ export const createCredentials = async (
   app_name: string,
   invite_code: string
 ) => {
-  const response = await axios.post(
-    `${baseUrl}/api/v1/live/admin/subadmins/create/credentials`,
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/admin/subadmins/create/credentials`,
     {
       subadmin_id,
       username,
@@ -296,8 +253,8 @@ export const createCredentials = async (
 };
 
 export const getSubAdminById = async (subadmin_id: string) => {
-  const response = await axios.get(
-    `${baseUrl}/api/v1/live/admin/subadmins/${subadmin_id}`
+  const response = await axiosInstance.get(
+    `${baseUrl}/v1/admin/subadmins/${subadmin_id}`
   );
   return response.data;
 };
@@ -311,13 +268,13 @@ export const fetchDealStatistics = createAsyncThunk<
     const { subadmin_id } = JSON.parse(
       sessionStorage.getItem('subadmindetails') as string
     );
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/deals/statistics/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/deals/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
     // Handle axios or network errors
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         return rejectWithValue(errorData);
@@ -340,13 +297,13 @@ export const fetchMembersStatistics = createAsyncThunk<
     const { subadmin_id } = JSON.parse(
       sessionStorage.getItem('subadmindetails') as string
     );
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/members/statistics/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/members/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
     // Handle axios or network errors
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         return rejectWithValue(errorData);
@@ -369,13 +326,13 @@ export const fetchTransactionList = createAsyncThunk<
     const { subadmin_id } = JSON.parse(
       sessionStorage.getItem('subadmindetails') as string
     );
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/dashboard/transactions/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/dashboard/transactions/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
     // Handle axios or network errors
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         return rejectWithValue(errorData);
@@ -398,13 +355,13 @@ export const fetchDashboardStatistics = createAsyncThunk<
     const { subadmin_id } = JSON.parse(
       sessionStorage.getItem('subadmindetails') as string
     );
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/dashboard/statistics/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/dashboard/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
     // Handle axios or network errors
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         return rejectWithValue(errorData);
@@ -418,41 +375,9 @@ export const fetchDashboardStatistics = createAsyncThunk<
   }
 });
 
-export const loginSubAdmin = createAsyncThunk<
-  SignInSubAdminResponse,
-  LoginFormData,
-  { rejectValue: CommonError }
->(
-  'subAdmins/loginSubAdmin',
-  async ({ username, password }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        `${baseUrl}/api/v1/live/subadmin/signin`,
-        { username, password }
-      );
-      return response.data;
-    } catch (error: unknown) {
-      // Handle axios or network errors
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const errorData = error.response.data as CommonError;
-        if (errorData.isSuccess !== undefined && errorData.message) {
-          return rejectWithValue(errorData);
-        }
-      }
-      // Fallback for unexpected errors
-      return rejectWithValue({
-        isSuccess: false,
-        message: 'Failed to Login Subadmin',
-      });
-    }
-  }
-);
-
-export const loginAdmin = async ({ username, password }: LoginFormData) => {
+export const appLogin = async (data: LoginFormData) => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/admin/signin?username=${username}&password=${password}`
-    );
+    const response = await axiosInstance.post(`${baseUrl}/v1/auth/token`, data);
     return response.data;
   } catch {
     return { success: false };
@@ -461,13 +386,13 @@ export const loginAdmin = async ({ username, password }: LoginFormData) => {
 
 export const addMember = async (subadmin_id: string, email: string) => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/subadmin/members/addmember/${subadmin_id}/${email}`
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/members/addmember/${subadmin_id}/${email}`
     );
     return response.data;
   } catch (error) {
     console.log('Error in apiAadhaarOtpSend:', error);
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       toast.error(`Error: ${error.message}`);
       throw new Error(error.message);
     } else {
@@ -479,14 +404,14 @@ export const addMember = async (subadmin_id: string, email: string) => {
 
 export const shareDetails = async (subadmin_id: string) => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
     );
     toast.success(response.data.message);
     return response.data;
   } catch (error) {
     console.log('Error in apiAadhaarOtpSend:', error);
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       toast.error(`Error: ${error.message}`);
       throw new Error(error.message);
     } else {
@@ -502,12 +427,12 @@ export const getSubadmins = async (
   pageSize: number
 ): Promise<SubadminsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/admin/subadmins?page=${pageNumber}&per_page=${pageSize}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/admin/subadmins?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         throw new Error(errorData.message);
@@ -521,12 +446,12 @@ export const getSubAdminDetails = async (
   subadmin_id: string
 ): Promise<SubadminDetailsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/admin/subadmin_details/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/admin/subadmin_details/${subadmin_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -539,13 +464,13 @@ export const updateSubAdminDetails = async (
   details: Partial<Omit<SubadminDetailsResponse, 'subadmin_id' | 'success'>>
 ): Promise<{ subadmin_id: string; message: string; success: boolean }> => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/api/v1/live/admin/subadmin_details/${subadmin_id}`,
+    const response = await axiosInstance.put(
+      `${baseUrl}/v1/admin/subadmin_details/${subadmin_id}`,
       details
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -555,12 +480,12 @@ export const updateSubAdminDetails = async (
 
 export const getSubadminIdList = async (): Promise<SubadminIdsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/subadminsIds`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/subadminsIds`
     );
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         throw new Error(errorData.message);
@@ -583,12 +508,12 @@ export const getDeals = async (
     if (!subadmin_id) {
       throw new Error('No subadmin id found in session storage');
     }
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/deals/overview/paginated/${subadmin_id}?active_page=${active_page_number}&active_per_page=${active_page_size}&closed_page=${closed_page_number}&closed_per_page=${closed_page_size}&onhold_page_number=${onhold_page_number}&onhold_page_size=${onhold_page_size}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/deals/overview/paginated/${subadmin_id}?active_page=${active_page_number}&active_per_page=${active_page_size}&closed_page=${closed_page_number}&closed_per_page=${closed_page_size}&onhold_page_number=${onhold_page_number}&onhold_page_size=${onhold_page_size}`
     );
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response?.data) {
+    if (isAxiosError(error) && error.response?.data) {
       const errorData = error.response.data as CommonError;
       if (errorData.isSuccess !== undefined && errorData.message) {
         throw new Error(errorData.message);
@@ -602,12 +527,12 @@ export const getDealDetails = async (
   deal_id: string
 ): Promise<DealDetailsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/deals/deal_details/${deal_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/deals/deal_details/${deal_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -620,13 +545,13 @@ export const updateDealDetails = async (
   details: Partial<DealDetails>
 ): Promise<UpdateDealDetailsResponse> => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/api/v1/live/subadmin/deals/edit_deals/${deal_id}`,
+    const response = await axiosInstance.put(
+      `${baseUrl}/v1/subadmin/deals/edit_deals/${deal_id}`,
       details
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -643,12 +568,12 @@ export const markDealInactive = async (
   deal_id: string;
 }> => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/subadmin/deals/mark_inactive/${deal_id}`
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/deals/mark_inactive/${deal_id}`
     );
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -658,13 +583,13 @@ export const markDealInactive = async (
 
 export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
   try {
-    const response = await axios.post(
-      `${baseUrl}/api/v1/live/subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/deals/change/status?deal_id=${deal_id}&status=${status}`
     );
     return response.data;
   } catch (error) {
     console.log('Error in changeDealStatus:', error);
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       toast.error(`Error: ${error.message}`);
       throw new Error(error.message);
     } else {
@@ -680,12 +605,12 @@ export const getDealInvestorInvestments = async (
   pageSize: number
 ): Promise<DealInvestorsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/deals/deal_info/investors/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/deals/deal_info/investors/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -699,12 +624,12 @@ export const getDealTransactions = async (
   pageSize: number
 ): Promise<DealTransactionsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/deals/deal_info/transactions/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/deals/deal_info/transactions/${deal_id}?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -716,12 +641,12 @@ export const getDealDocuments = async (
   deal_id: string
 ): Promise<DealDocumentsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/deals/deal_info/documents/${deal_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/deals/deal_info/documents/${deal_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -734,12 +659,12 @@ export const deleteInvestor = async (
   investor_id: string
 ): Promise<{ success: boolean; message: string }> => {
   try {
-    const response = await axios.delete(
-      `${baseUrl}/v1/live/subadmin/investors/delete/${subadmin_id}/${investor_id}`
+    const response = await axiosInstance.delete(
+      `${baseUrl}/v1/subadmin/investors/delete/${subadmin_id}/${investor_id}`
     );
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -753,12 +678,12 @@ export const getInvestors = async (
   pageSize: number
 ): Promise<InvestorsListResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/investors/list/${subadmin_id}?page=${pageNumber}&per_page=${pageSize}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/investors/list/${subadmin_id}?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -770,12 +695,12 @@ export const getInvestorDetails = async (
   investor_id: string
 ): Promise<InvestorDetailsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/investors/abount_info/${investor_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/investors/abount_info/${investor_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -787,12 +712,12 @@ export const getInvestorDealInvestments = async (
   investor_id: string
 ): Promise<InvestmentDealsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/investors/investments_info/${investor_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/investors/investments_info/${investor_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -804,12 +729,12 @@ export const getInvestorTransactions = async (
   investor_id: string
 ): Promise<InvestorTransactionsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/investors/transactions/${investor_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/investors/transactions/${investor_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -821,12 +746,12 @@ export const getInvestorDocuments = async (
   investor_id: string
 ): Promise<InvestorDocumentsResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/investors/documents_info/${investor_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/investors/documents_info/${investor_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -838,12 +763,12 @@ export const getInvestorMetadata = async (
   subadmin_id: string
 ): Promise<InvestorMetadataResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/investors/metadata/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/investors/metadata/${subadmin_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -857,13 +782,13 @@ export const updateInvestorDetails = async (
   details: UpdateInvestorRequest
 ): Promise<UpdateInvestorResponse> => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/api/v1/live/subadmin/investors/update/${subadmin_id}/${investor_id}`,
+    const response = await axiosInstance.put(
+      `${baseUrl}/v1/subadmin/investors/update/${subadmin_id}/${investor_id}`,
       details
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -874,12 +799,12 @@ export const updateInvestorDetails = async (
 export const getAdminDashboardStats =
   async (): Promise<AdminDashboardStats> => {
     try {
-      const response = await axios.get(
-        `${baseUrl}/testing/api/v1/live/admin/dashboard/metadata`
+      const response = await axiosInstance.get(
+        `${baseUrl}/testing/v1/admin/dashboard/metadata`
       );
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         throw new Error(error.message);
       } else {
         throw new Error('An unexpected error occurred');
@@ -892,12 +817,12 @@ export const getAdminOverview = async (
   pageSize: number
 ): Promise<AdminsOverviewListResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/testing/api/v1/live/admin/overview?page=${pageNumber}&per_page=${pageSize}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/testing/v1/admin/overview?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -909,12 +834,12 @@ export const getCommunicationEmails = async (
   subadmin_id: string
 ): Promise<EmailTemplatesResponse> => {
   try {
-    const response = await axios.get(
-      `${baseUrl}/api/v1/live/subadmin/communication/emails/${subadmin_id}`
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/subadmin/communication/emails/${subadmin_id}`
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');
@@ -927,13 +852,13 @@ export const updateCommunicationEmails = async (
   details: Partial<Omit<EmailTemplatesResponse, 'subadmin_id' | 'success'>>
 ): Promise<{ subadmin_id: string; message: string; success: boolean }> => {
   try {
-    const response = await axios.put(
-      `${baseUrl}/api/v1/live/subadmin/communication/emails/${subadmin_id}`,
+    const response = await axiosInstance.put(
+      `${baseUrl}/v1/subadmin/communication/emails/${subadmin_id}`,
       details
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       throw new Error('An unexpected error occurred');

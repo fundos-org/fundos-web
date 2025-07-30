@@ -23,14 +23,13 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
-import { useAppDispatch } from '@/app/hooks';
+// import { useAppDispatch } from '@/app/hooks';
 import {
   ForwardRefExoticComponent,
   RefAttributes,
   useEffect,
   useState,
 } from 'react';
-import { resetSubadmin } from '@/slices/subAdminSlice';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -102,7 +101,7 @@ export default function AppSidebar() {
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
   const [items, setItems] = useState<Route[]>([]);
   const location = useLocation();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -130,7 +129,7 @@ export default function AppSidebar() {
   }, []);
 
   const handleLogOut = () => {
-    dispatch(resetSubadmin());
+    // dispatch(resetSubadmin());
     sessionStorage.clear();
     navigate('/');
   };

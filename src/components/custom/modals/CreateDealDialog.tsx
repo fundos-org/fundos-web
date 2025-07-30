@@ -6,14 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import createDraft, {
   companyDetailsTrigger,
   customerSegmentTrigger,
   industryProblemTrigger,
@@ -26,15 +20,13 @@ import Step2 from '../stepComponents/Step2';
 import Step3 from '../stepComponents/Step3';
 import Step4 from '../stepComponents/Step4';
 import Step5 from '../stepComponents/Step5';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { RootState } from '@/app/store';
-import { toastifyThunk } from '@/lib/toastifyThunk';
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoader } from '@/hooks/useLoader';
 import StepperDemo from './StepperDemo';
 import { invalidateDealsTableQuery } from '@/hooks/customhooks/DealsHooks/useDealTable';
+import { useDealDraftId } from '@/hooks/customhooks/DealsHooks/useDealDraftId';
 
 export interface FormData {
   companyName: string;
@@ -97,30 +89,8 @@ export default function CreateDealDialog({
     },
     mode: 'onChange',
   });
-  const dispatch = useAppDispatch();
-  const deal_id = useAppSelector(
-    (state: RootState) => state.deals.draft?.deal_data.id
-  );
-
-  const callDraftApi = useCallback(async () => {
-    try {
-      await toastifyThunk(createDraft(), dispatch, {
-        loading: 'Fetching deal id...',
-        success: data => {
-          const payload = (data as { payload: { message: string } }).payload;
-          return `Fetched user: ${payload.message}`;
-        },
-        error: error => `Error: ${error}`,
-      });
-    } catch (error) {
-      // Errors are handled by toast, but you can add additional logic here if needed
-      toast.error(`Error fetching draft: ${error}`);
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    callDraftApi();
-  }, [callDraftApi]);
+  // const dispatch = useAppDispatch();
+  const { data: dealData, refetch } = useDealDraftId();
 
   const renderStep = () => {
     switch (activeStep) {
@@ -205,7 +175,7 @@ export default function CreateDealDialog({
             values.aboutCompany,
             `AVF - ${values.investmentSchemeAppendix} - 1`,
             values.logo,
-            deal_id
+            dealData?.deal_data?.id
           );
           break;
         }
@@ -214,14 +184,14 @@ export default function CreateDealDialog({
             values.industry,
             values.problemStatement,
             values.businessModel,
-            deal_id
+            dealData?.deal_data?.id
           );
           break;
         case 2:
           await customerSegmentTrigger(
             values.companyStage,
             values.targetCustomerSegment,
-            deal_id
+            dealData?.deal_data?.id
           );
           break;
         case 3:
@@ -233,7 +203,7 @@ export default function CreateDealDialog({
             values.pitchDeck,
             values.pitchVideo,
             values.investmentSchemeAppendixFile,
-            deal_id
+            dealData?.deal_data?.id
           );
           break;
         case 4:
@@ -241,7 +211,7 @@ export default function CreateDealDialog({
             values.instrumentType,
             values.conversionTerms,
             values.isStartup,
-            deal_id,
+            dealData?.deal_data?.id,
             values.managementFee,
             values.carryPercentage
           );
@@ -250,7 +220,7 @@ export default function CreateDealDialog({
           methods.reset();
           setIsDialogOpen(false);
           invalidateDealsTableQuery(); // dispatch(fetchAllDeals());
-          await callDraftApi();
+          await refetch();
           break;
       }
       // Store the submitted data for this step

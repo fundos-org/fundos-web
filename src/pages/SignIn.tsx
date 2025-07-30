@@ -3,14 +3,14 @@ import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CommonError, LoginFormData } from '@/constants/dealsConstant';
+import { LoginFormData } from '@/constants/dealsConstant';
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '@/app/hooks';
-import { loginAdmin, loginSubAdmin } from '@/axioscalls/apiServices';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { AppRoute } from '@/RoutesEnum';
 import { AppEnums } from '@/constants/enums';
+import { useAppLogin } from '@/hooks/useAppLogin';
+import { cleanupAxios } from '@/axioscalls/axiosConfig';
+import toast from 'react-hot-toast';
 
 type ColorScheme = {
   name: string;
@@ -112,18 +112,18 @@ const getColorScheme = (): ColorScheme => {
 
 export default function SignIn() {
   const [role, setRole] = useState<'admin' | 'subadmin' | 'kyc'>();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const colorScheme = getColorScheme();
+  const { mutateAsync: loginUser } = useAppLogin();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: '',
-      password: '',
+      username: 'admin',
+      password: 'admin123',
     },
   });
 
@@ -132,14 +132,24 @@ export default function SignIn() {
     if (!role) setRole(getColorScheme().role);
   }, [role]);
 
+  useEffect(() => {
+    // Cleanup on component unmount
+    return () => {
+      cleanupAxios();
+    };
+  }, []);
+
   const onSubmit = async (data: LoginFormData) => {
     switch (role) {
       case 'admin': {
-        const { success, message } = await loginAdmin(data);
-        if (success) {
+        data.role = 'ADMIN';
+        const { access_token, refresh_token } = await loginUser(data);
+        if (access_token) {
           const sessData = JSON.stringify({ role: 'admin', name: 'Ammit' });
+          sessionStorage.setItem(AppEnums.ACCESS_TOKEN, access_token);
+          sessionStorage.setItem(AppEnums.REFRESH_TOKEN, refresh_token);
           sessionStorage.setItem(AppEnums.SUBADMIN_SESSION, sessData);
-          toast.success(message || 'Login successful!');
+          toast.success('Admin login successful!');
           navigate(AppRoute.ADMIN_SUBADMIN);
         } else {
           toast.error('Unable to login. Please check once again!', {
@@ -149,26 +159,27 @@ export default function SignIn() {
         break;
       }
       case 'subadmin': {
-        dispatch(loginSubAdmin(data))
-          .unwrap()
-          .then(({ invite_code, name, subadmin_id, message, logo }) => {
-            const sessData = JSON.stringify({
-              invite_code,
-              logo,
-              name,
-              subadmin_id,
-              role: 'subadmin',
-            });
-            sessionStorage.setItem(AppEnums.SUBADMIN_SESSION, sessData);
-            toast.success(message || 'Login successful!');
-            navigate(AppRoute.SUBADMIN_DASHBOARD);
-          })
-          .catch((error: CommonError) => {
-            toast.error(error.message || 'Login failed.');
+        data.role = 'SUBADMIN';
+        const { access_token, refresh_token } = await loginUser(data);
+        if (access_token) {
+          const sessData = JSON.stringify({
+            role: 'subadmin',
+            name: 'fix it & add logo',
           });
+          sessionStorage.setItem(AppEnums.ACCESS_TOKEN, access_token);
+          sessionStorage.setItem(AppEnums.REFRESH_TOKEN, refresh_token);
+          sessionStorage.setItem(AppEnums.SUBADMIN_SESSION, sessData);
+          toast.success('Subadmin login successful!');
+          navigate(AppRoute.SUBADMIN_DASHBOARD);
+        } else {
+          toast.error('Unable to login. Please check once again!', {
+            style: { borderRadius: 0 },
+          });
+        }
         break;
       }
       case 'kyc': {
+        data.role = 'KYC';
         toast.error('KYC login is not implemented yet.');
         break;
       }
