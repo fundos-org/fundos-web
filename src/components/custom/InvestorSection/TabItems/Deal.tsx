@@ -99,10 +99,10 @@ export default function CardDeal({ deal }: { deal: InvestedDeal }) {
             </p>
 
             <div className="flex gap-2 mt-3">
-              <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm border border-[#a1a1a140]">
+              <span className="bg-zinc-800 text-white px-3 py-1 text-sm border border-[#a1a1a140]">
                 {getIndustryType(industry)}
               </span>
-              <span className="bg-zinc-800 text-white px-3 py-1 rounded-xs text-sm border border-[#a1a1a140]">
+              <span className="bg-zinc-800 text-white px-3 py-1 text-sm border border-[#a1a1a140]">
                 {getCompanyStage(company_stage)}
               </span>
             </div>
