@@ -14,12 +14,9 @@ import BulkOnboardingDialog from './modals/BulkOnboardingDialog';
 type UserData = {
   email: string | null | undefined;
   panNumber: string | null | undefined;
+  phoneNumber: string | null | undefined;
+  capitalCommitment: string | null | undefined;
 };
-
-// interface ParseResult {
-//   data: UserData[];
-//   errors: string[];
-// }
 
 export default function BulkOnboarding() {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -29,68 +26,6 @@ export default function BulkOnboarding() {
   const [errors, setErrors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
-
-  //   const validateAndMapData = (
-  //     rawData: Record<string, unknown>[]
-  //   ): ParseResult => {
-  //     const validData: UserData[] = [];
-  //     const errorList: string[] = [];
-
-  //     rawData.forEach((row, index) => {
-  //       const rowNumber = index + 2; // +2 because index starts at 0 and we skip header row
-
-  //       // Find email field (case insensitive)
-  //       const emailKey = Object.keys(row).find(
-  //         key =>
-  //           key.toLowerCase().includes('email') || key.toLowerCase() === 'email'
-  //       );
-
-  //       // Find PAN field (case insensitive)
-  //       const panKey = Object.keys(row).find(
-  //         key =>
-  //           key.toLowerCase().includes('pan') ||
-  //           key.toLowerCase().includes('pannumber') ||
-  //           key.toLowerCase().includes('pan_number') ||
-  //           key.toLowerCase() === 'pan'
-  //       );
-
-  //       const email = emailKey ? String(row[emailKey] || '').trim() : '';
-  //       const panNumber = panKey ? String(row[panKey] || '').trim() : '';
-
-  //       // Validate email
-  //       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //       if (!email) {
-  //         errorList.push(`Row ${rowNumber}: Email is required`);
-  //       } else if (!emailRegex.test(email)) {
-  //         errorList.push(`Row ${rowNumber}: Invalid email format - ${email}`);
-  //       }
-
-  //       // Validate PAN Number (Indian PAN format: AAAAA9999A)
-  //       const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-  //       if (!panNumber) {
-  //         errorList.push(`Row ${rowNumber}: PAN Number is required`);
-  //       } else if (!panRegex.test(panNumber.toUpperCase())) {
-  //         errorList.push(
-  //           `Row ${rowNumber}: Invalid PAN format - ${panNumber} (Expected: AAAAA9999A)`
-  //         );
-  //       }
-
-  //       // Add to valid data if both fields are present and valid
-  //       if (
-  //         email &&
-  //         panNumber &&
-  //         emailRegex.test(email) &&
-  //         panRegex.test(panNumber.toUpperCase())
-  //       ) {
-  //         validData.push({
-  //           email: email.toLowerCase(),
-  //           panNumber: panNumber.toUpperCase(),
-  //         });
-  //       }
-  //     });
-
-  //     return { data: validData, errors: errorList };
-  //   };
 
   const processFile = async (file: File): Promise<void> => {
     setIsLoading(true);
@@ -110,7 +45,6 @@ export default function BulkOnboarding() {
             const rawData = results.data as Record<string, unknown>[];
             setParsedData(
               rawData.map(row => {
-                // Find email and PAN fields as before
                 const emailKey = Object.keys(row).find(
                   key =>
                     key.toLowerCase().includes('email') ||
@@ -123,9 +57,29 @@ export default function BulkOnboarding() {
                     key.toLowerCase().includes('pan_number') ||
                     key.toLowerCase() === 'pan'
                 );
+                const phoneKey = Object.keys(row).find(
+                  key =>
+                    key.toLowerCase().includes('phone') ||
+                    key.toLowerCase().includes('phonenumber') ||
+                    key.toLowerCase().includes('phone_number') ||
+                    key.toLowerCase() === 'phone'
+                );
+                const capitalKey = Object.keys(row).find(
+                  key =>
+                    key.toLowerCase().includes('capital') ||
+                    key.toLowerCase().includes('commitment') ||
+                    key.toLowerCase().includes('capitalcommitment') ||
+                    key.toLowerCase().includes('capital_commitment')
+                );
                 return {
                   email: emailKey ? String(row[emailKey] ?? '').trim() : '',
                   panNumber: panKey ? String(row[panKey] ?? '').trim() : '',
+                  phoneNumber: phoneKey
+                    ? String(row[phoneKey] ?? '').trim()
+                    : '',
+                  capitalCommitment: capitalKey
+                    ? String(row[capitalKey] ?? '').trim()
+                    : '',
                 };
               })
             );
@@ -166,7 +120,6 @@ export default function BulkOnboarding() {
 
           setParsedData(
             rawData.map(row => {
-              // Find email and PAN fields as before
               const emailKey = Object.keys(row).find(
                 key =>
                   key.toLowerCase().includes('email') ||
@@ -179,9 +132,27 @@ export default function BulkOnboarding() {
                   key.toLowerCase().includes('pan_number') ||
                   key.toLowerCase() === 'pan'
               );
+              const phoneKey = Object.keys(row).find(
+                key =>
+                  key.toLowerCase().includes('phone') ||
+                  key.toLowerCase().includes('phonenumber') ||
+                  key.toLowerCase().includes('phone_number') ||
+                  key.toLowerCase() === 'phone'
+              );
+              const capitalKey = Object.keys(row).find(
+                key =>
+                  key.toLowerCase().includes('capital') ||
+                  key.toLowerCase().includes('commitment') ||
+                  key.toLowerCase().includes('capitalcommitment') ||
+                  key.toLowerCase().includes('capital_commitment')
+              );
               return {
                 email: emailKey ? String(row[emailKey] ?? '').trim() : '',
                 panNumber: panKey ? String(row[panKey] ?? '').trim() : '',
+                phoneNumber: phoneKey ? String(row[phoneKey] ?? '').trim() : '',
+                capitalCommitment: capitalKey
+                  ? String(row[capitalKey] ?? '').trim()
+                  : '',
               };
             })
           );
@@ -250,10 +221,8 @@ export default function BulkOnboarding() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // Modified browse click handler
   const handleUploadAreaClick = () => {
     if (fileName) {
-      // If file is uploaded, open dialog instead of file picker
       setOpen(true);
     } else {
       fileInputRef.current?.click();
@@ -261,11 +230,12 @@ export default function BulkOnboarding() {
   };
 
   const handleDownloadTemplate = () => {
-    // Create worksheet with headers only
-    const ws = XLSX.utils.aoa_to_sheet([['email', 'panNumber']]);
+    // Create worksheet with updated headers
+    const ws = XLSX.utils.aoa_to_sheet([
+      ['email', 'panNumber', 'phoneNumber', 'capitalCommitment'],
+    ]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Template');
-    // Generate and trigger download
     XLSX.writeFile(wb, 'bulk-onboarding-template.xlsx');
   };
 
@@ -356,7 +326,6 @@ export default function BulkOnboarding() {
             />
 
             <div className="flex flex-col items-center justify-center text-center">
-              {/* File indicator - show when file is uploaded */}
               {fileName ? (
                 <div className="my-8 flex items-center gap-2">
                   <div
@@ -389,7 +358,6 @@ export default function BulkOnboarding() {
                       className={`w-16 h-16 ${isLoading ? 'text-blue-500 animate-pulse' : 'text-gray-600'}`}
                     />
                   </div>
-                  {/* Upload text */}
                   <div className="mb-2">
                     <span className="text-lg text-gray-300">
                       {isLoading
@@ -416,7 +384,6 @@ export default function BulkOnboarding() {
             </div>
           </div>
 
-          {/* Display errors if any */}
           {errors.length > 0 && (
             <div className="mt-8 bg-red-900/20 border border-red-800 p-6">
               <h3 className="text-lg font-semibold mb-4 text-red-400">

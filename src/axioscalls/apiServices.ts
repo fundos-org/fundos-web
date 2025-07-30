@@ -209,7 +209,9 @@ export const securitiesTrigger = async (
 };
 
 export const dealWithIdTrigger = async (dealId: string) => {
-  const response = await axiosInstance.get(`${baseUrl}/v1/deals/mobile/${dealId}`);
+  const response = await axiosInstance.get(
+    `${baseUrl}/v1/deals/mobile/${dealId}`
+  );
   return response.data;
 };
 
