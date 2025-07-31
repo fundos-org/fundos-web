@@ -48,6 +48,16 @@ interface Props {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
+const fintechTable = 'min-w-full divide-y divide-[#232A36] text-sm';
+const fintechTh =
+  'px-4 py-2 bg-[#232A36] text-left font-semibold text-[#B5B5B5]';
+const fintechTd = 'px-4 py-2 bg-[#181C23]';
+
+const borderDanger =
+  'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400';
+const borderNormal =
+  'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400';
+
 const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
   const [rows, setRows] = useState<BulkOnboardingUserData[]>([]);
   const [selected, setSelected] = useState<boolean[]>([]);
@@ -185,11 +195,6 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     setOpen(false);
   };
 
-  const fintechTable = 'min-w-full divide-y divide-[#232A36] text-sm';
-  const fintechTh =
-    'px-4 py-2 bg-[#232A36] text-left font-semibold text-[#B5B5B5]';
-  const fintechTd = 'px-4 py-2 bg-[#181C23]';
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
@@ -251,12 +256,11 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                   const emailInvalid =
                     !!errors.email || !!inputErrors[`${idx}-email`];
                   const panInvalid =
-                    !!errors.pan_number || !!inputErrors[`${idx}-panNumber`];
+                    !!errors.pan_number || !!inputErrors[`${idx}-pan`];
                   const phoneInvalid =
-                    !!errors.phone || !!inputErrors[`${idx}-phoneNumber`];
+                    !!errors.phone || !!inputErrors[`${idx}-phone`];
                   const capitalInvalid =
-                    !!errors.capital_commitment ||
-                    !!inputErrors[`${idx}-capitalCommitment`];
+                    !!errors.capital_commitment || !!inputErrors[`${idx}-cc`];
                   const remark = getRemark(user, {
                     emailInvalid,
                     panInvalid,
@@ -282,8 +286,8 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                               autoFocus
                               className={`rounded-none bg-[#232A36] ${
                                 inputErrors[`${idx}-email`]
-                                  ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
-                                  : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
+                                  ? borderDanger
+                                  : borderNormal
                               }`}
                               value={user.email ?? ''}
                               placeholder="Enter email"
@@ -301,9 +305,9 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                             <Input
                               autoFocus
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-panNumber`]
-                                  ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
-                                  : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
+                                inputErrors[`${idx}-pan`]
+                                  ? borderDanger
+                                  : borderNormal
                               }`}
                               value={user.pan_number ?? ''}
                               placeholder="Enter PAN"
@@ -327,9 +331,9 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                               minLength={10}
                               maxLength={10}
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-phoneNumber`]
-                                  ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
-                                  : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
+                                inputErrors[`${idx}-phone`]
+                                  ? borderDanger
+                                  : borderNormal
                               }`}
                               value={user.phone ?? ''}
                               placeholder="Enter phone number"
@@ -347,9 +351,9 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                             <Input
                               autoFocus
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-capitalCommitment`]
-                                  ? 'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400'
-                                  : 'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400'
+                                inputErrors[`${idx}-cc`]
+                                  ? borderDanger
+                                  : borderNormal
                               }`}
                               value={user.capital_commitment ?? ''}
                               placeholder="Enter capital commitment"

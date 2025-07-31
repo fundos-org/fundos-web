@@ -237,9 +237,6 @@ export default function BulkOnboarding() {
         {/* Header Section */}
         <div className="px-8 py-8">
           <div className="mb-8">
-            <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-              <span>Tab groups</span>
-            </div>
             <h1 className="text-3xl font-semibold mb-2">How onboard works?</h1>
             <p className="text-gray-400">
               Here's a simple 3-step guide to get you started:
