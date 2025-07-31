@@ -9,7 +9,14 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { X, Trash2 } from 'lucide-react';
-import { Dispatch, SetStateAction, memo, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  memo,
+  useEffect,
+  useState,
+} from 'react';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
@@ -79,24 +86,25 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     setSelected(prev => prev.map((val, i) => (i === idx ? !val : val)));
   };
 
-  const validateField = (
-    field: keyof BulkOnboardingUserData,
-    value: string
-  ) => {
-    const schema = userSchema.shape[field];
+  const validateField = (field: string, value: string) => {
+    const schema =
+      userSchema.shape[field as keyof Omit<BulkOnboardingUserData, 'remark'>];
     const result = schema.safeParse(value || '');
     return result.success
       ? ''
       : result.error.issues[0]?.message || 'Invalid input';
   };
 
-  const handleInputChange = (
-    idx: number,
-    field: keyof BulkOnboardingUserData,
-    value: string
-  ) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {
+      dataset: { idx },
+      name: field,
+      value,
+    } = event.target;
     setRows(prev =>
-      prev.map((row, i) => (i === idx ? { ...row, [field]: value } : row))
+      prev.map((row, i) =>
+        i === Number(idx) ? { ...row, [field]: value } : row
+      )
     );
 
     // Validate in real-time and update inputErrors
@@ -105,22 +113,6 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
       ...prev,
       [`${idx}-${field}`]: error,
     }));
-  };
-
-  const handleBlur = (idx: number, field: keyof BulkOnboardingUserData) => {
-    const value = rows[idx][field] ?? '';
-    const error = validateField(field, value);
-    if (!error) {
-      setInputErrors(prev => ({
-        ...prev,
-        [`${idx}-${field}`]: '',
-      }));
-    } else {
-      setInputErrors(prev => ({
-        ...prev,
-        [`${idx}-${field}`]: error,
-      }));
-    }
   };
 
   const handleDeleteRow = (idx: number) => {
@@ -155,11 +147,17 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
   const summary = rows.reduce(
     (acc, row) => {
       const { errors } = getValidation(row);
+      const isEmpty = (value: string | undefined | null) =>
+        value === undefined || value === null || value === '';
       if (
         !errors.email &&
         !errors.pan_number &&
         !errors.phone &&
-        !errors.capital_commitment
+        !errors.capital_commitment &&
+        !isEmpty(row.email) &&
+        !isEmpty(row.pan_number) &&
+        !isEmpty(row.phone) &&
+        !isEmpty(row.capital_commitment)
       ) {
         acc.ready += 1;
       } else {
@@ -199,13 +197,31 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         hideCloseButton={true}
-        className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-8xl"
+        className="border border-[#393738] rounded-none bg-[#181C23] text-white sm:max-w-8xl"
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="text-3xl text-white flex items-center justify-between">
-            Bulk Onboarding
+          <DialogTitle className="text-xl text-white flex items-center justify-between">
+            <div className="flex gap-4 items-baseline-last">
+              <div>Bulk Onboarding</div>
+              <div className="flex flex-wrap gap-4 items-center justify-start mt-2 border-l border-[#383739]">
+                <div className="flex items-center gap-2 px-4 py-1 text-gray-400 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
+                  Total entries:{' '}
+                  <span className="text-white">{summary.total}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-1 text-green-400 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
+                  Valid: <span className="text-white">{summary.ready}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-1 text-red-400 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-red-400 inline-block" />
+                  Invalid entries:{' '}
+                  <span className="text-white">{summary.invalid}</span>
+                </div>
+              </div>
+            </div>
             <DialogClose
               asChild
               className="border-[1px] border-[#383739] bg-[#242325]"
@@ -217,22 +233,6 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
           </DialogTitle>
           <hr className="border-[#232A36] my-2" />
         </DialogHeader>
-
-        <div className="flex flex-wrap gap-4 items-center justify-start mb-4">
-          <div className="flex items-center gap-2 bg-[#232A36] px-8 py-4 text-gray-400 font-semibold">
-            <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
-            Total entries: <span className="text-white">{summary.total}</span>
-          </div>
-          <div className="flex items-center gap-2 bg-[#232A36] px-8 py-4 text-green-400 font-semibold">
-            <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
-            Valid: <span className="text-white">{summary.ready}</span>
-          </div>
-          <div className="flex items-center gap-2 bg-[#232A36] px-8 py-4 text-red-400 font-semibold">
-            <span className="w-2 h-2 rounded-full bg-red-400 inline-block" />
-            Invalid entries:{' '}
-            <span className="text-white">{summary.invalid}</span>
-          </div>
-        </div>
 
         <div className="overflow-x-auto h-auto max-h-[50vh]">
           {rows.length > 0 ? (
@@ -253,14 +253,24 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
               <tbody>
                 {rows.slice(0, 20).map((user, idx) => {
                   const { errors } = getValidation(user);
+                  const isEmpty = (value: string | undefined | null) =>
+                    value === undefined || value === null || value === '';
                   const emailInvalid =
-                    !!errors.email || !!inputErrors[`${idx}-email`];
+                    !!errors.email ||
+                    !!inputErrors[`${idx}-email`] ||
+                    isEmpty(user.email);
                   const panInvalid =
-                    !!errors.pan_number || !!inputErrors[`${idx}-pan`];
+                    !!errors.pan_number ||
+                    !!inputErrors[`${idx}-pan`] ||
+                    isEmpty(user.pan_number);
                   const phoneInvalid =
-                    !!errors.phone || !!inputErrors[`${idx}-phone`];
+                    !!errors.phone ||
+                    !!inputErrors[`${idx}-phone`] ||
+                    isEmpty(user.phone);
                   const capitalInvalid =
-                    !!errors.capital_commitment || !!inputErrors[`${idx}-cc`];
+                    !!errors.capital_commitment ||
+                    !!inputErrors[`${idx}-cc`] ||
+                    isEmpty(user.capital_commitment);
                   const remark = getRemark(user, {
                     emailInvalid,
                     panInvalid,
@@ -285,16 +295,13 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                             <Input
                               autoFocus
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-email`]
-                                  ? borderDanger
-                                  : borderNormal
+                                emailInvalid ? borderDanger : borderNormal
                               }`}
                               value={user.email ?? ''}
                               placeholder="Enter email"
-                              onChange={e =>
-                                handleInputChange(idx, 'email', e.target.value)
-                              }
-                              onBlur={() => handleBlur(idx, 'email')}
+                              data-idx={idx}
+                              name="email"
+                              onChange={handleInputChange}
                             />
                           </div>
                         </div>
@@ -305,20 +312,13 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                             <Input
                               autoFocus
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-pan`]
-                                  ? borderDanger
-                                  : borderNormal
+                                panInvalid ? borderDanger : borderNormal
                               }`}
                               value={user.pan_number ?? ''}
                               placeholder="Enter PAN"
-                              onChange={e =>
-                                handleInputChange(
-                                  idx,
-                                  'pan_number',
-                                  e.target.value
-                                )
-                              }
-                              onBlur={() => handleBlur(idx, 'pan_number')}
+                              data-idx={idx}
+                              name="pan_number"
+                              onChange={handleInputChange}
                             />
                           </div>
                         </div>
@@ -331,16 +331,13 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                               minLength={10}
                               maxLength={10}
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-phone`]
-                                  ? borderDanger
-                                  : borderNormal
+                                phoneInvalid ? borderDanger : borderNormal
                               }`}
+                              data-idx={idx}
+                              name="phone"
                               value={user.phone ?? ''}
                               placeholder="Enter phone number"
-                              onChange={e =>
-                                handleInputChange(idx, 'phone', e.target.value)
-                              }
-                              onBlur={() => handleBlur(idx, 'phone')}
+                              onChange={handleInputChange}
                             />
                           </div>
                         </div>
@@ -351,22 +348,13 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                             <Input
                               autoFocus
                               className={`rounded-none bg-[#232A36] ${
-                                inputErrors[`${idx}-cc`]
-                                  ? borderDanger
-                                  : borderNormal
+                                capitalInvalid ? borderDanger : borderNormal
                               }`}
+                              data-idx={idx}
+                              name="capital_commitment"
                               value={user.capital_commitment ?? ''}
                               placeholder="Enter capital commitment"
-                              onChange={e =>
-                                handleInputChange(
-                                  idx,
-                                  'capital_commitment',
-                                  e.target.value
-                                )
-                              }
-                              onBlur={() =>
-                                handleBlur(idx, 'capital_commitment')
-                              }
+                              onChange={handleInputChange}
                             />
                           </div>
                         </div>
