@@ -7,6 +7,7 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
+import toast from 'react-hot-toast';
 
 const baseURL = import.meta.env.VITE_BASE_ORIGIN;
 const envSuffix = import.meta.env.VITE_REVERSE_PROXY_ENV;
@@ -14,9 +15,6 @@ const envSuffix = import.meta.env.VITE_REVERSE_PROXY_ENV;
 const axiosInstance: AxiosInstance = axios.create({
   baseURL,
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Store refresh token promise to prevent multiple simultaneous refreshes
@@ -27,7 +25,7 @@ let failedQueue: Array<{
 }> = [];
 
 // Idle timeout configuration (30 minutes = 1800000 ms)
-const IDLE_TIMEOUT = 30 * 60 * 1000;
+const IDLE_TIMEOUT = 15 * 60 * 1000;
 let idleTimer: NodeJS.Timeout | null = null;
 
 const processQueue = (
@@ -60,6 +58,7 @@ const refreshAccessToken = async (): Promise<string> => {
     const { accessToken, refreshToken: newRefreshToken } = response.data;
     sessionStorage.setItem(AppEnums.ACCESS_TOKEN, accessToken);
     sessionStorage.setItem(AppEnums.REFRESH_TOKEN, newRefreshToken);
+    toast.success('Token refreshed due to idle timeout');
     return accessToken;
   } catch (error) {
     sessionStorage.removeItem(AppEnums.ACCESS_TOKEN);
@@ -77,9 +76,8 @@ const resetIdleTimer = () => {
   idleTimer = setTimeout(async () => {
     try {
       await refreshAccessToken();
-      console.log('Token refreshed due to idle timeout');
-    } catch (error) {
-      console.error('Idle token refresh failed:', error);
+    } catch {
+      toast.error('Idle token refresh failed:');
     }
   }, IDLE_TIMEOUT);
 };
@@ -108,10 +106,8 @@ const cleanupIdleDetection = () => {
 // Request Interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    console.log(config, 'headers');
     const token = sessionStorage.getItem(AppEnums.ACCESS_TOKEN);
     if (token && config.headers) {
-      console.log(token, config, 'headers');
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

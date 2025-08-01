@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { AppEnums } from '@/constants/enums';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -12,12 +13,12 @@ import toast from 'react-hot-toast';
 export default function AddMemberDialog() {
   const [email, setEmail] = useState('');
   const [copied] = useState(false);
-  const [session] = useState(() => {
-    return JSON.parse(sessionStorage.getItem('subadmindetails') || '{}');
-  });
+  const [session] = useState(() =>
+    JSON.parse(sessionStorage.getItem(AppEnums.SUBADMIN_SESSION) || '{}')
+  );
 
   const handleClick = async () => {
-    const response = await addMember(session.subadmin_id, email);
+    const response = await addMember(email);
     if (!response) {
       toast.error('Failed to send invite');
     }

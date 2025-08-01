@@ -81,7 +81,7 @@ export const companyDetailsTrigger = async (
     formData.append('logo', logo);
   }
   const response = await axiosInstance.post(
-    `${baseUrl}/v1/deals/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
+    `${baseUrl}/v1/deal/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
     formData
   );
   toast.success(response.data.message);
@@ -113,7 +113,7 @@ export const customerSegmentTrigger = async (
   dealId?: string
 ) => {
   const response = await axiosInstance.post(
-    `${baseUrl}/v1/deals/web/customer-segment`,
+    `${baseUrl}/v1/deal/web/customer-segment`,
     {
       deal_id: dealId,
       company_stage: companyStage,
@@ -145,7 +145,7 @@ export const valuationTrigger = async (
     formData.append('investment_scheme_appendix', investmentSchemeAppendix);
   }
   const response = await axiosInstance.post(
-    `${baseUrl}/v1/deals/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
+    `${baseUrl}/v1/deal/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
     formData
   );
   toast.success(response.data.message);
@@ -162,7 +162,7 @@ export const securitiesTrigger = async (
 ) => {
   try {
     const response = await axiosInstance.post(
-      `${baseUrl}/v1/deals/web/securities`,
+      `${baseUrl}/v1/deal/web/securities`,
       {
         deal_id: dealId,
         instrument_type: instrumentType,
@@ -189,31 +189,13 @@ export const securitiesTrigger = async (
       const errorCode =
         axiosError.response?.data?.code || axiosError.code || 'UNKNOWN_ERROR';
 
-      // Log error for debugging (use your preferred logging service)
-      console.error(`Securities API error [${errorCode}]: ${errorMessage}`, {
-        dealId,
-        instrumentType,
-        status: axiosError.response?.status,
-        details: axiosError.response?.data?.details,
-      });
-
       // Throw a structured error for React Query or caller to handle
       throw new Error(
         `Securities API failed: ${errorMessage} (Code: ${errorCode})`
       );
     }
-
-    // Handle non-Axios errors (e.g., network issues, code errors)
-    console.error('Unexpected error in securitiesTrigger:', error);
     throw new Error('An unexpected error occurred while triggering securities');
   }
-};
-
-export const dealWithIdTrigger = async (dealId: string) => {
-  const response = await axiosInstance.get(
-    `${baseUrl}/v1/deals/mobile/${dealId}`
-  );
-  return response.data;
 };
 
 export const bulkOnboarding = async (
@@ -291,11 +273,8 @@ export const fetchDealStatistics = createAsyncThunk<
   { rejectValue: CommonError }
 >('deals/fetchDealStatistics', async (_, { rejectWithValue }) => {
   try {
-    const { subadmin_id } = JSON.parse(
-      sessionStorage.getItem('subadmindetails') as string
-    );
     const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/deals/statistics/${subadmin_id}`
+      `${baseUrl}/v1/subadmin/deals/statistics`
     );
     return response.data;
   } catch (error: unknown) {
@@ -349,11 +328,8 @@ export const fetchTransactionList = createAsyncThunk<
   { rejectValue: CommonError }
 >('members/fetchTransactionList', async (_, { rejectWithValue }) => {
   try {
-    const { subadmin_id } = JSON.parse(
-      sessionStorage.getItem('subadmindetails') as string
-    );
     const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/dashboard/transactions/${subadmin_id}`
+      `${baseUrl}/v1/subadmin/dashboard/transactions`
     );
     return response.data;
   } catch (error: unknown) {
@@ -378,11 +354,8 @@ export const fetchDashboardStatistics = createAsyncThunk<
   { rejectValue: CommonError }
 >('members/fetchDashboardStatistics', async (_, { rejectWithValue }) => {
   try {
-    const { subadmin_id } = JSON.parse(
-      sessionStorage.getItem('subadmindetails') as string
-    );
     const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/dashboard/statistics/${subadmin_id}`
+      `${baseUrl}/v1/subadmin/dashboard/statistics`
     );
     return response.data;
   } catch (error: unknown) {
@@ -410,14 +383,13 @@ export const appLogin = async (data: LoginFormData) => {
   }
 };
 
-export const addMember = async (subadmin_id: string, email: string) => {
+export const addMember = async (email: string) => {
   try {
     const response = await axiosInstance.post(
-      `${baseUrl}/v1/subadmin/members/addmember/${subadmin_id}/${email}`
+      `${baseUrl}/v1/subadmin/members/addmember/${email}`
     );
     return response.data;
   } catch (error) {
-    console.log('Error in apiAadhaarOtpSend:', error);
     if (isAxiosError(error)) {
       toast.error(`Error: ${error.message}`);
       throw new Error(error.message);
@@ -699,14 +671,16 @@ export const deleteInvestor = async (
 };
 
 export const getInvestors = async (
-  subadmin_id: string,
   pageNumber: number,
-  pageSize: number
+  pageSize: number,
+  subadmin_id?: string
 ): Promise<InvestorsListResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/investors/list/${subadmin_id}?page=${pageNumber}&per_page=${pageSize}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/list`);
+    url.searchParams.set('page', pageNumber.toString());
+    url.searchParams.set('per_page', pageSize.toString());
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -786,12 +760,12 @@ export const getInvestorDocuments = async (
 };
 
 export const getInvestorMetadata = async (
-  subadmin_id: string
+  subadmin_id?: string
 ): Promise<InvestorMetadataResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/investors/metadata/${subadmin_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/metadata`);
+    if (subadmin_id) url.pathname += `/${subadmin_id}`;
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {

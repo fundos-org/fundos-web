@@ -278,7 +278,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     <TableCell className="font-medium">
                       {investor.joined_on}
                     </TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium text-center">
                       {investor.capital_commitment}
                     </TableCell>
                     <TableCell className="font-medium">
