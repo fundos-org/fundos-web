@@ -35,7 +35,7 @@ import {
   UpdateInvestorResponse,
 } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios, { AxiosError, isAxiosError } from 'axios';
+import { AxiosError, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 import axiosInstance from './axiosConfig';
@@ -845,7 +845,7 @@ export const updateCommunicationEmails = async (
   try {
     const url = new URL(`${baseUrl}/v1/subadmin/communication/emails`);
     if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
-    const response = await axios.put(url.toString(), details);
+    const response = await axiosInstance.put(url.toString(), details);
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {

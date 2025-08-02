@@ -49,7 +49,7 @@ const InvestorInvestments: FC<{ investor_id: string }> = ({ investor_id }) => {
   };
   return (
     <>
-      <div className="flex flex-wrap gap-4 overflow-y-auto custom-scrollbar-table">
+      <div className="flex flex-wrap gap-4 overflow-y-auto custom-scrollbar-table w-full">
         {data?.deals?.map(deal => <CardDeal deal={deal} />)}
       </div>
       {(data?.deals?.length ?? 0) > 0 && (

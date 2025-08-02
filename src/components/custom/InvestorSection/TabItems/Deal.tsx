@@ -4,7 +4,7 @@ import { convertToCrores } from '@/lib/currencyToWords';
 import { InvestedDeal } from '@/constants/membersConstant';
 
 function getStatusColor(status: DealStatus): string {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case 'open':
       return 'bg-green-400';
     case 'closed':
@@ -16,7 +16,7 @@ function getStatusColor(status: DealStatus): string {
   }
 }
 function getStatusBgColor(status: DealStatus): string {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case 'open':
       return 'bg-[#00fb5745]';
     case 'closed':
@@ -31,6 +31,7 @@ function getStatusBgColor(status: DealStatus): string {
 function getIndustryType(industry: string | null): string {
   return (
     businessModels?.find(model => model.value === industry)?.name ||
+    industry ||
     'Unknown Industry'
   );
 }
@@ -38,6 +39,7 @@ function getIndustryType(industry: string | null): string {
 function getCompanyStage(companyStage: string | null): string {
   return (
     stages?.find(model => model.value === companyStage)?.title ||
+    companyStage ||
     'Unknown Stage'
   );
 }
@@ -62,15 +64,9 @@ export default function CardDeal({ deal }: { deal: InvestedDeal }) {
       <CardContent className="p-0 h-full flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
-            {logo_url ? (
-              <div className="w-20 h-20 mr-2 mt-2 overflow-hidden">
-                <img src={logo_url} alt="logo" width="50" height="50" />
-              </div>
-            ) : (
-              <div className="bg-violet-200 text-violet-800 px-3 py-4 rounded-xs font-medium text-sm">
-                🚀 Startup
-              </div>
-            )}
+            <div className="w-20 h-20 mr-2 mt-2 overflow-hidden">
+              <img src={logo_url} alt="logo" width="50" height="50" />
+            </div>
           </div>
 
           <div className="flex flex-col items-end">
@@ -80,9 +76,9 @@ export default function CardDeal({ deal }: { deal: InvestedDeal }) {
               <span
                 className={`mr-3 inline-block w-2 h-2 rounded-full ${getStatusColor(status)}`}
               />
-              {status === 'open' ? 'Active' : null}
-              {status === 'closed' ? 'Closed' : null}
-              {status === 'on_hold' ? 'On Hold' : null}
+              {status.toLowerCase() === 'open' ? 'Active' : null}
+              {status.toLowerCase() === 'closed' ? 'Closed' : null}
+              {status.toLowerCase() === 'on_hold' ? 'On Hold' : null}
             </div>
           </div>
         </div>
@@ -98,7 +94,7 @@ export default function CardDeal({ deal }: { deal: InvestedDeal }) {
                 : 'Default description for the deal. This is a placeholder text.'}
             </p>
 
-            <div className="flex gap-2 mt-3">
+            <div className="flex gap-2 mt-3 flex-wrap">
               <span className="bg-zinc-800 text-white px-3 py-1 text-sm border border-[#a1a1a140]">
                 {getIndustryType(industry)}
               </span>

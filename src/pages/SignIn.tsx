@@ -80,34 +80,34 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-cyan-200',
     };
   } else {
-    // return {
-    //   name: 'FundOS',
-    //   role: 'subadmin',
-    //   background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
-    //   cardBg: 'bg-zinc-900/40',
-    //   inputBg: 'bg-gray-800',
-    //   inputBorder: 'border-gray-600',
-    //   inputText: 'text-white',
-    //   focusRing: 'focus:ring-gray-500',
-    //   buttonBg: 'bg-white',
-    //   buttonHover: 'hover:bg-gray-200',
-    //   buttonText: 'text-black',
-    //   starColor: 'bg-white',
-    // };
     return {
-      name: 'Admin Portal',
-      role: 'admin',
-      background: 'bg-gradient-to-br from-blue-900 via-violet-700 to-white-900',
-      cardBg: 'bg-yellow-100',
-      inputBg: 'bg-light-800',
-      inputText: 'text-black',
-      inputBorder: 'border-cyan-500',
-      focusRing: 'focus:ring-cyan-400',
-      buttonBg: 'bg-gradient-to-r from-cyan-600 to-blue-600',
-      buttonHover: 'hover:from-cyan-500 hover:to-blue-500',
-      buttonText: 'text-white',
-      starColor: 'bg-cyan-200',
+      name: 'FundOS',
+      role: 'subadmin',
+      background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+      cardBg: 'bg-zinc-900/40',
+      inputBg: 'bg-gray-800',
+      inputBorder: 'border-gray-600',
+      inputText: 'text-white',
+      focusRing: 'focus:ring-gray-500',
+      buttonBg: 'bg-white',
+      buttonHover: 'hover:bg-gray-200',
+      buttonText: 'text-black',
+      starColor: 'bg-white',
     };
+    // return {
+    //   name: 'Admin Portal',
+    //   role: 'admin',
+    //   background: 'bg-gradient-to-br from-blue-900 via-violet-700 to-white-900',
+    //   cardBg: 'bg-yellow-100',
+    //   inputBg: 'bg-light-800',
+    //   inputText: 'text-black',
+    //   inputBorder: 'border-cyan-500',
+    //   focusRing: 'focus:ring-cyan-400',
+    //   buttonBg: 'bg-gradient-to-r from-cyan-600 to-blue-600',
+    //   buttonHover: 'hover:from-cyan-500 hover:to-blue-500',
+    //   buttonText: 'text-white',
+    //   starColor: 'bg-cyan-200',
+    // };
   }
 };
 
@@ -123,8 +123,8 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: 'admin',
-      password: 'admin123',
+      username: 'username',
+      password: 'password',
     },
   });
 

@@ -16,6 +16,10 @@ function Deals() {
   const [isSubadmin] = useState<boolean>(returnBool);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: stats } = useDealMetadata(isSubadmin);
+  const { subadmin_id, subadmin_name, success, ...rest } = stats || {};
+  void subadmin_id;
+  void success;
+  void subadmin_name;
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -38,7 +42,7 @@ function Deals() {
         </div>
         {isSubadmin && (
           <StatisticCardList
-            stats={stats as Record<string, string | number> | undefined}
+            stats={rest as Record<string, string | number> | undefined}
           />
         )}
         <Suspense fallback={<div>Loading...</div>}>

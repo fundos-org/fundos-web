@@ -88,7 +88,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     isLoading: isFetching,
     error,
     refetch,
-  } = useInvestors(pageNumber, pageSize, subAdminId);
+  } = useInvestors(pageNumber, pageSize, subAdminId, isSubadmin);
 
   useEffect(() => {
     // Suggestion: Only set subAdminId if it's undefined and subadminIds is available
