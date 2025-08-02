@@ -95,7 +95,7 @@ export const industryProblemTrigger = async (
   dealId?: string
 ) => {
   const response = await axiosInstance.post(
-    `${baseUrl}/v1/deals/web/industry-problem`,
+    `${baseUrl}/v1/deal/web/industry-problem`,
     {
       deal_id: dealId,
       industry: industry,
@@ -625,13 +625,14 @@ export const getDealDocuments = async (
 };
 
 export const deleteInvestor = async (
-  subadmin_id: string,
-  investor_id: string
+  investor_id: string,
+  subadmin_id?: string
 ): Promise<{ success: boolean; message: string }> => {
   try {
-    const response = await axiosInstance.delete(
-      `${baseUrl}/v1/subadmin/investors/delete/${subadmin_id}/${investor_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/delete`);
+    url.pathname += `/${investor_id}`;
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
+    const response = await axiosInstance.delete(url.toString());
     return response.data;
   } catch (error: unknown) {
     if (isAxiosError(error)) {
@@ -758,15 +759,15 @@ export const getInvestorMetadata = async (
 };
 
 export const updateInvestorDetails = async (
-  subadmin_id: string,
   investor_id: string,
-  details: UpdateInvestorRequest
+  details: UpdateInvestorRequest,
+  subadmin_id?: string
 ): Promise<UpdateInvestorResponse> => {
   try {
-    const response = await axiosInstance.put(
-      `${baseUrl}/v1/subadmin/investors/update/${subadmin_id}/${investor_id}`,
-      details
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/update`);
+    url.pathname += `/${investor_id}`;
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
+    const response = await axiosInstance.put(url.toString(), details);
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {

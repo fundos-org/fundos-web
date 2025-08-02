@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from 'react-query';
 
 interface OpenEditDialog {
   investor_id: string;
-  subadmin_id: string;
+  subadmin_id?: string;
 }
 
 export const useInvestorEditDetails = (params: OpenEditDialog | null) => {
@@ -15,7 +15,7 @@ export const useInvestorEditDetails = (params: OpenEditDialog | null) => {
   const subadmin_id = params?.subadmin_id;
   return useMutation({
     mutationFn: (details: UpdateInvestorRequest) =>
-      updateInvestorDetails(subadmin_id!, investor_id!, details),
+      updateInvestorDetails(investor_id!, details, subadmin_id!),
     onSuccess: response => {
       toast.success(
         response?.message && 'Investor Details updated successfully'

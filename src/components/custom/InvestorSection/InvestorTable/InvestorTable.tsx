@@ -54,7 +54,7 @@ const InvestorEditDialog = lazy(
 
 interface OpenEditDialog {
   investor_id: string;
-  subadmin_id: string;
+  subadmin_id?: string;
 }
 
 const sessCapture = () => {
@@ -234,10 +234,10 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                   Capital Commit(INR)
                 </TableHead>
                 <TableHead className="text-zinc-400">MCA</TableHead>
-                {subAdminId && (
+                {isSubadmin && (
                   <TableHead className="text-zinc-400">Edit</TableHead>
                 )}
-                {subAdminId && (
+                {isSubadmin && (
                   <TableHead className="text-zinc-400">Bin</TableHead>
                 )}
               </TableRow>
@@ -290,7 +290,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                         className="cursor-pointer"
                       />
                     </TableCell>
-                    {subAdminId && (
+                    {isSubadmin && (
                       <TableCell
                         className="font-medium"
                         onClick={() =>
@@ -303,7 +303,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                         <UserPen className="text-blue-400" />
                       </TableCell>
                     )}
-                    {subAdminId && (
+                    {isSubadmin && (
                       <TableCell
                         className="font-medium"
                         onClick={() =>

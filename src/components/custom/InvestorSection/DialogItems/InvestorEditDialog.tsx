@@ -22,7 +22,7 @@ const ProfessionalBackground = lazy(
 
 interface OpenEditDialog {
   investor_id: string;
-  subadmin_id: string;
+  subadmin_id?: string;
 }
 
 export default function InvestorEditDialog({

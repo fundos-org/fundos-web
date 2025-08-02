@@ -5,17 +5,19 @@ import { useMutation, useQueryClient } from 'react-query';
 
 interface OpenEditDialog {
   investor_id: string;
-  subadmin_id: string;
+  subadmin_id?: string;
 }
 
 export const useInvestorDelete = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ subadmin_id, investor_id }: OpenEditDialog) => {
-      return deleteInvestor(subadmin_id, investor_id);
+    mutationFn: ({ investor_id, subadmin_id }: OpenEditDialog) => {
+      return deleteInvestor(investor_id, subadmin_id);
     },
     onSuccess: (response, investor_id) => {
-      toast.success(response?.message && 'Investors deleted successfully');
+      if (response.success)
+        toast.success(response?.message || 'Investors deleted successfully');
+      else toast.error(response?.message || 'Failed to delete investor');
       queryClient.invalidateQueries({
         queryKey: [QueryEnums.Investors],
       });
