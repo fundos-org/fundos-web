@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { ResetPasswordFormData } from '@/constants/dealsConstant';
 import { ChevronLeft, Eye, EyeOff, X } from 'lucide-react';
 import { useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   resetPasswordAssign,
   resetPasswordRequest,
@@ -17,7 +18,7 @@ const ResetPassword: FC<{
   colorScheme: ColorScheme;
   backToSignIn: () => void;
 }> = ({ colorScheme, backToSignIn }) => {
-  const [step, setStep] = useState<'email' | 'otp' | 'password'>('email');
+  const [step, setStep] = useState<'email' | 'otp' | 'password'>('password');
   const [showPassword, setShowPassword] = useState(false);
   const [otpTimer, setOtpTimer] = useState(60);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -133,110 +134,126 @@ const ResetPassword: FC<{
         </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Email Field */}
-        {step === 'email' && (
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-400 text-sm uppercase">
-              Email
-            </Label>
-            <Input
-              id="email"
-              placeholder="Enter email"
-              className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing}`}
-              {...register('email', { required: 'Email is required' })}
-              autoFocus
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
+        {/* Animate step transitions */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Email Field */}
+            {step === 'email' && (
+              <div className="space-y-2">
+                <Label
+                  htmlFor="email"
+                  className="text-gray-400 text-sm uppercase"
+                >
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  placeholder="Enter email"
+                  className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing}`}
+                  {...register('email', { required: 'Email is required' })}
+                  autoFocus
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
+              </div>
             )}
-          </div>
-        )}
 
-        {/* OTP Field */}
-        {step === 'otp' && (
-          <div className="space-y-2">
-            <Label htmlFor="otp" className="text-gray-400 text-sm uppercase">
-              OTP
-            </Label>
-            <Input
-              minLength={6}
-              type="text"
-              maxLength={6}
-              id="otp"
-              placeholder="Enter OTP"
-              className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing}`}
-              {...register('otp', { required: 'OTP is required' })}
-              autoFocus
-            />
-            {errors.otp && (
-              <p className="text-red-500 text-sm">{errors.otp.message}</p>
+            {/* OTP Field */}
+            {step === 'otp' && (
+              <div className="space-y-2">
+                <Label
+                  htmlFor="otp"
+                  className="text-gray-400 text-sm uppercase"
+                >
+                  OTP
+                </Label>
+                <Input
+                  minLength={6}
+                  type="text"
+                  maxLength={6}
+                  id="otp"
+                  placeholder="Enter OTP"
+                  className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing}`}
+                  {...register('otp', { required: 'OTP is required' })}
+                  autoFocus
+                />
+                {errors.otp && (
+                  <p className="text-red-500 text-sm">{errors.otp.message}</p>
+                )}
+                <div className="flex items-center justify-end gap-2 mt-2">
+                  {otpResendDisabled && (
+                    <span className="text-gray-400 text-xs">
+                      Resend in {otpTimer}s
+                    </span>
+                  )}
+                  <Button
+                    type="button"
+                    onClick={handleResendOtp}
+                    disabled={otpResendDisabled}
+                    className="rounded-none px-3 py-1 text-xs border border-[#4a4a4a] cursor-pointer"
+                  >
+                    Resend OTP
+                  </Button>
+                </div>
+              </div>
             )}
-            <div className="flex items-center justify-end gap-2 mt-2">
-              {otpResendDisabled && (
-                <span className="text-gray-400 text-xs">
-                  Resend in {otpTimer}s
-                </span>
-              )}
-              <Button
-                type="button"
-                onClick={handleResendOtp}
-                disabled={otpResendDisabled}
-                className="rounded-none px-3 py-1 text-xs border border-[#4a4a4a] cursor-pointer"
-              >
-                Resend OTP
-              </Button>
-            </div>
-          </div>
-        )}
 
-        {/* Password Fields */}
-        {step === 'password' && (
-          <div className="space-y-2">
-            <Label
-              htmlFor="password"
-              className="text-gray-400 text-sm uppercase"
-            >
-              Password
-            </Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter password"
-                className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing} pr-10`}
-                {...register('password', {
-                  required: 'Password is required',
-                })}
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
-                tabIndex={-1}
-              >
-                {!showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-            <div className="relative">
-              <Input
-                id="confirmPassword"
-                type={'password'}
-                placeholder="Confirm password"
-                className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing} pr-10`}
-                {...register('confirmPassword', {
-                  required: 'Confirm Password is required',
-                })}
-              />
-            </div>
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
-              </p>
+            {/* Password Fields */}
+            {step === 'password' && (
+              <div className="space-y-2">
+                <Label
+                  htmlFor="password"
+                  className="text-gray-400 text-sm uppercase"
+                >
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter password"
+                    className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing} pr-10`}
+                    {...register('password', {
+                      required: 'Password is required',
+                    })}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+                    tabIndex={-1}
+                  >
+                    {!showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={'password'}
+                    placeholder="Confirm password"
+                    className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing} pr-10`}
+                    {...register('confirmPassword', {
+                      required: 'Confirm Password is required',
+                    })}
+                  />
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-
+          </motion.div>
+        </AnimatePresence>
         {/* Submit Button */}
         <Button
           type="submit"
