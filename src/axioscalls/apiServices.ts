@@ -291,34 +291,22 @@ export const fetchDashboardStatistics =
     }
   };
 
-export const fetchMembersStatistics = createAsyncThunk<
-  MemberApiResponse,
-  void,
-  { rejectValue: CommonError }
->('members/fetchMembersStatistics', async (_, { rejectWithValue }) => {
+export const fetchMembersStatistics = async (
+  subadmin_id?: string
+): Promise<MemberApiResponse> => {
   try {
-    const { subadmin_id } = JSON.parse(
-      sessionStorage.getItem('subadmindetails') as string
-    );
     const response = await axiosInstance.get(
       `${baseUrl}/v1/subadmin/members/statistics/${subadmin_id}`
     );
     return response.data;
   } catch (error: unknown) {
-    // Handle axios or network errors
-    if (isAxiosError(error) && error.response?.data) {
-      const errorData = error.response.data as CommonError;
-      if (errorData.isSuccess !== undefined && errorData.message) {
-        return rejectWithValue(errorData);
-      }
+    if (isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
     }
-    // Fallback for unexpected errors
-    return rejectWithValue({
-      isSuccess: false,
-      message: 'Failed to fetch deals',
-    });
   }
-});
+};
 
 export const fetchTransactionList = createAsyncThunk<
   MemberApiResponse,

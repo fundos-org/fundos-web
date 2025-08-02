@@ -1,14 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import adminFeature from '../slices/adminSlice';
-import globalFeature from '../slices/globalSlice';
-import memberFeature from '../slices/memberSlice';
 
 const store = configureStore({
-  reducer: {
-    global: globalFeature,
-    admin: adminFeature,
-    member: memberFeature,
-  },
+  reducer: {}, // removing redux in future, so no reducers are defined
+  //wrapper around main is also removed
 });
 
 export default store;
