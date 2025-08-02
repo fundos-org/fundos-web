@@ -18,25 +18,19 @@ import {
 } from '@/components/ui/select';
 import { RefreshCw } from 'lucide-react';
 import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
-import { AppEnums } from '@/constants/enums';
+import isThisSubadmin from '@/lib/isSubadmin';
 
 export type EmailTemplateKeys =
   | 'welcome_mail'
   | 'onboarding_mail'
   | 'consent_mail';
 
-const returnBool = () => {
-  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  const raw = subadminDetailsRaw ? JSON.parse(subadminDetailsRaw) : {};
-  return raw?.role === 'subadmin';
-};
-
 const CommunicationEmails: React.FC = () => {
   const { data: subadminIds, refetch: refetchIds } = useSubadminIds(false);
   const [subadminId, setSubAdminId] = useState<string | undefined>(
     subadminIds?.subadmins?.[0].subadmin_id
   );
-  const [isSubadmin] = useState(() => returnBool());
+  const [isSubadmin] = useState(isThisSubadmin);
   const {
     data: emails,
     isLoading,

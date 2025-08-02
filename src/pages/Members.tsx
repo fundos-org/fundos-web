@@ -4,21 +4,15 @@ import StatisticCardList from '@/components/custom/StatisticCardList';
 import { DialogTrigger, Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useInvestorsMetadata } from '@/hooks/customhooks/MembersHooks/useInvestorsMetadata';
+import isThisSubadmin from '@/lib/isSubadmin';
 import { lazy, Suspense, useState } from 'react';
-import { AppEnums } from '@/constants/enums';
 const InvestorTable = lazy(
   () =>
     import('@/components/custom/InvestorSection/InvestorTable/InvestorTable')
 );
 
-const returnBool = () => {
-  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  const raw = subadminDetailsRaw ? JSON.parse(subadminDetailsRaw) : {};
-  return raw?.role === 'subadmin';
-};
-
 export default function Members() {
-  const [isSubadmin] = useState<boolean>(returnBool);
+  const [isSubadmin] = useState<boolean>(isThisSubadmin);
   const { data: stats } = useInvestorsMetadata(isSubadmin);
 
   return (

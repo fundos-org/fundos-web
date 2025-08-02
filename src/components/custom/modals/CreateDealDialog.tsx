@@ -27,7 +27,7 @@ import { useLoader } from '@/hooks/useLoader';
 import StepperDemo from './StepperDemo';
 import { invalidateDealsTableQuery } from '@/hooks/customhooks/DealsHooks/useDealTable';
 import { useDealDraftId } from '@/hooks/customhooks/DealsHooks/useDealDraftId';
-import { AppEnums } from '@/constants/enums';
+import isThisSubadmin from '@/lib/isSubadmin';
 
 export interface FormData {
   companyName: string;
@@ -53,18 +53,12 @@ export interface FormData {
   investmentSchemeAppendixFile?: File | null;
 }
 
-const returnBool = () => {
-  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  const raw = subadminDetailsRaw ? JSON.parse(subadminDetailsRaw) : {};
-  return raw?.role === 'subadmin';
-};
-
 export default function CreateDealDialog({
   setIsDialogOpen,
 }: {
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [isSubadmin] = useState<boolean>(returnBool);
+  const [isSubadmin] = useState<boolean>(isThisSubadmin);
   const [activeStep, setActiveStep] = useState(0);
   const { showLoader, hideLoader } = useLoader();
   const [submittedData, setSubmittedData] = useState<
