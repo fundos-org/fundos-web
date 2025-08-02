@@ -308,6 +308,75 @@ export const fetchMembersStatistics = async (
   }
 };
 
+export const resetPasswordRequest = async (
+  email: string
+): Promise<{ message: string; success: boolean }> => {
+  try {
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/password/reset/request?email=${email}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const resetPasswordVerify = async (
+  email: string,
+  otp: string
+): Promise<{
+  message: string;
+  success: boolean;
+  tokens: {
+    access_token: string;
+    refresh_token: string;
+    token_type: string;
+  };
+}> => {
+  try {
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/password/reset/verify?email=${email}&otp_code=${otp}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const resetPasswordAssign = async (
+  password: string,
+  access_token: string
+): Promise<{ message: string; success: boolean }> => {
+  try {
+    const url = new URL(`${baseUrl}/v1/subadmin/password/reset`);
+    url.searchParams.set('password', password);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    };
+
+    const response = await axiosInstance.post(url.toString(), {}, config);
+
+    return response.data;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
 export const fetchTransactionList = createAsyncThunk<
   MemberApiResponse,
   void,

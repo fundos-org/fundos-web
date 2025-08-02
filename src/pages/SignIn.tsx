@@ -12,8 +12,9 @@ import { useAppLogin } from '@/hooks/useAppLogin';
 import { cleanupAxios } from '@/axioscalls/axiosConfig';
 import toast from 'react-hot-toast';
 import Stars from '@/components/custom/Stars';
+import ResetPassword from '@/components/custom/ResetPassword';
 
-type ColorScheme = {
+export type ColorScheme = {
   name: string;
   role: 'admin' | 'subadmin' | 'kyc';
   background: string;
@@ -115,6 +116,7 @@ export default function SignIn() {
   const [role, setRole] = useState<'admin' | 'subadmin' | 'kyc'>();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
   const colorScheme = getColorScheme();
   const { mutateAsync: loginUser } = useAppLogin();
   const {
@@ -123,8 +125,8 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      username: 'username',
-      password: 'password',
+      username: '',
+      password: '',
     },
   });
 
@@ -204,73 +206,91 @@ export default function SignIn() {
         </h1>
 
         {/* Login Form */}
-        <div
-          className={`${colorScheme.cardBg} backdrop-blur-lg p-8 rounded-none shadow-lg w-[40rem] max-w-md border-[1px] border-gray-700`}
-        >
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Username Field */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="username"
-                className="text-gray-400 text-sm uppercase"
-              >
-                Username
-              </Label>
-              <Input
-                id="username"
-                placeholder="Enter username"
-                className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing}`}
-                {...register('username', { required: 'Username is required' })}
-              />
-              {errors.username && (
-                <p className="text-red-500 text-sm">
-                  {errors.username.message}
-                </p>
-              )}
-            </div>
-
-            {/* Password Field */}
-            <div className="space-y-2 relative">
-              <Label
-                htmlFor="password"
-                className="text-gray-400 text-sm uppercase"
-              >
-                Password
-              </Label>
-              <div className="relative">
+        {!resetPassword ? (
+          <div
+            className={`${colorScheme.cardBg} backdrop-blur-lg p-8 rounded-none shadow-lg w-[40rem] max-w-md border-[1px] border-gray-700`}
+          >
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Username Field */}
+              <div className="space-y-2">
+                <Label
+                  htmlFor="username"
+                  className="text-gray-400 text-sm uppercase"
+                >
+                  Username
+                </Label>
                 <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter password"
-                  className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing} pr-10`}
-                  {...register('password', {
-                    required: 'Password is required',
+                  id="username"
+                  placeholder="Enter username"
+                  className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing}`}
+                  {...register('username', {
+                    required: 'Username is required',
                   })}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
-                >
-                  {!showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
+                {errors.username && (
+                  <p className="text-red-500 text-sm">
+                    {errors.username.message}
+                  </p>
+                )}
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
 
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              className={`w-full mt-4 ${colorScheme.buttonBg} rounded-none ${colorScheme.buttonText || 'text-white'} ${colorScheme.buttonHover} font-semibold py-3`}
-            >
-              Login
-            </Button>
-          </form>
-        </div>
+              {/* Password Field */}
+              <div className="space-y-2 relative">
+                <Label
+                  htmlFor="password"
+                  className="text-gray-400 text-sm uppercase"
+                >
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter password"
+                    className={`${colorScheme.inputBg} ${colorScheme.inputText} rounded-none ${colorScheme.inputBorder} placeholder-gray-500 focus:ring-2 ${colorScheme.focusRing} pr-10`}
+                    {...register('password', {
+                      required: 'Password is required',
+                    })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+                  >
+                    {!showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <div
+                className="text-gray-400 cursor-pointer text-start"
+                onClick={() => setResetPassword(true)}
+              >
+                Forget Password?{' '}
+                <span className="text-blue-500">
+                  Reset password using email!
+                </span>
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className={`w-full ${colorScheme.buttonBg} rounded-none ${colorScheme.buttonText || 'text-white'} ${colorScheme.buttonHover} font-semibold py-3`}
+              >
+                Login
+              </Button>
+            </form>
+          </div>
+        ) : (
+          <ResetPassword
+            colorScheme={colorScheme}
+            backToSignIn={() => setResetPassword(false)}
+          />
+        )}
       </div>
     </div>
   );

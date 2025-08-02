@@ -221,6 +221,13 @@ export interface LoginFormData {
   role: 'ADMIN' | 'SUBADMIN' | 'INVESTOR' | 'KYC';
 }
 
+export interface ResetPasswordFormData {
+  email: string;
+  otp: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export type DealStatus = 'open' | 'closed' | 'on_hold';
 export interface DealCard {
   deal_id: string;
