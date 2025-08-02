@@ -260,38 +260,20 @@ export const createCredentials = async (
   return response.data;
 };
 
-export const getSubAdminById = async (subadmin_id: string) => {
-  const response = await axiosInstance.get(
-    `${baseUrl}/v1/admin/subadmins/${subadmin_id}`
-  );
-  return response.data;
-};
-
-export const fetchDealStatistics = createAsyncThunk<
-  StatisticsResponse,
-  void,
-  { rejectValue: CommonError }
->('deals/fetchDealStatistics', async (_, { rejectWithValue }) => {
+export const fetchDealStatistics = async (): Promise<StatisticsResponse> => {
   try {
     const response = await axiosInstance.get(
       `${baseUrl}/v1/subadmin/deals/statistics`
     );
     return response.data;
   } catch (error: unknown) {
-    // Handle axios or network errors
-    if (isAxiosError(error) && error.response?.data) {
-      const errorData = error.response.data as CommonError;
-      if (errorData.isSuccess !== undefined && errorData.message) {
-        return rejectWithValue(errorData);
-      }
+    if (isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('An unexpected error occurred');
     }
-    // Fallback for unexpected errors
-    return rejectWithValue({
-      isSuccess: false,
-      message: 'Failed to fetch deals',
-    });
   }
-});
+};
 
 export const fetchMembersStatistics = createAsyncThunk<
   MemberApiResponse,
@@ -736,7 +718,7 @@ export const getInvestorTransactions = async (
   investor_id: string
 ): Promise<InvestorTransactionsResponse> => {
   try {
-    const url = new URL(`${baseUrl}/v1/subadmin/investors/transactions_info`);
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/transactions`);
     url.searchParams.set('page', pageNumber.toString());
     url.searchParams.set('per_page', pageSize.toString());
     url.searchParams.set('investor_id', investor_id);

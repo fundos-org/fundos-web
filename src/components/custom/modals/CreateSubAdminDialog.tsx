@@ -173,7 +173,7 @@ function CreateSubAdminDialog() {
           Create a Sub-Admin
           <DialogClose
             asChild
-            className="border-[1px] border-[#383739] bg-[#242325]"
+            className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
           >
             <span className="p-1" onClick={handleClose}>
               <X />

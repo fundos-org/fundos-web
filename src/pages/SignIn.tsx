@@ -11,6 +11,7 @@ import { AppEnums } from '@/constants/enums';
 import { useAppLogin } from '@/hooks/useAppLogin';
 import { cleanupAxios } from '@/axioscalls/axiosConfig';
 import toast from 'react-hot-toast';
+import Stars from '@/components/custom/Stars';
 
 type ColorScheme = {
   name: string;
@@ -194,48 +195,10 @@ export default function SignIn() {
     <div
       className={`min-h-screen flex items-center justify-center ${colorScheme.background} relative overflow-hidden`}
     >
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full top-10 left-20 animate-twinkle`}
-        />
-        <div
-          className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full top-20 right-30 animate-twinkle delay-1000`}
-        />
-        <div
-          className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full bottom-40 left-40 animate-twinkle delay-500`}
-        />
-        <div
-          className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full bottom-20 right-20 animate-twinkle delay-1500`}
-        />
-        <div
-          className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full top-40 right-60 animate-twinkle delay-2000`}
-        />
-        <div
-          className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full top-16 left-60 animate-twinkle delay-300`}
-        />
-        <div
-          className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full bottom-60 right-40 animate-twinkle delay-1200`}
-        />
-        <div
-          className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full top-80 left-10 animate-twinkle delay-1800`}
-        />
-        <div
-          className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full bottom-10 left-80 animate-twinkle delay-600`}
-        />
-        <div
-          className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full top-50 right-80 animate-twinkle delay-900`}
-        />
-        <div
-          className={`absolute w-2 h-2 ${colorScheme.starColor} rounded-full bottom-30 left-30 animate-twinkle delay-2500`}
-        />
-        <div
-          className={`absolute w-1 h-1 ${colorScheme.starColor} rounded-full top-30 right-10 animate-twinkle delay-400`}
-        />
-      </div>
+      <Stars starColor={colorScheme.starColor} />
 
       {/* Main content */}
       <div className="relative z-10 text-center">
-        {/* Logo - shows domain-specific name */}
         <h1 className="text-5xl font-bold text-white mb-10">
           {colorScheme.name}
         </h1>
@@ -244,9 +207,6 @@ export default function SignIn() {
         <div
           className={`${colorScheme.cardBg} backdrop-blur-lg p-8 rounded-none shadow-lg w-[40rem] max-w-md border-[1px] border-gray-700`}
         >
-          {/* <h2 className="text-2xl font-semibold text-white mb-2">Welcome!</h2> */}
-          {/* <p className="text-gray-400 mb-6">Sign in to your account</p> */}
-
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Username Field */}
             <div className="space-y-2">

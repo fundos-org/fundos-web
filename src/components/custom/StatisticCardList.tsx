@@ -1,8 +1,6 @@
 import { Card, CardContent } from '../ui/card';
 
-const formatKey = (key: string) => {
-  return key.replace(/_/g, ' ').trim();
-};
+const formatKey = (key: string) => key.replace(/_/g, ' ').trim();
 
 function StatisticCardList({
   stats,

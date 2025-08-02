@@ -1,32 +1,17 @@
-import { getSubAdminById, shareDetails } from '@/axioscalls/apiServices';
+import { shareDetails } from '@/axioscalls/apiServices';
 import { Button } from '@/components/ui/button';
-import { useCallback, useEffect, useState } from 'react';
+import { useSubadminDetails } from '@/hooks/customhooks/SubAdminsHooks/useSubadminDetails';
 import toast from 'react-hot-toast';
 
-interface Response {
-  name: string;
-  username: string;
-  password: string;
-  invite_code: string;
-}
+// interface Response {
+//   name: string;
+//   username: string;
+//   password: string;
+//   invite_code: string;
+// }
 
 const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
-  const [data, setData] = useState<Response>();
-
-  const callGetSubAdminById = useCallback(async () => {
-    try {
-      const response = await getSubAdminById(subAdminId);
-      setData(response);
-    } catch (error) {
-      console.error('Error fetching sub-admin data:', error);
-    }
-  }, [subAdminId]);
-
-  useEffect(() => {
-    if (!data) {
-      callGetSubAdminById();
-    }
-  }, [callGetSubAdminById, data]);
+  const { data } = useSubadminDetails(subAdminId);
 
   const handleClick = async () => {
     const response = await shareDetails(subAdminId);

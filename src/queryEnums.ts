@@ -19,6 +19,7 @@ export enum QueryEnums {
   DealTransactions = 'dealTransactions',
   DealDocuments = 'dealDocuments',
   DealDraftId = 'dealDraftId',
+  DealMetadata = 'dealMetadata',
 
   CommunicationEmails = 'communicationEmails',
 }

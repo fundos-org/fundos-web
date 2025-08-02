@@ -1,10 +1,8 @@
-import { useAppStateEffect } from '@/app/hooks';
-import { RootState } from '@/app/store';
-import { fetchDealStatistics } from '@/axioscalls/apiServices';
 import CreateDealDialog from '@/components/custom/modals/CreateDealDialog';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { AppEnums } from '@/constants/enums';
+import { useDealMetadata } from '@/hooks/customhooks/DealsHooks/useDealMetadata';
 import { lazy, useState, Suspense } from 'react';
 const ShowDeals = lazy(
   () => import('@/components/custom/DealSection/DealTable/ShowDeals')
@@ -17,10 +15,7 @@ const returnBool = () => {
 function Deals() {
   const [isSubadmin] = useState<boolean>(returnBool);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const stats = useAppStateEffect(
-    (state: RootState) => state.deals.statistics,
-    fetchDealStatistics
-  );
+  const { data: stats } = useDealMetadata(isSubadmin);
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

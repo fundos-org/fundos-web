@@ -3,8 +3,9 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
-export const useDealDraftId = () => {
+export const useDealDraftId = (isSubadmin: boolean | undefined) => {
   return useQuery([QueryEnums.DealDraftId], () => createDraft(), {
+    enabled: isSubadmin,
     refetchOnWindowFocus: false,
     retry: 2,
     // keepPreviousData: true, // useful for pagination
