@@ -74,7 +74,10 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     <>
       {!isSubadmin && (
         <div className="flex mt-5">
-          <Select onValueChange={handleSubAdminIdChange} value={subadmin_id}>
+          <Select
+            onValueChange={handleSubAdminIdChange}
+            value={subadmin_id ?? ''}
+          >
             <SelectTrigger className="rounded-none w-[444px] cursor-pointer border border-[#383739] bg-black/40">
               <SelectValue placeholder="Select Sub-Admin" />
             </SelectTrigger>

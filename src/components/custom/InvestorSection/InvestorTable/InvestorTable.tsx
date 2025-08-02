@@ -184,7 +184,10 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
           </div>
           {!isSubadmin && (
             <div className="flex">
-              <Select onValueChange={handleSubAdminIdChange} value={subAdminId}>
+              <Select
+                onValueChange={handleSubAdminIdChange}
+                value={subAdminId ?? ''}
+              >
                 <SelectTrigger className="rounded-none w-[200px] cursor-pointer border border-[#383739] bg-black/40">
                   <SelectValue placeholder="Select Sub-Admin" />
                 </SelectTrigger>

@@ -1,7 +1,7 @@
 import { Card, CardContent } from '../ui/card';
 
 const formatKey = (key: string) => {
-  return key.replace(/([A-Z])/g, ' $1').trim();
+  return key.replace(/_/g, ' ').trim();
 };
 
 function StatisticCardList({
@@ -18,7 +18,7 @@ function StatisticCardList({
             className=" bg-[#1f1f1f] text-white rounded-none border-0"
           >
             <CardContent className="px-6">
-              <p className="uppercase text-sm text-gray-400 tracking-wide">
+              <p className="capitalize text-sm text-gray-400 tracking-wide">
                 {formatKey(key)}
               </p>
               <p className="text-4xl font-bold mt-2">{value}</p>

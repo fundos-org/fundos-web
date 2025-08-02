@@ -74,7 +74,7 @@ const CommunicationEmails: React.FC = () => {
   return (
     <>
       <div className="flex mb-5">
-        <Select onValueChange={handleSubAdminIdChange} value={subadminId}>
+        <Select onValueChange={handleSubAdminIdChange} value={subadminId ?? ''}>
           <SelectTrigger className="rounded-none w-[250px] cursor-pointer border border-[#383739] bg-black/40">
             <SelectValue placeholder="Select Sub-Admin" />
           </SelectTrigger>
