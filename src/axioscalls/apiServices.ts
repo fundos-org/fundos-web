@@ -275,6 +275,22 @@ export const fetchDealStatistics = async (): Promise<StatisticsResponse> => {
   }
 };
 
+export const fetchDashboardStatistics =
+  async (): Promise<DashboardStatisticsResponse> => {
+    try {
+      const response = await axiosInstance.get(
+        `${baseUrl}/v1/subadmin/dashboard/statistics`
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('An unexpected error occurred');
+      }
+    }
+  };
+
 export const fetchMembersStatistics = createAsyncThunk<
   MemberApiResponse,
   void,
@@ -312,32 +328,6 @@ export const fetchTransactionList = createAsyncThunk<
   try {
     const response = await axiosInstance.get(
       `${baseUrl}/v1/subadmin/dashboard/transactions`
-    );
-    return response.data;
-  } catch (error: unknown) {
-    // Handle axios or network errors
-    if (isAxiosError(error) && error.response?.data) {
-      const errorData = error.response.data as CommonError;
-      if (errorData.isSuccess !== undefined && errorData.message) {
-        return rejectWithValue(errorData);
-      }
-    }
-    // Fallback for unexpected errors
-    return rejectWithValue({
-      isSuccess: false,
-      message: 'Failed to fetch deals',
-    });
-  }
-});
-
-export const fetchDashboardStatistics = createAsyncThunk<
-  DashboardStatisticsResponse,
-  void,
-  { rejectValue: CommonError }
->('members/fetchDashboardStatistics', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/dashboard/statistics`
     );
     return response.data;
   } catch (error: unknown) {

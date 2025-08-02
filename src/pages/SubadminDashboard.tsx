@@ -1,21 +1,18 @@
-import { useAppStateEffect } from '@/app/hooks';
-import { RootState } from '@/app/store';
-import { fetchDashboardStatistics } from '@/axioscalls/apiServices';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import TransactionTable from '@/components/custom/tables/TransactionDetailsTable';
+import { useSubadminDashboardMetadata } from '@/hooks/customhooks/SubAdminsHooks/useSubadminDashboardMetadata';
 import { useState } from 'react';
 
 const SubadminDashboard = () => {
-  const stats = useAppStateEffect(
-    (state: RootState) => state.dashboard.statistics,
-    fetchDashboardStatistics
-  );
+  const { data: stats } = useSubadminDashboardMetadata();
   const [name] = useState(
     JSON.parse(sessionStorage.getItem('subadmindetails') || '{}').name || ''
   );
-  if (!name) {
-    return <div>Please log in</div>;
-  }
+
+  const { subadmin_id, subadmin_name, success, ...rest } = stats || {};
+  void subadmin_id;
+  void success;
+  void subadmin_name;
 
   return (
     <>
@@ -26,7 +23,7 @@ const SubadminDashboard = () => {
         </small>
       </div>
       <StatisticCardList
-        stats={stats as Record<string, string | number> | undefined}
+        stats={rest as Record<string, string | number> | undefined}
       />
       <div className="w-full flex gap-5 mb-5">
         {/* <OverViewChart /> */}

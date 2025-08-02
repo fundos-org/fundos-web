@@ -7,6 +7,8 @@ function StatisticCardList({
 }: {
   stats?: Record<string, string | number>;
 }) {
+  console.log(stats);
+
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {Object.entries(stats ?? { investors: '0', amount: '0' }).map(

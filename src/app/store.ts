@@ -2,14 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import adminFeature from '../slices/adminSlice';
 import globalFeature from '../slices/globalSlice';
 import memberFeature from '../slices/memberSlice';
-import dashboardFeature from '../slices/dashboardSlice';
 
 const store = configureStore({
   reducer: {
     global: globalFeature,
     admin: adminFeature,
     member: memberFeature,
-    dashboard: dashboardFeature,
   },
 });
 
