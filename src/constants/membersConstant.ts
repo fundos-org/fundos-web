@@ -144,6 +144,7 @@ export interface InvestedDeal {
 export interface InvestmentDealsResponse {
   investor_id: string;
   deals: InvestedDeal[];
+  pagination: Pagination;
   success: boolean;
 }
 
@@ -159,6 +160,7 @@ export interface Transaction {
 export interface InvestorTransactionsResponse {
   investor_id: string;
   transactions: Transaction[];
+  pagination: Pagination;
   success: boolean;
 }
 

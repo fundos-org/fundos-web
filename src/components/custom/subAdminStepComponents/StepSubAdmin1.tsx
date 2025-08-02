@@ -84,6 +84,8 @@ const StepSubAdmin1: React.FC = () => {
           Sub Admin Contact<span className="text-red-400">*</span>
         </Label>
         <Input
+          minLength={10}
+          maxLength={10}
           id="subadmincontact"
           {...register('subadmincontact', {
             required: 'Contact is required',

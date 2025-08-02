@@ -3,10 +3,14 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
-export const useInvestorTransactions = (investor_id: string) => {
+export const useInvestorTransactions = (
+  pageNumber: number,
+  pageSize: number,
+  investor_id: string
+) => {
   return useQuery(
-    [QueryEnums.InvestorTransactions, investor_id],
-    () => getInvestorTransactions(investor_id),
+    [QueryEnums.InvestorTransactions, investor_id, pageNumber, pageSize],
+    () => getInvestorTransactions(pageNumber, pageSize, investor_id),
     {
       enabled: !!investor_id,
       refetchOnWindowFocus: false,

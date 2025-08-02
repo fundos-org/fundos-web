@@ -57,22 +57,22 @@ export default function InvestorEditDialog({
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
+        <DialogHeader>
+          <DialogTitle className="text-3xl text-white flex items-center justify-between">
+            Edit Member
+            <DialogClose
+              asChild
+              className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+            >
+              <span className="p-1">
+                <X />
+              </span>
+            </DialogClose>
+          </DialogTitle>
+          <hr className="border-[#232A36] my-2" />
+        </DialogHeader>
         {!error ? (
           <>
-            <DialogHeader>
-              <DialogTitle className="text-3xl text-white flex items-center justify-between">
-                Edit Member
-                <DialogClose
-                  asChild
-                  className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
-                >
-                  <span className="p-1">
-                    <X />
-                  </span>
-                </DialogClose>
-              </DialogTitle>
-              <hr className="border-[#232A36] my-2" />
-            </DialogHeader>
             <div className="w-full flex">
               <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
               <div className="border-r border-gray-800"></div>

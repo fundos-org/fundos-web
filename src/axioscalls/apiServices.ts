@@ -35,7 +35,7 @@ import {
   UpdateInvestorResponse,
 } from '@/constants/membersConstant';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosError, isAxiosError } from 'axios';
+import axios, { AxiosError, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 import axiosInstance from './axiosConfig';
@@ -675,6 +675,7 @@ export const getInvestors = async (
   pageSize: number,
   subadmin_id?: string
 ): Promise<InvestorsListResponse> => {
+  console.log(subadmin_id, 'subadmin_id in getInvestors');
   try {
     const url = new URL(`${baseUrl}/v1/subadmin/investors/list`);
     url.searchParams.set('page', pageNumber.toString());
@@ -695,9 +696,9 @@ export const getInvestorDetails = async (
   investor_id: string
 ): Promise<InvestorDetailsResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/investors/abount_info/${investor_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/about_info`);
+    url.searchParams.set('investor_id', investor_id);
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -709,12 +710,16 @@ export const getInvestorDetails = async (
 };
 
 export const getInvestorDealInvestments = async (
+  pageNumber: number,
+  pageSize: number,
   investor_id: string
 ): Promise<InvestmentDealsResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/investors/investments_info/${investor_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/investments_info`);
+    url.searchParams.set('page', pageNumber.toString());
+    url.searchParams.set('per_page', pageSize.toString());
+    url.searchParams.set('investor_id', investor_id);
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -726,12 +731,16 @@ export const getInvestorDealInvestments = async (
 };
 
 export const getInvestorTransactions = async (
+  pageNumber: number,
+  pageSize: number,
   investor_id: string
 ): Promise<InvestorTransactionsResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/investors/transactions/${investor_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/transactions_info`);
+    url.searchParams.set('page', pageNumber.toString());
+    url.searchParams.set('per_page', pageSize.toString());
+    url.searchParams.set('investor_id', investor_id);
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -746,9 +755,9 @@ export const getInvestorDocuments = async (
   investor_id: string
 ): Promise<InvestorDocumentsResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/investors/documents_info/${investor_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/investors/documents_info`);
+    url.searchParams.set('investor_id', investor_id);
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -800,7 +809,7 @@ export const getAdminDashboardStats =
   async (): Promise<AdminDashboardStats> => {
     try {
       const response = await axiosInstance.get(
-        `${baseUrl}/testing/v1/admin/dashboard/metadata`
+        `${baseUrl}/v1/admin/dashboard/metadata`
       );
       return response.data;
     } catch (error) {
@@ -818,7 +827,7 @@ export const getAdminOverview = async (
 ): Promise<AdminsOverviewListResponse> => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/testing/v1/admin/overview?page=${pageNumber}&per_page=${pageSize}`
+      `${baseUrl}/v1/admin/overview?page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {
@@ -831,12 +840,12 @@ export const getAdminOverview = async (
 };
 
 export const getCommunicationEmails = async (
-  subadmin_id: string
+  subadmin_id?: string
 ): Promise<EmailTemplatesResponse> => {
   try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/communication/emails/${subadmin_id}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/communication/emails`);
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -848,14 +857,13 @@ export const getCommunicationEmails = async (
 };
 
 export const updateCommunicationEmails = async (
-  subadmin_id: string,
-  details: Partial<Omit<EmailTemplatesResponse, 'subadmin_id' | 'success'>>
+  details: Partial<Omit<EmailTemplatesResponse, 'subadmin_id' | 'success'>>,
+  subadmin_id?: string
 ): Promise<{ subadmin_id: string; message: string; success: boolean }> => {
   try {
-    const response = await axiosInstance.put(
-      `${baseUrl}/v1/subadmin/communication/emails/${subadmin_id}`,
-      details
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/communication/emails`);
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
+    const response = await axios.put(url.toString(), details);
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {

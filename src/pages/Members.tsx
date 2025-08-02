@@ -18,8 +18,8 @@ const returnBool = () => {
 };
 
 export default function Members() {
-  const { data: stats } = useInvestorsMetadata();
   const [isSubadmin] = useState<boolean>(returnBool);
+  const { data: stats } = useInvestorsMetadata(isSubadmin);
 
   return (
     <Dialog>

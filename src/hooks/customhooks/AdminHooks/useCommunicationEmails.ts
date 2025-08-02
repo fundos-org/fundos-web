@@ -3,12 +3,15 @@ import { QueryEnums } from '@/queryEnums';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
-export const useCommunicationEmails = (subadmin_id?: string) => {
+export const useCommunicationEmails = (
+  subadmin_id?: string,
+  isSubadmin?: boolean
+) => {
   return useQuery(
     [QueryEnums.CommunicationEmails, subadmin_id],
     () => getCommunicationEmails(subadmin_id!),
     {
-      enabled: !!subadmin_id,
+      enabled: !!subadmin_id || isSubadmin,
       refetchOnWindowFocus: false,
       retry: 2,
       keepPreviousData: true, // useful for pagination

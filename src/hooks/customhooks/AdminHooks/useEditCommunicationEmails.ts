@@ -9,7 +9,7 @@ export const useEditCommunicationEmails = (subadmin_id?: string) => {
   return useMutation({
     mutationFn: (
       details: Partial<Omit<EmailTemplatesResponse, 'subadmin_id' | 'success'>>
-    ) => updateCommunicationEmails(subadmin_id!, details),
+    ) => updateCommunicationEmails(details, subadmin_id!),
     onSuccess: response => {
       toast.success(
         response?.message && 'Communication Email Details updated successfully'

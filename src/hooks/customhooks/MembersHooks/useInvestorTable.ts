@@ -13,10 +13,10 @@ export const useInvestors = (
     [QueryEnums.Investors, pageNumber, pageSize],
     () => getInvestors(pageNumber, pageSize, subAdminIdFromAdmin),
     {
-      // enabled: !!subAdminIdFromAdmin,
+      enabled: !!subAdminIdFromAdmin,
       refetchOnWindowFocus: false,
       retry: 2,
-      keepPreviousData: true, // useful for pagination
+      // keepPreviousData: true, // useful for pagination
       // staleTime: 1000 * 60 * 60, // 1 hour
       onSuccess: () => {
         const queryKey = [QueryEnums.Investors, pageNumber, pageSize];

@@ -45,11 +45,7 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
   const {
     control,
     handleSubmit,
-    formState: {
-      errors,
-      // dirtyFields,
-      isSubmitting,
-    },
+    formState: { errors, dirtyFields, isSubmitting },
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -62,8 +58,8 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
   const onSubmit = async (data: FormData) => {
     try {
       const updatedData: Partial<EmailTemplate> = {};
-      // if (dirtyFields.subject) updatedData.subject = data.subject;
-      // if (dirtyFields.body) updatedData.body = data.body;
+      if (dirtyFields.subject) updatedData.subject = data.subject;
+      if (dirtyFields.body) updatedData.body = data.body;
 
       if (Object.keys(data).length > 0) {
         handleUpdateEmail({ [emailType]: updatedData });
