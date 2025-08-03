@@ -13,12 +13,13 @@ import {
   resetPasswordRequest,
   resetPasswordVerify,
 } from '@/axioscalls/apiServices';
+import toast from 'react-hot-toast';
 
 const ResetPassword: FC<{
   colorScheme: ColorScheme;
   backToSignIn: () => void;
 }> = ({ colorScheme, backToSignIn }) => {
-  const [step, setStep] = useState<'email' | 'otp' | 'password'>('password');
+  const [step, setStep] = useState<'email' | 'otp' | 'password'>('email');
   const [showPassword, setShowPassword] = useState(false);
   const [otpTimer, setOtpTimer] = useState(60);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -68,16 +69,20 @@ const ResetPassword: FC<{
         setStep('otp');
         setOtpTimer(60);
         setOtpResendDisabled(true);
+        toast.success(res.message || 'OTP sent successfully');
       } else {
         setError('email', { message: 'Failed to send OTP' });
+        toast.error(res.message || 'Failed to send OTP');
       }
     } else if (step === 'otp') {
       const res = await resetPasswordVerify(data.email, data.otp);
       if (res.success) {
         setAccessToken(res?.tokens?.access_token);
         setStep('password');
+        toast.success(res.message || 'OTP verified successfully');
       } else {
         setError('otp', { message: 'Invalid OTP' });
+        toast.error(res.message || 'Invalid OTP');
       }
     } else if (step === 'password') {
       if (data.password !== data.confirmPassword) {
@@ -87,8 +92,10 @@ const ResetPassword: FC<{
       const res = await resetPasswordAssign(data.password, accessToken!);
       if (res.success) {
         backToSignIn();
+        toast.success(res.message || 'Password reset successfully');
       } else {
         setError('password', { message: 'Failed to reset password' });
+        toast.error(res.message || 'Failed to reset password');
       }
     }
   };

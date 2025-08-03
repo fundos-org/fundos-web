@@ -1,16 +1,10 @@
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
-import {
-  Upload,
-  Users,
-  FileSpreadsheet,
-  Download,
-  Cloud,
-  X,
-} from 'lucide-react';
+import { Download, CloudUpload, Trash2, Info } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import BulkOnboardingDialog from './modals/BulkOnboardingDialog';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
+import BulkOnboardInstructions from './BulkOnboardInstructions';
 
 export default function BulkOnboarding() {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -20,6 +14,7 @@ export default function BulkOnboarding() {
   const [errors, setErrors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
+  const [openInstructions, setOpenInstructions] = useState(false);
 
   const processFile = async (file: File): Promise<void> => {
     setIsLoading(true);
@@ -233,49 +228,12 @@ export default function BulkOnboarding() {
 
   return (
     <>
-      <div className="min-h-screen w-full bg-black text-white">
+      <div className="min-h-screen w-full bg-black text-white py-10">
         {/* Header Section */}
-        <div className="px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-semibold mb-2">How onboard works?</h1>
-            <p className="text-gray-400">
-              Here's a simple 3-step guide to get you started:
-            </p>
-          </div>
-
-          {/* Steps */}
-          <div className="space-y-6 mb-12">
-            {/* Step 1 */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gray-800 flex items-center justify-center">
-                <FileSpreadsheet className="w-6 h-6 text-gray-300" />
-              </div>
-              <span className="text-lg text-gray-300">
-                Download the template CSV file
-              </span>
-            </div>
-
-            {/* Step 2 */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gray-800 flex items-center justify-center">
-                <Upload className="w-6 h-6 text-gray-300" />
-              </div>
-              <span className="text-lg text-gray-300">
-                Fill & Upload your file (.csv or .xls under 10MB)
-              </span>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gray-800 flex items-center justify-center">
-                <Users className="w-6 h-6 text-gray-300" />
-              </div>
-              <span className="text-lg text-gray-300">
-                Review and confirm to onboard members
-              </span>
-            </div>
-          </div>
-        </div>
+        <BulkOnboardInstructions
+          open={openInstructions}
+          setOpen={setOpenInstructions}
+        />
 
         {/* Upload Section */}
         <div className="px-8 pb-8">
@@ -287,63 +245,77 @@ export default function BulkOnboarding() {
                 our template.
               </p>
             </div>
-            <button
-              className="cursor-pointer bg-white text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors"
-              onClick={handleDownloadTemplate}
-            >
-              <Download className="w-4 h-4" />
-              Download template
-            </button>
+            <div className="flex gap-4">
+              <button
+                className="cursor-pointer bg-blue-200 text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                onClick={() => setOpenInstructions(true)}
+              >
+                <Info className="w-4 h-4" />
+                Instructions
+              </button>
+              <button
+                className="cursor-pointer bg-white text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                onClick={handleDownloadTemplate}
+              >
+                <Download className="w-4 h-4" />
+                Download template
+              </button>
+            </div>
           </div>
 
-          {/* Upload Area */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.xlsx,.xls"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+
           <div
-            className={`bg-gray-900 border-2 border-dashed p-12 transition-colors cursor-pointer ${
-              isDragOver ? 'border-blue-500 bg-gray-800' : 'border-gray-700'
-            }`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onClick={handleUploadAreaClick}
           >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileSelect}
-              className="hidden"
-            />
-
-            <div className="flex flex-col items-center justify-center text-center">
-              {fileName ? (
-                <div className="my-8 flex items-center gap-2">
-                  <div
-                    className="bg-blue-600 text-white px-4 py-2 text-sm font-medium flex items-center gap-2 cursor-pointer"
-                    onClick={e => {
-                      e.stopPropagation();
-                      setOpen(true);
+            {fileName ? (
+              <div className="relative bg-gray-900 border-2 border-gray-700 cursor-pointer">
+                <button
+                  className="z-2 p-3 bg-gray-900 text-red-400 absolute top-2 right-2 cursor-pointer"
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleRemoveFile();
+                  }}
+                  title="Remove file"
+                  tabIndex={-1}
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+                <div className="w-full relative overflow-hidden flex items-center justify-center">
+                  <img
+                    src={'/excel-sheet.png'}
+                    alt="excel sheet"
+                    className="w-auto h-full object-contain"
+                    style={{
+                      maskImage:
+                        'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 100%)',
+                      WebkitMaskImage:
+                        'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 100%)',
                     }}
-                    title="Show uploaded file"
-                  >
-                    <FileSpreadsheet className="w-4 h-4" />
-                    {fileName}
+                  />
+                  <div className="absolute bottom-0 bg-linear-to-b from-white to-black items-baseline-last opacity-30 w-full flex justify-center h-full p-5">
+                    Click to review: {fileName}
                   </div>
-                  <button
-                    className="ml-2 text-gray-300 hover:text-red-400"
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleRemoveFile();
-                    }}
-                    title="Remove file"
-                    tabIndex={-1}
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
                 </div>
-              ) : (
-                <>
+              </div>
+            ) : (
+              <div
+                className={`bg-gray-900 border-2 border-dashed p-12 transition-colors cursor-pointer ${
+                  isDragOver ? 'border-blue-500 bg-gray-800' : 'border-gray-700'
+                }`}
+              >
+                <div className="flex flex-col items-center justify-center text-center">
                   <div className="mb-6">
-                    <Cloud
+                    <CloudUpload
                       className={`w-16 h-16 ${isLoading ? 'text-blue-500 animate-pulse' : 'text-gray-600'}`}
                     />
                   </div>
@@ -368,9 +340,9 @@ export default function BulkOnboarding() {
                   <p className="text-gray-500 text-sm">
                     File type: XLS or CSV under 10MB
                   </p>
-                </>
-              )}
-            </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {errors.length > 0 && (
