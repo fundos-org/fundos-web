@@ -705,7 +705,6 @@ export const getInvestors = async (
   pageSize: number,
   subadmin_id?: string
 ): Promise<InvestorsListResponse> => {
-  console.log(subadmin_id, 'subadmin_id in getInvestors');
   try {
     const url = new URL(`${baseUrl}/v1/subadmin/investors/list`);
     url.searchParams.set('page', pageNumber.toString());

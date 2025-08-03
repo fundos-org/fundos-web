@@ -224,7 +224,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
             </div>
             <DialogClose
               asChild
-              className="border-[1px] border-[#383739] bg-[#242325]"
+              className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
             >
               <span className="p-1">
                 <X />
