@@ -1,11 +1,12 @@
-import { useState, useRef, DragEvent, ChangeEvent } from 'react';
+import { useState, useRef, DragEvent, ChangeEvent, lazy } from 'react';
 import { Download, CloudUpload, Trash2, Info } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
-import BulkOnboardingDialog from './modals/BulkOnboardingDialog';
+import BulkOnboardingDialog from '../modals/BulkOnboardingDialog';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
 import BulkOnboardInstructions from './BulkOnboardInstructions';
 import { useUserDB } from '@/hooks/customhooks/IndexedDBHooks/useUserDB';
+const BulkOnboardingTable = lazy(() => import('./BulkOnboardingTable'));
 
 export default function BulkOnboarding() {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -367,6 +368,7 @@ export default function BulkOnboarding() {
             </div>
           )}
         </div>
+        <BulkOnboardingTable />
       </div>
       <BulkOnboardingDialog data={parsedData} open={open} setOpen={setOpen} />
     </>

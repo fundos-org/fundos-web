@@ -1,8 +1,8 @@
 import { Dialog, DialogTitle } from '@radix-ui/react-dialog';
 import { FileSpreadsheet, CloudUpload, Users, X } from 'lucide-react';
-import { DialogContent, DialogHeader } from '../ui/dialog';
+import { DialogContent, DialogHeader } from '../../ui/dialog';
 import { FC } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 
 const BulkOnboardInstructions: FC<{
   open: boolean;

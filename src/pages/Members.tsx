@@ -1,4 +1,4 @@
-import BulkOnboarding from '@/components/custom/BulkOnboarding';
+import BulkOnboarding from '@/components/custom/BulkOnboardingSection/BulkOnboarding';
 import AddMemberDialog from '@/components/custom/modals/AddMemberDialog';
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import { DialogTrigger, Dialog } from '@/components/ui/dialog';
