@@ -11,7 +11,7 @@ export const useDealMetadata = (isSubadmin: boolean | undefined) => {
     retry: 2,
     keepPreviousData: true, // useful for pagination
     // staleTime: 1000 * 60 * 60, // 1 hour
-    onSuccess: () => toast.success('Deal Details fetched successfully'),
+    onSuccess: () => toast.success('Deal Statistics fetched successfully'),
     onError: (error: Error) => {
       toast.error(`Fetch investors failed: ${error.message}`);
     },

@@ -226,7 +226,7 @@ export default function AppSidebar() {
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleLogOut}
-                    className="bg-red-600 text-white hover:bg-red-700 rounded-none"
+                    className="bg-red-600 text-white hover:bg-red-700 rounded-none cursor-pointer"
                   >
                     Log Out
                   </AlertDialogAction>

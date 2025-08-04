@@ -13,7 +13,6 @@ export const useSubadminDetails = (subadmin_id: string) => {
       retry: 2,
       keepPreviousData: true, // useful for pagination
       //   staleTime: 1000 * 60 * 60, // 1 hour
-      onSuccess: () => toast.success('Deal Details fetched successfully'),
       onError: (error: Error) => {
         toast.error(`Fetch investors failed: ${error.message}`);
       },
