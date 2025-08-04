@@ -58,7 +58,7 @@ export const useUserDB = () => {
   );
 
   const updateUserByPhone = useCallback(
-    (phone: number, updates: Partial<User>) =>
+    (phone: string, updates: Partial<User>) =>
       handleOperation(() => dbService.updateUserByPhone(phone, updates)),
     [handleOperation, dbService]
   );
@@ -69,8 +69,13 @@ export const useUserDB = () => {
   );
 
   const deleteUser = useCallback(
-    (fileName: string, phone: number) =>
+    (fileName: string, phone: string) =>
       handleOperation(() => dbService.deleteUser(fileName, phone)),
+    [handleOperation, dbService]
+  );
+
+  const fileNames = useCallback(
+    () => handleOperation(() => dbService.fileNames()),
     [handleOperation, dbService]
   );
 
@@ -80,6 +85,7 @@ export const useUserDB = () => {
     upsertUsers,
     getUsers,
     getAllData,
+    fileNames,
     updateUserByPhone,
     deleteFile,
     deleteUser,

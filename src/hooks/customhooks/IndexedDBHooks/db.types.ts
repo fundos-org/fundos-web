@@ -1,8 +1,8 @@
 export interface User {
   email?: string | null;
   pan_number?: string | null;
-  phone: number; // This is our unique identifier
-  capital_commitment?: number | null;
+  phone: string; // This is our unique identifier
+  capital_commitment?: string | null;
   checked?: string | null;
   onboarded?: boolean | null;
 }
