@@ -4,9 +4,8 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@radix-ui/react-dialog';
 import { Dispatch, FC, SetStateAction, lazy, Suspense } from 'react';
 import { DealCard, DealStatus } from '@/constants/dealsConstant';
 import { convertToCrores } from '@/lib/currencyToWords';
@@ -14,6 +13,9 @@ import { Progress } from '@/components/ui/progress';
 import DealStatusSelect from '../DealTable/DealStatusSelect';
 import { Button } from '@/components/ui/button';
 import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive';
+import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
+import { AWS_BUCKET_NAME } from '@/constants/enums';
+import { DialogHeader } from '@/components/ui/dialog';
 const DealMainTab = lazy(() => import('../TabItems/DealMainTab'));
 
 const DealDetailsDialog: FC<{
@@ -32,6 +34,7 @@ const DealDetailsDialog: FC<{
     deal_status,
     deal_id,
   } = details ?? {};
+  const { data: logo } = useAwsFileObjectKey(AWS_BUCKET_NAME, logo_url ?? '');
   const { mutate: markInactive } = useDealInactive();
   return (
     <Dialog
@@ -77,7 +80,8 @@ const DealDetailsDialog: FC<{
             <div className="flex gap-5">
               <div className="w-30 h-30 mr-2 mt-2 overflow-hidden">
                 <img
-                  src={logo_url ?? ''}
+                  src={logo ?? ''}
+                  // src={getFileUrl(AWS_BUCKET_NAME, logo_url ?? '')}
                   className="w-full h-full object-cover"
                   alt="dp"
                 />

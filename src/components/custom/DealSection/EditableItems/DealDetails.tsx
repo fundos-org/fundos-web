@@ -1,9 +1,12 @@
-import { Input } from '@/components/ui/input';
 import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dispatch, SetStateAction } from 'react';
+import { SetStateAction, Dispatch } from 'react';
+import { Upload } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import toast from 'react-hot-toast';
+import { DealDetails as DDInterface } from '@/constants/dealsConstant';
+import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import {
   Select,
   SelectContent,
@@ -12,9 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { DealDetails as DDInterface } from '@/constants/dealsConstant';
-import toast from 'react-hot-toast';
-import { Upload } from 'lucide-react';
+import { z } from 'zod';
 
 const instrumentTypes = [
   { name: 'Equity', value: 'equity' },
@@ -62,6 +63,7 @@ const DealDetails: React.FC<{
     control,
     handleSubmit,
     formState: { errors, dirtyFields },
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -74,6 +76,25 @@ const DealDetails: React.FC<{
       pitch_video_url: details?.pitch_video_url || '',
     },
   });
+
+  // Watch the pitch_deck_url and pitch_video_url fields for changes
+  const pitchDeckValue = watch('pitch_deck_url');
+  const isPitchDeckBlob =
+    typeof pitchDeckValue === 'string' && pitchDeckValue.startsWith('blob:');
+
+  const pitchVideoValue = watch('pitch_video_url');
+  const isPitchVideoBlob =
+    typeof pitchVideoValue === 'string' && pitchVideoValue.startsWith('blob:');
+
+  const BUCKET_NAME = import.meta.env.VITE_AWS_BUCKET_NAME as string;
+  const { data: pitchDeckUrl } = useAwsFileObjectKey(
+    BUCKET_NAME,
+    !isPitchDeckBlob && pitchDeckValue ? pitchDeckValue : ''
+  );
+  const { data: pitchVideoUrl } = useAwsFileObjectKey(
+    BUCKET_NAME,
+    !isPitchVideoBlob && pitchVideoValue ? pitchVideoValue : ''
+  );
 
   const onSubmit = (data: FormData) => {
     const updatedData: Partial<DDInterface> = {};
@@ -259,75 +280,118 @@ const DealDetails: React.FC<{
             </p>
           )}
         </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Pitch Deck
-          </label>
-          <Controller
-            name="pitch_deck_url"
-            control={control}
-            render={({ field }) => (
-              <div className="flex items-center gap-2">
-                {field.value && (
-                  <label
-                    htmlFor="pitch_deck_url"
-                    className="relative group cursor-pointer border border-[#393738]"
-                  >
-                    <img
-                      src={field.value}
-                      alt="Pitch Deck"
-                      className="w-[60px] h-[60px] object-cover hover:opacity-30"
-                    />
-                    <Upload className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden group-hover:block" />
-                  </label>
-                )}
-                <Input
-                  type="file"
-                  id="pitch_deck_url"
-                  accept="image/*"
-                  onChange={e => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const url = URL.createObjectURL(file);
-                      field.onChange(url);
-                    }
-                  }}
-                  className="hidden"
-                />
-              </div>
+        <div className="flex gap-10">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Pitch Deck
+            </label>
+            <Controller
+              name="pitch_deck_url"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  {pitchDeckValue && (
+                    <label
+                      htmlFor="pitch_deck_url"
+                      className="relative group cursor-pointer border border-[#393738]"
+                    >
+                      <img
+                        src={isPitchDeckBlob ? pitchDeckValue : pitchDeckUrl}
+                        alt="Pitch Deck"
+                        className="w-[60px] h-[60px] object-cover hover:opacity-30"
+                      />
+                      <Upload className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden group-hover:block" />
+                    </label>
+                  )}
+                  <Input
+                    type="file"
+                    id="pitch_deck_url"
+                    accept="image/*"
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        field.onChange(url);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </div>
+              )}
+            />
+            {errors.pitch_deck_url && (
+              <p className="text-red-500 text-sm">
+                {errors.pitch_deck_url.message}
+              </p>
             )}
-          />
-          {errors.pitch_deck_url && (
-            <p className="text-red-500 text-sm">
-              {errors.pitch_deck_url.message}
-            </p>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <Label
-            htmlFor="pitch_video_url"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
-            Pitch Video
-          </Label>
-          <Controller
-            name="pitch_video_url"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Pitch Video"
-                className={`${errors.pitch_video_url ? 'border-red-500' : ''} rounded-none`}
-              />
+          <div>
+            <Label
+              htmlFor="pitch_video_url"
+              className="block text-sm font-medium text-gray-300 mb-1"
+            >
+              Pitch Video
+            </Label>
+            <Controller
+              name="pitch_video_url"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  {pitchVideoValue && (
+                    <label
+                      htmlFor="pitch_video_url"
+                      className="relative group cursor-pointer border border-[#393738]"
+                    >
+                      {(() => {
+                        const src = isPitchVideoBlob
+                          ? pitchVideoValue
+                          : pitchVideoUrl;
+                        if (!src) return null;
+                        // Show <img> for images, <video> for videos
+                        if (src.match(/\.(jpeg|jpg|png|gif|webp|bmp)$/i)) {
+                          return (
+                            <img
+                              src={src}
+                              alt="Pitch Video Preview"
+                              className="w-[60px] h-[60px] object-cover hover:opacity-30"
+                            />
+                          );
+                        } else {
+                          return (
+                            <video
+                              src={src}
+                              controls
+                              className="w-[60px] h-[60px] object-cover hover:opacity-30"
+                            />
+                          );
+                        }
+                      })()}
+                      <Upload className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden group-hover:block" />
+                    </label>
+                  )}
+                  <Input
+                    type="file"
+                    id="pitch_video_url"
+                    accept="image/*,video/*"
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        field.onChange(url);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </div>
+              )}
+            />
+            {errors.pitch_video_url && (
+              <p className="text-red-500 text-sm">
+                {errors.pitch_video_url.message}
+              </p>
             )}
-          />
-          {errors.pitch_video_url && (
-            <p className="text-red-500 text-sm">
-              {errors.pitch_video_url.message}
-            </p>
-          )}
+          </div>
         </div>
       </div>
 

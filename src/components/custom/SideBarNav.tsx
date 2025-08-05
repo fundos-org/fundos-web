@@ -13,7 +13,7 @@ import {
   ScrollText,
   LayoutDashboard,
   Users,
-  Settings,
+  // Settings,
   HelpCircle,
   UserRoundPen,
   LucideProps,
@@ -22,7 +22,6 @@ import {
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
-// import { useAppDispatch } from '@/app/hooks';
 import {
   ForwardRefExoticComponent,
   RefAttributes,
@@ -44,7 +43,6 @@ import { AppRoute } from '@/RoutesEnum';
 import { AppEnums } from '@/constants/enums';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-// Define role type for better type safety
 type Role = 'admin' | 'subadmin' | 'kyc';
 
 interface Route {
@@ -77,7 +75,7 @@ const routes: Routes = {
     },
     { title: 'Deals', url: AppRoute.SUBADMIN_DEALS, icon: ScrollText },
     { title: 'Members', url: AppRoute.SUBADMIN_MEMBERS, icon: Users },
-    { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
+    // { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
   ],
   admin: [
     {
@@ -194,8 +192,8 @@ export default function AppSidebar() {
               </Avatar>
             </div>
             <div className="flex-1">
-              <h4 className="text-white font-medium">
-                {sessionData?.name ?? 'Ammit'}
+              <h4 className="text-white font-medium capitalize">
+                {sessionData?.name ?? 'User'}
               </h4>
               <p className="text-sm text-gray-400">
                 {sessionData?.invite_code ?? 'You dont need invite code 😉'}

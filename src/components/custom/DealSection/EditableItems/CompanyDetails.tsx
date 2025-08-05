@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dispatch, FC, SetStateAction } from 'react';
 import { DealDetails } from '@/constants/dealsConstant';
+import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import { Upload } from 'lucide-react';
 
 const schema = z.object({
@@ -35,6 +36,7 @@ const CompanyDetails: FC<{
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -45,6 +47,21 @@ const CompanyDetails: FC<{
       problem_statement: details?.problem_statement || '',
     },
   });
+
+  // Watch the logo_url field for changes
+  const logoValue = watch('logo_url');
+
+  // Helper: is this a local blob url?
+  const isBlobUrl =
+    typeof logoValue === 'string' && logoValue.startsWith('blob:');
+
+  // You may want to set your bucket name here or get it from env/config
+  const BUCKET_NAME = import.meta.env.VITE_AWS_BUCKET_NAME as string;
+  // Only use AWS hook if not a blob url and value exists
+  const { data: logoUrl } = useAwsFileObjectKey(
+    BUCKET_NAME,
+    !isBlobUrl && logoValue ? logoValue : ''
+  );
 
   const onSubmit = ({
     logo_url,
@@ -77,13 +94,13 @@ const CompanyDetails: FC<{
             control={control}
             render={({ field }) => (
               <div className="flex items-center gap-2">
-                {field.value && (
+                {logoValue && (
                   <label
                     htmlFor="logoFile"
                     className="relative group cursor-pointer"
                   >
                     <img
-                      src={field.value}
+                      src={isBlobUrl ? logoValue : logoUrl}
                       alt="logo"
                       className="w-[60px] h-[60px] object-cover hover:opacity-30"
                     />
@@ -155,7 +172,7 @@ const CompanyDetails: FC<{
           )}
         </div>
 
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">
             Company Website
           </label>
@@ -175,7 +192,7 @@ const CompanyDetails: FC<{
               {errors.company_website.message}
             </p>
           )}
-        </div>
+        </div> */}
 
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">

@@ -2,7 +2,6 @@ import { FC, lazy, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui/tabs';
 import { useDealTable } from '@/hooks/customhooks/DealsHooks/useDealTable';
 import { RefreshCw } from 'lucide-react';
-import { AppEnums } from '@/constants/enums';
 import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
 import {
   Select,
@@ -14,14 +13,6 @@ import {
 import { Button } from '@/components/ui/button';
 const DealsTable = lazy(() => import('./DealsTable'));
 
-const sessCapture = () => {
-  const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
-  const { subadmin_id } = subadminDetailsRaw
-    ? JSON.parse(subadminDetailsRaw)
-    : {};
-  return subadmin_id;
-};
-
 const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [activePageNumber, setActivePageNumber] = useState<number>(1);
   const [activePageSize, setActivePageSize] = useState<number>(3);
@@ -29,9 +20,7 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [closedPageSize, setClosedPageSize] = useState<number>(3);
   const [onholdPageNumber, setOnholdPageNumber] = useState<number>(1);
   const [onholdPageSize, setOnholdPageSize] = useState<number>(3);
-  const [subadmin_id, setSubadmin_id] = useState<string | undefined>(
-    sessCapture
-  );
+  const [subadmin_id, setSubadmin_id] = useState<string | undefined>();
   const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isSubadmin);
   const { data, refetch, isLoading } = useDealTable(
     activePageNumber,

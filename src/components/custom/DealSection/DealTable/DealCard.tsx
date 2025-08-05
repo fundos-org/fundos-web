@@ -20,6 +20,8 @@ import {
 import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive';
 import { convertToCrores } from '@/lib/currencyToWords';
 import DealStatusSelect from './DealStatusSelect'; // Added import for DealStatusSelect
+import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
+import { AWS_BUCKET_NAME } from '@/constants/enums';
 const DealEditDialog = lazy(() => import('../DialogItems/DealEditDialog'));
 const DealDetailsDialog = lazy(
   () => import('../DialogItems/DealDetailsDialog')
@@ -55,6 +57,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
     company_stage,
     fund_raised_till_now,
   } = deal;
+  const { data: logo } = useAwsFileObjectKey(AWS_BUCKET_NAME, logo_url ?? '');
   const { mutate: markInactive } = useDealInactive();
 
   return (
@@ -65,12 +68,14 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
                 <div className="">
-                  <div className="w-10 h-10 overflow-hidden">
-                    <img
-                      src={logo_url ?? ''}
-                      className="w-full h-full object-cover"
-                      alt="deal image"
-                    />
+                  <div className="w-15 h-15 overflow-hidden flex items-center justify-center bg-zinc-800 rounded">
+                    {logo && (
+                      <img
+                        src={logo}
+                        className="max-w-full max-h-full object-contain"
+                        alt="deal image"
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -170,12 +175,12 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
         </CardContent>
       </Card>
       {dealId !== null && (
-        <Suspense fallback={<div>Dialog Opening...</div>}>
+        <Suspense fallback={<div></div>}>
           <DealEditDialog dealId={dealId} setDealId={setDealId} />
         </Suspense>
       )}
       {details !== null && (
-        <Suspense fallback={<div>Dialog Opening...</div>}>
+        <Suspense fallback={<div></div>}>
           <DealDetailsDialog details={details} setDetails={setDetails} />
         </Suspense>
       )}

@@ -183,10 +183,10 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
           {/* </div> */}
         </CardContent>
       </Card>
-      <Suspense fallback={<div>Dialog Opening...</div>}>
+      <Suspense fallback={<div></div>}>
         <DealEditDialog dealId={dealId} setDealId={setDealId} />
       </Suspense>
-      <Suspense fallback={<div>Dialog Opening...</div>}>
+      <Suspense fallback={<div></div>}>
         <DealDetailsDialog details={details} setDetails={setDetails} />
       </Suspense>
     </>

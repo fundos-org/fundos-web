@@ -86,20 +86,20 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-cyan-200',
     };
   } else {
-    return {
-      name: 'FundOS',
-      role: 'subadmin',
-      background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
-      cardBg: 'bg-zinc-900/40',
-      inputBg: 'bg-gray-800',
-      inputBorder: 'border-gray-600',
-      inputText: 'text-white',
-      focusRing: 'focus:ring-gray-500',
-      buttonBg: 'bg-white',
-      buttonHover: 'hover:bg-gray-200',
-      buttonText: 'text-black',
-      starColor: 'bg-white',
-    };
+    // return {
+    //   name: 'FundOS',
+    //   role: 'subadmin',
+    //   background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+    //   cardBg: 'bg-zinc-900/40',
+    //   inputBg: 'bg-gray-800',
+    //   inputBorder: 'border-gray-600',
+    //   inputText: 'text-white',
+    //   focusRing: 'focus:ring-gray-500',
+    //   buttonBg: 'bg-white',
+    //   buttonHover: 'hover:bg-gray-200',
+    //   buttonText: 'text-black',
+    //   starColor: 'bg-white',
+    // };
     return {
       name: 'Admin Portal',
       role: 'admin',
