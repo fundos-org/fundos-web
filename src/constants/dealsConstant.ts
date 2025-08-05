@@ -1,5 +1,3 @@
-import { StepStyleDTO } from 'react-form-stepper/dist/components/Step/StepTypes';
-
 export type Stages = {
   value: string;
   title: string;
@@ -120,14 +118,6 @@ export const stages: Stages[] = [
     description: 'Expansion, acquisition, or IPO preparation',
   },
 ];
-
-export const styleConfig = {
-  activeBgColor: '#fff',
-  activeTextColor: '#000',
-  inactiveBgColor: '#1a1a1a',
-  completedBgColor: '#2a2a2a',
-  borderRadius: 0,
-} as StepStyleDTO;
 
 export interface CommonError {
   isSuccess: boolean;

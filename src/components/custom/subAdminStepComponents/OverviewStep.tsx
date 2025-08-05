@@ -1,6 +1,8 @@
 import { shareDetails } from '@/axioscalls/apiServices';
 import { Button } from '@/components/ui/button';
+import { AWS_BUCKET_NAME } from '@/constants/enums';
 import { useSubadminDetails } from '@/hooks/customhooks/SubAdminsHooks/useSubadminDetails';
+import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import toast from 'react-hot-toast';
 
 // interface Response {
@@ -12,7 +14,7 @@ import toast from 'react-hot-toast';
 
 const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   const { data } = useSubadminDetails(subAdminId);
-
+  const { data: logo } = useAwsFileObjectKey(AWS_BUCKET_NAME, data?.logo ?? '');
   const handleClick = async () => {
     const response = await shareDetails(subAdminId);
     if (!response) {
@@ -22,23 +24,25 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
 
   return (
     <div className="relative text-white w-full">
-      <div className="flex items-center gap-3 p-3 mb-4">
-        <img width="50" src="/fund.svg" alt="image" />
-        <div>
-          <p className="text-lg font-medium">
-            Congratulations, sub-admin created!
-          </p>
-          <p className="text-sm text-gray-400">
-            An confirmation mail has been sent to {data?.name}
-          </p>
-        </div>
-      </div>
-
       {data && (
         <div className="p-5 mb-10 bg-[#1C2526]">
+          <div className="mb-5">
+            <p className="text-lg font-medium">
+              Congratulations, sub-admin created!
+            </p>
+            <p className="text-sm text-gray-400">
+              An confirmation mail has been sent to {data?.name}
+            </p>
+          </div>
           <div className="flex gap-4 mb-6 bg-[#1C2526]">
             <div className="w-16 h-16 bg-white rounded flex items-center justify-center">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-orange-500 rounded"></div>
+              {logo && (
+                <img
+                  src={logo}
+                  className="max-w-full max-h-full object-contain"
+                  alt="investor"
+                />
+              )}
             </div>
             <div className="flex-1">
               <p className="text-lg font-medium">{data?.name}'s investiee</p>

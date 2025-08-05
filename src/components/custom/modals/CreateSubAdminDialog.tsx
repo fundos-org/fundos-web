@@ -8,8 +8,6 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Step, Stepper } from 'react-form-stepper';
-import { styleConfig, subAdminStepsList } from '@/constants/dealsConstant';
 import { FormProvider, useForm } from 'react-hook-form';
 import OverviewStep from '../subAdminStepComponents/OverviewStep';
 import StepSubAdmin1 from '../subAdminStepComponents/StepSubAdmin1';
@@ -182,17 +180,6 @@ function CreateSubAdminDialog() {
         </DialogTitle>
         <hr />
       </DialogHeader>
-      {activeStep !== 2 && (
-        <Stepper
-          activeStep={activeStep}
-          styleConfig={styleConfig}
-          style={{ padding: 0 }}
-        >
-          {subAdminStepsList.map(step => (
-            <Step key={step.index} label={step.label} index={step.index} />
-          ))}
-        </Stepper>
-      )}
       <FormProvider {...methods}>
         <div className="grid gap-4">{renderStep()}</div>
       </FormProvider>

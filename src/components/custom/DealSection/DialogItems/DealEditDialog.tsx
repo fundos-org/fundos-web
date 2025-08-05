@@ -120,13 +120,18 @@ const Sidebar: React.FC<{
 // Main content component
 const Content: FC<{
   activeTab: LocalEnum;
-  dealDetails: DealDetailsInterface;
+  dealDetails: DealDetailsInterface | undefined;
   setDealId: Dispatch<SetStateAction<string | null>>;
   handleUpdateDetails: (
     details: Partial<DealDetailsInterface>,
     files?: Partial<Files>
   ) => void;
 }> = ({ activeTab, dealDetails, setDealId, handleUpdateDetails }) => {
+  if (!dealDetails) {
+    return (
+      <div className="flex-1 flex items-center justify-center">Loading...</div>
+    );
+  }
   return (
     <div className="flex-1">
       {activeTab === LocalEnum.CD && (
