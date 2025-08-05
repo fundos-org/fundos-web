@@ -1,12 +1,12 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-  DialogTitle,
-} from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, X } from 'lucide-react';
-import { DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { FC, lazy, Suspense } from 'react';
 import { InvestorEntity } from '@/constants/membersConstant';
 const InvestorMainTab = lazy(() => import('../TabItems/InvestorMainTab'));

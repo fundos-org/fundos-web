@@ -1,12 +1,12 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-  DialogTitle,
-} from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, EyeOff, X } from 'lucide-react';
-import { DialogHeader } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Dispatch, FC, SetStateAction, lazy, Suspense } from 'react';
 import { DealCard, DealStatus } from '@/constants/dealsConstant';
 import { convertToCrores } from '@/lib/currencyToWords';

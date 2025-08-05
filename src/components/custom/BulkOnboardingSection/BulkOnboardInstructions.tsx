@@ -1,6 +1,10 @@
-import { Dialog, DialogTitle } from '@radix-ui/react-dialog';
 import { FileSpreadsheet, CloudUpload, Users, X } from 'lucide-react';
-import { DialogContent, DialogHeader } from '../../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '../../ui/dialog';
 import { FC } from 'react';
 import { Button } from '../../ui/button';
 
