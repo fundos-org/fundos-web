@@ -1,10 +1,12 @@
 import {
   AdminDashboardStats,
+  AdminLoginResponse,
   AdminsOverviewListResponse,
   BulkOnboardingUserData,
   DashboardStatisticsResponse,
   EmailTemplatesResponse,
   SubadminIdsResponse,
+  SubadminLoginResponse,
 } from '@/constants/dashboardConstant';
 import {
   AllDealsResponse,
@@ -403,9 +405,17 @@ export const fetchTransactionList = createAsyncThunk<
   }
 });
 
-export const appLogin = async (data: LoginFormData) => {
+export const appLogin = async (
+  data: LoginFormData,
+  role: 'admin' | 'subadmin' | 'kyc'
+): Promise<
+  AdminLoginResponse | SubadminLoginResponse | { success: boolean }
+> => {
   try {
-    const response = await axiosInstance.post(`${baseUrl}/v1/auth/token`, data);
+    const url = new URL(`${baseUrl}/v1/${role}/signin`);
+    url.searchParams.set('username', data.username);
+    url.searchParams.set('password', data.password);
+    const response = await axiosInstance.post(url.toString());
     return response.data;
   } catch {
     return { success: false };

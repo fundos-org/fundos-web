@@ -22,7 +22,6 @@ import {
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 // import { useAppDispatch } from '@/app/hooks';
 import {
   ForwardRefExoticComponent,
@@ -43,6 +42,7 @@ import {
 } from '../ui/alert-dialog';
 import { AppRoute } from '@/RoutesEnum';
 import { AppEnums } from '@/constants/enums';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 // Define role type for better type safety
 type Role = 'admin' | 'subadmin' | 'kyc';

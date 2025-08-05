@@ -7,12 +7,17 @@ import { LoginFormData } from '@/constants/dealsConstant';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/RoutesEnum';
-import { AppEnums } from '@/constants/enums';
+import { AppEnums, AWS_BUCKET_NAME } from '@/constants/enums';
 import { useAppLogin } from '@/hooks/useAppLogin';
 import { cleanupAxios } from '@/axioscalls/axiosConfig';
 import toast from 'react-hot-toast';
 import Stars from '@/components/custom/Stars';
 import ResetPassword from '@/components/custom/ResetPassword';
+import {
+  AuthTokens,
+  SubadminLoginResponse,
+} from '@/constants/dashboardConstant';
+import { getFileUrl } from '@/hooks/useAwsFileObjectKey';
 
 export type ColorScheme = {
   name: string;
@@ -118,7 +123,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [resetPassword, setResetPassword] = useState(false);
   const colorScheme = getColorScheme();
-  const { mutateAsync: loginUser } = useAppLogin();
+  const { mutateAsync: loginUser } = useAppLogin(colorScheme.role);
   const {
     register,
     handleSubmit,
@@ -146,9 +151,10 @@ export default function SignIn() {
     switch (role) {
       case 'admin': {
         data.role = 'ADMIN';
-        const { access_token, refresh_token } = await loginUser(data);
+        const { tokens: { access_token, refresh_token } = {} as AuthTokens } =
+          await loginUser(data);
         if (access_token) {
-          const sessData = JSON.stringify({ role: 'admin', name: 'Ammit' });
+          const sessData = JSON.stringify({ role: 'admin', name: 'Amit' });
           sessionStorage.setItem(AppEnums.ACCESS_TOKEN, access_token);
           sessionStorage.setItem(AppEnums.REFRESH_TOKEN, refresh_token);
           sessionStorage.setItem(AppEnums.SUBADMIN_SESSION, sessData);
@@ -163,11 +169,20 @@ export default function SignIn() {
       }
       case 'subadmin': {
         data.role = 'SUBADMIN';
-        const { access_token, refresh_token } = await loginUser(data);
+        const {
+          role,
+          logo: logoKey,
+          name,
+          invite_code,
+          tokens: { access_token, refresh_token } = {} as AuthTokens,
+        } = (await loginUser(data)) as SubadminLoginResponse;
+        const logo = await getFileUrl(AWS_BUCKET_NAME, logoKey);
         if (access_token) {
           const sessData = JSON.stringify({
-            role: 'subadmin',
-            name: 'fix it & add logo',
+            role,
+            name,
+            logo,
+            invite_code,
           });
           sessionStorage.setItem(AppEnums.ACCESS_TOKEN, access_token);
           sessionStorage.setItem(AppEnums.REFRESH_TOKEN, refresh_token);

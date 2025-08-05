@@ -71,3 +71,25 @@ export interface BulkOnboardingUserData {
   capital_commitment: string | null | undefined;
   remark?: string;
 }
+
+export interface AuthTokens {
+  access_token: string;
+  refresh_token: string;
+  token_type: 'bearer' | 'Bearer';
+}
+
+export interface SubadminLoginResponse {
+  message: string;
+  subadmin_id: string;
+  name: string;
+  invite_code: string;
+  logo: string;
+  role: 'subadmin' | 'admin' | 'user';
+  tokens: AuthTokens;
+  success: boolean;
+}
+export interface AdminLoginResponse {
+  message: string;
+  success: boolean;
+  tokens?: AuthTokens;
+}

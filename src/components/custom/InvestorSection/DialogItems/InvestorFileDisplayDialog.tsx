@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { AppEnums } from '@/constants/enums';
+import { AWS_BUCKET_NAME } from '@/constants/enums';
 import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import { X } from 'lucide-react';
 import { Dispatch, FC, memo, SetStateAction } from 'react';
@@ -15,7 +15,7 @@ const AdvancedInvestorFileDialog: FC<{
   setAwsObjectKey: Dispatch<SetStateAction<string | null>>;
 }> = memo(({ awsObjectKey, setAwsObjectKey }) => {
   const { data: showFile, error } = useAwsFileObjectKey(
-    AppEnums.AWS_BUCKET_NAME,
+    AWS_BUCKET_NAME,
     awsObjectKey ?? ''
   );
 
