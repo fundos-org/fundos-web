@@ -13,6 +13,7 @@ import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
 import CompanyDetails from '../EditableItems/CompanyDetails';
 import MarketDetails from '../EditableItems/MarketDetails';
 import DealDetails from '../EditableItems/DealDetails';
+import { Files } from '@/axioscalls/apiServices';
 
 interface Tab {
   id: number;
@@ -25,10 +26,16 @@ const DealEditDialog: FC<{
 }> = ({ dealId, setDealId }) => {
   const [activeTab, setActiveTab] = useState<LocalEnum>(LocalEnum.CD);
   const { data, error } = useDealDetails(dealId);
-  const { mutate: updateDealDetails } = useDealEditDetails(dealId);
+  const { mutate: updateDeal } = useDealEditDetails(dealId);
+
+  // Wrapper to match the expected signature
   const handleUpdateDetails = (
-    details: Partial<Partial<DealDetailsInterface>>
-  ) => updateDealDetails(details);
+    details: Partial<DealDetailsInterface>,
+    files?: Partial<Files>
+  ) => {
+    // Pass files as part of details if needed, or handle as required by your API
+    updateDeal({ ...details, ...(files ? { files } : {}) });
+  };
 
   return (
     <Dialog
@@ -115,7 +122,10 @@ const Content: FC<{
   activeTab: LocalEnum;
   dealDetails: DealDetailsInterface;
   setDealId: Dispatch<SetStateAction<string | null>>;
-  handleUpdateDetails: (value: Partial<DealDetailsInterface>) => void;
+  handleUpdateDetails: (
+    details: Partial<DealDetailsInterface>,
+    files?: Partial<Files>
+  ) => void;
 }> = ({ activeTab, dealDetails, setDealId, handleUpdateDetails }) => {
   return (
     <div className="flex-1">

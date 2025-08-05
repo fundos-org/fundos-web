@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, EyeOff, PenLine, X } from 'lucide-react';
+import { ChevronLeft, EyeOff, X } from 'lucide-react';
 import { DialogHeader } from '@/components/ui/dialog';
 import { Dispatch, FC, SetStateAction, lazy, Suspense } from 'react';
 import { DealCard, DealStatus } from '@/constants/dealsConstant';
@@ -13,6 +13,7 @@ import { convertToCrores } from '@/lib/currencyToWords';
 import { Progress } from '@/components/ui/progress';
 import DealStatusSelect from '../DealTable/DealStatusSelect';
 import { Button } from '@/components/ui/button';
+import { useDealInactive } from '@/hooks/customhooks/DealsHooks/useDealInactive';
 const DealMainTab = lazy(() => import('../TabItems/DealMainTab'));
 
 const DealDetailsDialog: FC<{
@@ -31,6 +32,7 @@ const DealDetailsDialog: FC<{
     deal_status,
     deal_id,
   } = details ?? {};
+  const { mutate: markInactive } = useDealInactive();
   return (
     <Dialog
       open={details ? Object.keys(details).length > 0 : false}
@@ -59,7 +61,7 @@ const DealDetailsDialog: FC<{
                   />
                 </span>
               </DialogClose>
-              <span>Member Details</span>
+              <span>Deal Details</span>
             </div>
             <DialogClose
               asChild
@@ -99,10 +101,13 @@ const DealDetailsDialog: FC<{
                   deal_id={deal_id ?? ''}
                   initialStatus={deal_status as DealStatus}
                 />
-                <Button className="rounded-none px-10 border border-[#393738] cursor-pointer">
+                {/* <Button className="rounded-none px-10 border border-[#393738] cursor-pointer">
                   <PenLine className="text-blue-500" /> Edit
-                </Button>
-                <Button className="rounded-none px-10 border border-[#393738] cursor-pointer">
+                </Button> */}
+                <Button
+                  className="rounded-none px-10 border border-[#393738] cursor-pointer"
+                  onClick={() => markInactive(deal_id ?? '')}
+                >
                   <EyeOff className="text-red-500" /> Mark Inactive
                 </Button>
               </div>

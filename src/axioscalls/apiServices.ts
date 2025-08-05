@@ -523,21 +523,24 @@ export const getSubadminIdList = async (): Promise<SubadminIdsResponse> => {
 };
 
 export const getDeals = async (
-  subadmin_id: string,
   active_page_number: number,
   active_page_size: number,
   closed_page_number: number,
   closed_page_size: number,
   onhold_page_number: number,
-  onhold_page_size: number
+  onhold_page_size: number,
+  subadmin_id: string
 ): Promise<AllDealsResponse> => {
   try {
-    if (!subadmin_id) {
-      throw new Error('No subadmin id found in session storage');
-    }
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/deals/overview/paginated/${subadmin_id}?active_page=${active_page_number}&active_per_page=${active_page_size}&closed_page=${closed_page_number}&closed_per_page=${closed_page_size}&onhold_page_number=${onhold_page_number}&onhold_page_size=${onhold_page_size}`
-    );
+    const url = new URL(`${baseUrl}/v1/subadmin/deals/overview/paginated`);
+    if (subadmin_id) url.pathname += subadmin_id;
+    url.searchParams.set('active_page', active_page_number.toString());
+    url.searchParams.set('active_per_page', active_page_size.toString());
+    url.searchParams.set('closed_page', closed_page_number.toString());
+    url.searchParams.set('closed_per_page', closed_page_size.toString());
+    url.searchParams.set('onhold_page_number', onhold_page_number.toString());
+    url.searchParams.set('onhold_page_size', onhold_page_size.toString());
+    const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error: unknown) {
     if (isAxiosError(error) && error.response?.data) {
@@ -567,14 +570,28 @@ export const getDealDetails = async (
   }
 };
 
+export type Files = {
+  logo: File | null;
+  pitch_deck: File | null;
+  pitch_video: File | null;
+};
+
 export const updateDealDetails = async (
   deal_id: string,
-  details: Partial<DealDetails>
+  details: Partial<
+    DealDetails | 'logo_url' | 'pitch_deck_url' | 'pitch_video_url'
+  >,
+  files?: Partial<Files>
 ): Promise<UpdateDealDetailsResponse> => {
   try {
+    const formData = new FormData();
+    if (files?.logo) formData.append('logo', files.logo);
+    if (files?.pitch_deck) formData.append('pitch_deck', files.pitch_deck);
+    if (files?.pitch_video) formData.append('pitch_video', files.pitch_video);
+    formData.append('data', JSON.stringify(details));
     const response = await axiosInstance.put(
       `${baseUrl}/v1/subadmin/deals/edit_deals/${deal_id}`,
-      details
+      formData
     );
     return response.data;
   } catch (error) {

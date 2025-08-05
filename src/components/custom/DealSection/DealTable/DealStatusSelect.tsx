@@ -22,11 +22,11 @@ import { useDealStatusChange } from '@/hooks/customhooks/DealsHooks/useDealStatu
 
 function getStatusColor(status: DealStatus): string {
   switch (status) {
-    case 'open':
+    case 'OPEN':
       return 'bg-green-400';
-    case 'closed':
+    case 'CLOSED':
       return 'bg-red-400';
-    case 'on_hold':
+    case 'ON_HOLD':
       return 'bg-yellow-400';
     default:
       return 'bg-gray-400';
@@ -35,11 +35,11 @@ function getStatusColor(status: DealStatus): string {
 
 function getStatusBgColor(status: DealStatus): string {
   switch (status) {
-    case 'open':
+    case 'OPEN':
       return 'bg-[#00fb5745]';
-    case 'closed':
+    case 'CLOSED':
       return 'bg-[#fd888845]';
-    case 'on_hold':
+    case 'ON_HOLD':
       return 'bg-[#fbbf2450]';
     default:
       return 'bg-[#6b728045]';
@@ -60,7 +60,7 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
   const { mutateAsync: changeDealStatus } = useDealStatusChange();
 
   const handleChangeStatus = async (status: DealStatus) => {
-    if (status !== 'closed' && !open) {
+    if (status !== 'CLOSED' && !open) {
       const response = await changeDealStatus({ deal_id, status });
       if (!response) {
         toast.error('Failed to change deal status');
@@ -70,9 +70,9 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
         toast.success(response.message);
       }
       setStatus(status);
-    } else if (status === 'closed' && !open) {
+    } else if (status === 'CLOSED' && !open) {
       setOpen(true);
-    } else if (status === 'closed' && open) {
+    } else if (status === 'CLOSED' && open) {
       const response = await changeDealStatus({ deal_id, status });
       if (!response) {
         toast.error('Failed to change deal status');
@@ -105,19 +105,19 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
             <span
               className={`mx-1 inline-block w-2 h-2 rounded-full ${getStatusColor(status)}`}
             />
-            {status === 'open' ? 'Active' : null}
-            {status === 'closed' ? 'Closed' : null}
-            {status === 'on_hold' ? 'On Hold' : null}
+            {status === 'OPEN' ? 'Active' : null}
+            {status === 'CLOSED' ? 'Closed' : null}
+            {status === 'ON_HOLD' ? 'On Hold' : null}
           </SelectValue>
         </SelectTrigger>
         <SelectContent className="bg-[#1a1a1a] text-white border rounded-none">
-          <SelectItem className="rounded-none" value="open">
+          <SelectItem className="rounded-none" value="OPEN">
             Active
           </SelectItem>
-          <SelectItem className="rounded-none" value="closed">
+          <SelectItem className="rounded-none" value="CLOSED">
             Closed
           </SelectItem>
-          <SelectItem className="rounded-none" value="on_hold">
+          <SelectItem className="rounded-none" value="ON_HOLD">
             On Hold
           </SelectItem>
         </SelectContent>
@@ -142,7 +142,7 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
             </AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 text-white hover:bg-red-700 rounded-none"
-              onClick={() => handleChangeStatus('closed' as DealStatus)}
+              onClick={() => handleChangeStatus('CLOSED' as DealStatus)}
             >
               Close Deal
             </AlertDialogAction>

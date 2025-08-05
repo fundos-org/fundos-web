@@ -27,19 +27,19 @@ export const useDealTable = (
     ],
     () =>
       getDeals(
-        subadmin_id!,
         activePageNumber,
         activePageSize,
         closedPageNumber,
         closedPageSize,
         onholdPageNumber,
-        onholdPageSize
+        onholdPageSize,
+        subadmin_id!
       ),
     {
       // enabled: !!subadmin_id,
       refetchOnWindowFocus: false,
       retry: 2,
-      keepPreviousData: true, // useful for pagination
+      // keepPreviousData: true, // useful for pagination
       // staleTime: 1000 * 60 * 60, // 1 hour
       onSuccess: () => toast.success('Deals fetched successfully'),
       onError: (error: Error) => {

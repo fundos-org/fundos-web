@@ -4,24 +4,24 @@ import { convertToCrores } from '@/lib/currencyToWords';
 import { InvestedDeal } from '@/constants/membersConstant';
 
 function getStatusColor(status: DealStatus): string {
-  switch (status.toLowerCase()) {
-    case 'open':
+  switch (status) {
+    case 'OPEN':
       return 'bg-green-400';
-    case 'closed':
+    case 'CLOSED':
       return 'bg-red-400';
-    case 'on_hold':
+    case 'ON_HOLD':
       return 'bg-yellow-400';
     default:
       return 'bg-gray-400';
   }
 }
 function getStatusBgColor(status: DealStatus): string {
-  switch (status.toLowerCase()) {
-    case 'open':
+  switch (status) {
+    case 'OPEN':
       return 'bg-[#00fb5745]';
-    case 'closed':
+    case 'CLOSED':
       return 'bg-[#fd888870]';
-    case 'on_hold':
+    case 'ON_HOLD':
       return 'bg-[#fbbf2450]';
     default:
       return 'bg-[#6b728045]';

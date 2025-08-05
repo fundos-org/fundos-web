@@ -228,7 +228,7 @@ export interface ResetPasswordFormData {
   confirmPassword: string;
 }
 
-export type DealStatus = 'open' | 'closed' | 'on_hold';
+export type DealStatus = 'OPEN' | 'CLOSED' | 'ON_HOLD';
 export interface DealCard {
   deal_id: string;
   description: string;
