@@ -1,4 +1,4 @@
-import { useState, useRef, DragEvent, ChangeEvent, lazy } from 'react';
+import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import { Download, CloudUpload, Trash2, Info } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
@@ -6,7 +6,7 @@ import BulkOnboardingDialog from '../modals/BulkOnboardingDialog';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
 import BulkOnboardInstructions from './BulkOnboardInstructions';
 import { useUserDB } from '@/hooks/customhooks/IndexedDBHooks/useUserDB';
-const BulkOnboardingTable = lazy(() => import('./BulkOnboardingTable'));
+import BulkOnboardingTable from './BulkOnboardingTable';
 
 export default function BulkOnboarding() {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -17,7 +17,7 @@ export default function BulkOnboarding() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [openInstructions, setOpenInstructions] = useState(false);
-  const { upsertUsers } = useUserDB();
+  const { fileNames, getUsers, upsertUsers } = useUserDB();
 
   const processFile = async (file: File): Promise<void> => {
     setIsLoading(true);
@@ -35,45 +35,45 @@ export default function BulkOnboarding() {
           dynamicTyping: true,
           complete: results => {
             const rawData = results.data as Record<string, unknown>[];
-            setParsedData(
-              rawData.map(row => {
-                const emailKey = Object.keys(row).find(
-                  key =>
-                    key.toLowerCase().includes('email') ||
-                    key.toLowerCase() === 'email'
-                );
-                const panKey = Object.keys(row).find(
-                  key =>
-                    key.toLowerCase().includes('pan') ||
-                    key.toLowerCase().includes('pannumber') ||
-                    key.toLowerCase().includes('pan_number') ||
-                    key.toLowerCase() === 'pan'
-                );
-                const phoneKey = Object.keys(row).find(
-                  key =>
-                    key.toLowerCase().includes('phone') ||
-                    key.toLowerCase().includes('phonenumber') ||
-                    key.toLowerCase().includes('phone_number') ||
-                    key.toLowerCase() === 'phone'
-                );
-                const capitalKey = Object.keys(row).find(
-                  key =>
-                    key.toLowerCase().includes('capital') ||
-                    key.toLowerCase().includes('commitment') ||
-                    key.toLowerCase().includes('capitalcommitment') ||
-                    key.toLowerCase().includes('capital_commitment')
-                );
-                return {
-                  email: emailKey ? String(row[emailKey] ?? '').trim() : '',
-                  pan_number: panKey ? String(row[panKey] ?? '').trim() : '',
-                  phone: phoneKey ? String(row[phoneKey] ?? '').trim() : '',
-                  capital_commitment: capitalKey
-                    ? String(row[capitalKey] ?? '').trim()
-                    : '',
-                };
-              })
-            );
+            const list = rawData.map(row => {
+              const emailKey = Object.keys(row).find(
+                key =>
+                  key.toLowerCase().includes('email') ||
+                  key.toLowerCase() === 'email'
+              );
+              const panKey = Object.keys(row).find(
+                key =>
+                  key.toLowerCase().includes('pan') ||
+                  key.toLowerCase().includes('pannumber') ||
+                  key.toLowerCase().includes('pan_number') ||
+                  key.toLowerCase() === 'pan'
+              );
+              const phoneKey = Object.keys(row).find(
+                key =>
+                  key.toLowerCase().includes('phone') ||
+                  key.toLowerCase().includes('phonenumber') ||
+                  key.toLowerCase().includes('phone_number') ||
+                  key.toLowerCase() === 'phone'
+              );
+              const capitalKey = Object.keys(row).find(
+                key =>
+                  key.toLowerCase().includes('capital') ||
+                  key.toLowerCase().includes('commitment') ||
+                  key.toLowerCase().includes('capitalcommitment') ||
+                  key.toLowerCase().includes('capital_commitment')
+              );
+              return {
+                email: emailKey ? String(row[emailKey] ?? '').trim() : '',
+                pan_number: panKey ? String(row[panKey] ?? '').trim() : '',
+                phone: phoneKey ? String(row[phoneKey] ?? '').trim() : '',
+                capital_commitment: capitalKey
+                  ? String(row[capitalKey] ?? '').trim()
+                  : '',
+              };
+            });
+            setParsedData(list);
             setOpen(true);
+            upsertUsers(file.name, list);
             setIsLoading(false);
           },
           error: error => {
@@ -368,7 +368,7 @@ export default function BulkOnboarding() {
             </div>
           )}
         </div>
-        <BulkOnboardingTable />
+        <BulkOnboardingTable fileNames={fileNames} getUsers={getUsers} />
       </div>
       <BulkOnboardingDialog data={parsedData} open={open} setOpen={setOpen} />
     </>

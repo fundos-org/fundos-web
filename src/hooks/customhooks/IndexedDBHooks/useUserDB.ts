@@ -6,6 +6,7 @@ export const useUserDB = () => {
   const [dbService] = useState(() => new UserDBService());
   const [isInitializing, setIsInitializing] = useState(true);
   const [error, setError] = useState<DBError>(null);
+  const [fileNames, setFileNames] = useState<string[]>([]);
 
   // Initialize DB on mount
   useEffect(() => {
@@ -13,6 +14,9 @@ export const useUserDB = () => {
       try {
         await dbService.initialize();
         setError(null);
+        // Fetch file names after DB init
+        const names = await dbService.fileNames();
+        setFileNames(names);
       } catch (err) {
         setError(
           err instanceof Error
@@ -23,7 +27,6 @@ export const useUserDB = () => {
         setIsInitializing(false);
       }
     };
-
     initDB();
   }, [dbService]);
 
@@ -42,8 +45,11 @@ export const useUserDB = () => {
   );
 
   const upsertUsers = useCallback(
-    (fileName: string, users: User[]) =>
-      handleOperation(() => dbService.upsertUsers(fileName, users)),
+    async (fileName: string, users: User[]) => {
+      await handleOperation(() => dbService.upsertUsers(fileName, users));
+      const names = await dbService.fileNames();
+      setFileNames(names);
+    },
     [handleOperation, dbService]
   );
 
@@ -64,18 +70,17 @@ export const useUserDB = () => {
   );
 
   const deleteFile = useCallback(
-    (fileName: string) => handleOperation(() => dbService.deleteFile(fileName)),
+    async (fileName: string) => {
+      await handleOperation(() => dbService.deleteFile(fileName));
+      const names = await dbService.fileNames();
+      setFileNames(names);
+    },
     [handleOperation, dbService]
   );
 
   const deleteUser = useCallback(
     (fileName: string, phone: string) =>
       handleOperation(() => dbService.deleteUser(fileName, phone)),
-    [handleOperation, dbService]
-  );
-
-  const fileNames = useCallback(
-    () => handleOperation(() => dbService.fileNames()),
     [handleOperation, dbService]
   );
 

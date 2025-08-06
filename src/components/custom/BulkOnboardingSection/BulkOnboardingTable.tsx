@@ -14,27 +14,20 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { User } from '@/hooks/customhooks/IndexedDBHooks/db.types';
-import { useUserDB } from '@/hooks/customhooks/IndexedDBHooks/useUserDB';
 import { FC, useEffect, useState } from 'react';
 import { memo } from 'react';
 
-const BulkOnboardingTable: FC = memo(() => {
-  const { getUsers, fileNames } = useUserDB();
+const BulkOnboardingTable: FC<{
+  fileNames: string[];
+  getUsers: (fileName: string) => Promise<User[]>;
+}> = memo(({ fileNames, getUsers }) => {
   const [files, setFiles] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [userList, setUserList] = useState<User[]>([]);
 
   useEffect(() => {
-    const fetchFileNames = async () => {
-      try {
-        const fileNamesList = await fileNames();
-        setFiles(fileNamesList);
-        setSelectedFile(fileNamesList[0] || null);
-      } catch (error) {
-        console.error('Error fetching file names:', error);
-      }
-    };
-    fetchFileNames();
+    setFiles(fileNames);
+    setSelectedFile(fileNames[0] || null);
   }, [fileNames]);
 
   useEffect(() => {
