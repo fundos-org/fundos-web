@@ -36,7 +36,6 @@ import {
   UpdateInvestorRequest,
   UpdateInvestorResponse,
 } from '@/constants/membersConstant';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
@@ -379,31 +378,31 @@ export const resetPasswordAssign = async (
   }
 };
 
-export const fetchTransactionList = createAsyncThunk<
-  MemberApiResponse,
-  void,
-  { rejectValue: CommonError }
->('members/fetchTransactionList', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.get(
-      `${baseUrl}/v1/subadmin/dashboard/transactions`
-    );
-    return response.data;
-  } catch (error: unknown) {
-    // Handle axios or network errors
-    if (isAxiosError(error) && error.response?.data) {
-      const errorData = error.response.data as CommonError;
-      if (errorData.isSuccess !== undefined && errorData.message) {
-        return rejectWithValue(errorData);
-      }
-    }
-    // Fallback for unexpected errors
-    return rejectWithValue({
-      isSuccess: false,
-      message: 'Failed to fetch deals',
-    });
-  }
-});
+// export const fetchTransactionList = createAsyncThunk<
+//   MemberApiResponse,
+//   void,
+//   { rejectValue: CommonError }
+// >('members/fetchTransactionList', async (_, { rejectWithValue }) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `${baseUrl}/v1/subadmin/dashboard/transactions`
+//     );
+//     return response.data;
+//   } catch (error: unknown) {
+//     // Handle axios or network errors
+//     if (isAxiosError(error) && error.response?.data) {
+//       const errorData = error.response.data as CommonError;
+//       if (errorData.isSuccess !== undefined && errorData.message) {
+//         return rejectWithValue(errorData);
+//       }
+//     }
+//     // Fallback for unexpected errors
+//     return rejectWithValue({
+//       isSuccess: false,
+//       message: 'Failed to fetch deals',
+//     });
+//   }
+// });
 
 export const appLogin = async (
   data: LoginFormData,
