@@ -548,7 +548,7 @@ export const getDeals = async (
     url.searchParams.set('closed_per_page', closed_page_size.toString());
     url.searchParams.set('onhold_page_number', onhold_page_number.toString());
     url.searchParams.set('onhold_page_size', onhold_page_size.toString());
-    url.searchParams.set('subadmin_id', subadmin_id);
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
     const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error: unknown) {
