@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -136,14 +136,19 @@
   }
 }
 
-body{
+body {
   background-color: #000000;
   color: #ffffff;
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .animate-twinkle {
@@ -188,4 +193,21 @@ body{
 .custom-scrollbar-table::-webkit-scrollbar-thumb:hover {
   background: #38373930; /* Thumb hover color */
   cursor: pointer;
+}
+
+.gradient-bg-fundos {
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(255, 182, 193, 0.8) 0%,
+      rgba(255, 182, 193, 0.3) 10%,
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(92, 133, 244, 0.9) 0%,
+      rgba(171, 193, 255, 0.3) 10%,
+      transparent 25%
+    ),
+    #000000;
 }
