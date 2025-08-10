@@ -174,7 +174,7 @@ export default function CreateDealDialog({
           await companyDetailsTrigger(
             values.companyName,
             values.aboutCompany,
-            `AVF - ${values.investmentSchemeAppendix} - 1`,
+            `AVF - ${values.investmentSchemeAppendix}`,
             values.logo,
             dealData?.deal_data?.id
           );
