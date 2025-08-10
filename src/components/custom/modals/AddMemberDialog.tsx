@@ -7,23 +7,42 @@ import {
 } from '@/components/ui/dialog';
 import { AppEnums } from '@/constants/enums';
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function AddMemberDialog() {
   const [email, setEmail] = useState('');
   const [copied] = useState(false);
+  const [invitedEmail, setInvitedEmail] = useState<string | null>(null);
   const [session] = useState(() =>
     JSON.parse(sessionStorage.getItem(AppEnums.SUBADMIN_SESSION) || '{}')
   );
+
+  // Clear invited email after 4 seconds
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (invitedEmail) {
+      timeoutId = setTimeout(() => {
+        setInvitedEmail(null);
+      }, 6000);
+    }
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [invitedEmail]);
 
   const handleClick = async () => {
     const response = await addMember(email);
     if (!response) {
       toast.error('Failed to send invite');
+      setInvitedEmail(null);
     }
     if (response.message) {
       toast.success(response.message);
+      setInvitedEmail(email);
+      setEmail(''); // Clear input after successful invite
     }
   };
 
@@ -45,7 +64,7 @@ export default function AddMemberDialog() {
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >
-      <div className="text-white rounded-none shadow-lg">
+      <div className="text-white rounded-none">
         <DialogHeader>
           <DialogTitle className="text-3xl text-white flex items-center justify-between">
             Add member
@@ -76,12 +95,17 @@ export default function AddMemberDialog() {
               className="flex-1 bg-transparent border border-zinc-700 text-white p-2 outline-none"
             />
             <button
-              className="bg-white text-black px-6 ml-2 font-semibold"
+              className="bg-white text-black px-6 ml-2 font-semibold cursor-pointer"
               onClick={handleClick}
             >
               Invite
             </button>
           </div>
+          {invitedEmail && (
+            <div className="mt-2 text-sm text-emerald-500">
+              ✓ Invite sent to {invitedEmail}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-center text-sm text-zinc-500 mb-6">

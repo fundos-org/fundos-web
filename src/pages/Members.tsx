@@ -23,7 +23,7 @@ export default function Members() {
         </div>
         {isSubadmin && (
           <DialogTrigger asChild>
-            <button className="bg-white text-black px-4 py-2 rounded-none">
+            <button className="bg-white text-black px-4 py-2 rounded-none cursor-pointer">
               Add member
             </button>
           </DialogTrigger>

@@ -104,7 +104,7 @@ const DealTransactions: FC<{ deal_id: string }> = ({ deal_id }) => {
             </TableRow>
           </TableHeader>
           <TableBody className="overflow-hidden">
-            {data?.transactions &&
+            {data?.transactions && data.transactions.length > 0 ? (
               data?.transactions?.map((transaction: DealTransaction) => (
                 <TableRow
                   className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
@@ -126,7 +126,17 @@ const DealTransactions: FC<{ deal_id: string }> = ({ deal_id }) => {
                     {transaction.status}
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={10}
+                  className="text-center py-8 text-zinc-400"
+                >
+                  No transactions found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

@@ -14,7 +14,7 @@ import {
   LayoutDashboard,
   Users,
   // Settings,
-  HelpCircle,
+  // HelpCircle,
   UserRoundPen,
   LucideProps,
   LogOut,
@@ -42,6 +42,9 @@ import {
 import { AppRoute } from '@/RoutesEnum';
 import { AppEnums } from '@/constants/enums';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import SupportPopover from './SupportPopover';
+// import SupportPopover from './SupportPopover';
+// import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 type Role = 'admin' | 'subadmin' | 'kyc';
 
@@ -135,7 +138,7 @@ export default function AppSidebar() {
   return (
     <Sidebar className="p-3 bg-gray-900">
       <SidebarHeader className="text-3xl font-bold text-white bg-gray-900">
-        <img src={'/fundosImg.jpeg'} width="150" alt="Fundos" />
+        <img src={'/logo.svg'} width="150" alt="Fundos" />
       </SidebarHeader>
       <SidebarContent className="bg-gray-900 text-white">
         <SidebarGroup>
@@ -171,8 +174,7 @@ export default function AppSidebar() {
       <SidebarFooter className="bg-gray-900">
         <div className="bg-gray-900 rounded-none border-0 p-5 text-white flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <HelpCircle className="text-gray-400" />
-            <h4 className="font-medium text-gray-400">Support</h4>
+            <SupportPopover />
           </div>
         </div>
         <Card className="bg-gray-800 rounded-none border-0 p-5 text-white flex items-center justify-between">

@@ -82,7 +82,7 @@ const SubAdminTable: FC = () => {
     <>
       <div className="w-full border border-[#2A2A2B]">
         <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
-          <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
+          <h1 className="text-2xl text-zinc-400">SUBADMINS</h1>
           <button
             onClick={handleRefresh}
             disabled={isRefreshing || isLoading}

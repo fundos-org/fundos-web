@@ -45,7 +45,7 @@ const DealDetailsDialog: FC<{
     >
       <DialogContent
         aria-describedby={undefined}
-        // onInteractOutside={e => e.preventDefault()}
+        onInteractOutside={e => e.preventDefault()}
         className={cn(
           'fixed inset-0 z-50 p-10 mx-[20rem] my-[0rem] rounded-none shadow-none w-[calc(100vw-20rem)] h-screen max-w-none max-h-none bg-black'
         )}

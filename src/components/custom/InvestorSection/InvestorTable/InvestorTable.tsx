@@ -158,7 +158,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
       <div className="w-full border border-[#2A2A2B]">
         <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
           <div className="flex gap-2">
-            <h1 className="text-2xl text-zinc-400">INVESTORS ONBOARDED</h1>
+            <h1 className="text-2xl text-zinc-400">ONBOARDED INVESTORS</h1>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -243,8 +243,8 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
-              {data?.investors &&
-                data?.investors?.map((investor: InvestorEntity) => (
+              {data?.investors && data.investors.length > 0 ? (
+                data.investors.map((investor: InvestorEntity) => (
                   <TableRow
                     className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
                     key={investor.investor_id}
@@ -317,7 +317,17 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                       </TableCell>
                     )}
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={isSubadmin ? 12 : 10}
+                    className="text-center py-8 text-zinc-400"
+                  >
+                    No investor found
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

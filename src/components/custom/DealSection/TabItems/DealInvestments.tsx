@@ -114,7 +114,7 @@ const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
-              {data?.investors &&
+              {data?.investors && data.investors.length > 0 ? (
                 data?.investors?.map((investor: InvestorForDeals) => (
                   <TableRow
                     className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
@@ -148,7 +148,17 @@ const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
                       />
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={12}
+                    className="text-center py-8 text-zinc-400"
+                  >
+                    No investments found
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
