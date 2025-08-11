@@ -217,7 +217,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
             </div>
           )}
         </div>
-        <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
+        <div className="grid w-full [&>div]:min-h-[56vh] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom after:border-zinc-400/60 border-zinc-400/60">
@@ -319,7 +319,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
+                <TableRow className="h-100 hover:bg-black">
                   <TableCell
                     colSpan={isSubadmin ? 12 : 10}
                     className="text-center py-8 text-zinc-400"

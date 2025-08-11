@@ -35,7 +35,7 @@ const pageSizesList = [6, 10, 20, 50];
 const SubAdminTable: FC = () => {
   const [subAadminId, setSubAadminId] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(6);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const { data, isLoading, error, refetch } = useSubadminsTable(
     pageNumber,
@@ -97,7 +97,7 @@ const SubAdminTable: FC = () => {
             />
           </button>
         </div>
-        <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
+        <div className="grid w-full [&>div]:min-h-[63vh] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:absolute bottom-0 border-zinc-700">

@@ -48,18 +48,20 @@ export interface AdminDashboardStats {
   success: boolean;
 }
 
-interface Admin {
-  admin_id: string;
-  admin_name: string;
+export interface SubadminOverview {
+  subadmin_id: string;
+  subadmin_name: string;
   email: string;
   invitation_code: string;
   total_users: number;
   active_deals: number;
+  users_added_last_one_month: number;
+  users_added_till_date: number;
   onboarding_date: string;
 }
 
 export interface AdminsOverviewListResponse {
-  admins: Admin[];
+  subadmins: SubadminOverview[];
   pagination: Pagination;
   success: boolean;
 }

@@ -36,7 +36,7 @@ export const useDealTable = (
         subadmin_id!
       ),
     {
-      // enabled: !!subadmin_id,
+      enabled: !!subadmin_id,
       refetchOnWindowFocus: false,
       retry: 2,
       // keepPreviousData: true, // useful for pagination

@@ -34,7 +34,7 @@ const pageSizesList = [6, 10, 20, 50];
 
 function AdminOverviewTable() {
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(6);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {
     data,
@@ -106,7 +106,7 @@ function AdminOverviewTable() {
             </Tooltip>
           </div>
         </div>
-        <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
+        <div className="grid w-full [&>div]:min-h-[47vh] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom after:border-zinc-400/60 border-zinc-400/60">
@@ -123,14 +123,14 @@ function AdminOverviewTable() {
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
-              {data?.admins &&
-                data?.admins?.map(admin => (
+              {data?.subadmins &&
+                data?.subadmins?.map(admin => (
                   <TableRow
                     className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
-                    key={admin.admin_id}
+                    key={admin.subadmin_id}
                   >
                     <TableCell className="font-medium">
-                      {admin.admin_name}
+                      {admin.subadmin_name}
                     </TableCell>
                     <TableCell className="font-medium">{admin.email}</TableCell>
                     <TableCell className="font-medium">

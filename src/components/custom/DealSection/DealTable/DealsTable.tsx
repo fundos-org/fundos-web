@@ -1,4 +1,4 @@
-import { Dispatch, FC, lazy, SetStateAction, Suspense } from 'react';
+import { Dispatch, FC, lazy, SetStateAction } from 'react';
 import { DealCard as DC } from '@/constants/dealsConstant';
 import {
   Pagination,
@@ -56,11 +56,7 @@ const DealsTable: FC<{
   };
   return (
     <>
-      {deals?.map((deal: DC, index: number) => (
-        <Suspense fallback={<div>Loading</div>}>
-          <Dealcard deal={deal} key={index + 1} />
-        </Suspense>
-      ))}
+      {deals?.map((deal: DC) => <Dealcard deal={deal} key={deal.deal_id} />)}
       {deals.length > 0 && (
         <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
           <span>Total records: {pagination.total_records}</span>

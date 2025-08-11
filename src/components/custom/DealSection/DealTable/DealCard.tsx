@@ -63,20 +63,18 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
   return (
     <>
       <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] to-[#202022] text-white p-5 w-[380px] max-w-md">
-        <CardContent className="p-0 flex flex-col justify-between">
-          <div>
+        <CardContent className="p-0 flex flex-col justify-between cursor-pointer">
+          <div className="cursor-pointer" onClick={() => setDetails(deal)}>
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="">
-                  <div className="w-15 h-15 overflow-hidden flex items-center justify-center bg-zinc-800 rounded">
-                    {logo && (
-                      <img
-                        src={logo}
-                        className="max-w-full max-h-full object-contain"
-                        alt="deal image"
-                      />
-                    )}
-                  </div>
+                <div className="w-15 h-15 overflow-hidden flex items-center justify-center bg-zinc-800 rounded">
+                  {logo && (
+                    <img
+                      src={logo}
+                      className="max-w-full max-h-full object-contain"
+                      alt="deal image"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -93,7 +91,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                 </p>
               </div>
             </div>
-            <h2 className="text-2xl font-bold mt-4 line-clamp-1">
+            <h2 className="text-2xl font-bold mt-4 line-clamp-1 hover:underline">
               {title ? title : 'Default Deal Title'}
             </h2>
             <small className="text-zinc-400 mt-1 line-clamp-2">
