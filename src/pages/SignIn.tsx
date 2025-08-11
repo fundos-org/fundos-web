@@ -57,7 +57,7 @@ const getColorScheme = (): ColorScheme => {
     };
   } else if (hostname.includes('subadmin.fundos.services')) {
     return {
-      name: 'FundOS',
+      name: 'Fund Manager',
       role: 'subadmin',
       background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
       cardBg: 'bg-zinc-900/40',
@@ -72,22 +72,23 @@ const getColorScheme = (): ColorScheme => {
     };
   } else if (hostname.includes('admin.fundos.services')) {
     return {
-      name: 'Admin Portal',
+      name: 'Admin',
       role: 'admin',
-      background: 'bg-gradient-to-br from-blue-900 via-violet-700 to-white-900',
-      cardBg: 'bg-yellow-100',
-      inputBg: 'bg-light-800',
+      background: 'gradient-bg-fundos',
+      cardBg:
+        'bg-white/10 hover:bg-zinc-800/80 transition-all duration-300 ease-in-out',
+      inputBg: 'bg-blue-100',
       inputText: 'text-black',
-      inputBorder: 'border-cyan-500',
-      focusRing: 'focus:ring-cyan-400',
-      buttonBg: 'bg-gradient-to-r from-cyan-600 to-blue-600',
-      buttonHover: 'hover:from-cyan-500 hover:to-blue-500',
+      inputBorder: 'border-gray-500',
+      focusRing: 'focus:ring-blue-400',
+      buttonBg: 'bg-black cursor-pointer border border-zinc-700',
+      buttonHover: 'hover:bg-gray-600',
       buttonText: 'text-white',
-      starColor: 'bg-cyan-200',
+      starColor: 'bg-blue-200',
     };
   } else {
     // return {
-    //   name: 'FundOS',
+    //   name: 'Fund Manager',
     //   role: 'subadmin',
     //   background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
     //   cardBg: 'bg-zinc-900/40',
@@ -101,15 +102,16 @@ const getColorScheme = (): ColorScheme => {
     //   starColor: 'bg-white',
     // };
     return {
-      name: 'Fundos Admin',
+      name: 'Admin',
       role: 'admin',
       background: 'gradient-bg-fundos',
-      cardBg: 'bg-blue-50',
+      cardBg:
+        'bg-white/10 hover:bg-zinc-800/80 transition-all duration-300 ease-in-out',
       inputBg: 'bg-blue-100',
       inputText: 'text-black',
-      inputBorder: 'border-pink-500',
+      inputBorder: 'border-gray-500',
       focusRing: 'focus:ring-blue-400',
-      buttonBg: 'bg-black cursor-pointer',
+      buttonBg: 'bg-black cursor-pointer border border-zinc-700',
       buttonHover: 'hover:bg-gray-600',
       buttonText: 'text-white',
       starColor: 'bg-blue-200',
@@ -306,6 +308,9 @@ export default function SignIn() {
             backToSignIn={() => setResetPassword(false)}
           />
         )}
+      </div>
+      <div className="absolute bottom-7">
+        <img src={'/logo.svg'} width={150} alt="Fundos" />
       </div>
     </div>
   );
