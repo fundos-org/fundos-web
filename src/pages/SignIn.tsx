@@ -87,20 +87,20 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-blue-200',
     };
   } else {
-    return {
-      name: 'Fund Manager',
-      role: 'subadmin',
-      background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
-      cardBg: 'bg-zinc-900/40',
-      inputBg: 'bg-gray-800',
-      inputBorder: 'border-gray-600',
-      inputText: 'text-white',
-      focusRing: 'focus:ring-gray-500',
-      buttonBg: 'bg-white cursor-pointer',
-      buttonHover: 'hover:bg-gray-200',
-      buttonText: 'text-black',
-      starColor: 'bg-white',
-    };
+    // return {
+    //   name: 'Fund Manager',
+    //   role: 'subadmin',
+    //   background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+    //   cardBg: 'bg-zinc-900/40',
+    //   inputBg: 'bg-gray-800',
+    //   inputBorder: 'border-gray-600',
+    //   inputText: 'text-white',
+    //   focusRing: 'focus:ring-gray-500',
+    //   buttonBg: 'bg-white cursor-pointer',
+    //   buttonHover: 'hover:bg-gray-200',
+    //   buttonText: 'text-black',
+    //   starColor: 'bg-white',
+    // };
     return {
       name: 'Admin',
       role: 'admin',
@@ -176,6 +176,12 @@ export default function SignIn() {
           logo: logoKey,
           name,
           invite_code,
+          email,
+          contact,
+          username,
+          about,
+          app_link,
+          app_name,
           tokens: { access_token, refresh_token } = {} as AuthTokens,
         } = (await loginUser(data)) as SubadminLoginResponse;
         const logo = await getFileUrl(AWS_BUCKET_NAME, logoKey);
@@ -185,6 +191,12 @@ export default function SignIn() {
             name,
             logo,
             invite_code,
+            email,
+            contact,
+            username,
+            about,
+            app_link,
+            app_name,
           });
           sessionStorage.setItem(AppEnums.ACCESS_TOKEN, access_token);
           sessionStorage.setItem(AppEnums.REFRESH_TOKEN, refresh_token);

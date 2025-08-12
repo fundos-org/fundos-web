@@ -43,8 +43,7 @@ import { AppRoute } from '@/RoutesEnum';
 import { AppEnums } from '@/constants/enums';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import SupportPopover from './SupportPopover';
-// import SupportPopover from './SupportPopover';
-// import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import ShortDetailsPopover from './ShortDetailsPopover';
 
 type Role = 'admin' | 'subadmin' | 'kyc';
 
@@ -193,14 +192,18 @@ export default function AppSidebar() {
                 <AvatarFallback>BS</AvatarFallback>
               </Avatar>
             </div>
-            <div className="flex-1">
-              <h4 className="text-white font-medium capitalize">
-                {sessionData?.name ?? 'User'}
-              </h4>
+            {/* <div className="flex-1">
+              <div className="flex gap-2">
+                <h4 className="text-white font-medium capitalize">
+                  {sessionData?.name ?? 'User'}
+                </h4>
+                <ShortDetailsPopover />
+              </div>
               <p className="text-sm text-gray-400">
                 {sessionData?.invite_code ?? 'You dont need invite code 😉'}
               </p>
-            </div>
+            </div> */}
+            <ShortDetailsPopover />
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <button

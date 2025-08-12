@@ -86,6 +86,12 @@ export interface SubadminLoginResponse {
   message: string;
   subadmin_id: string;
   name: string;
+  email: string;
+  contact: string;
+  username: string;
+  about: string;
+  app_link: string;
+  app_name: string;
   invite_code: string;
   logo: string;
   role: 'subadmin' | 'admin' | 'user';
