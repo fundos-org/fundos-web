@@ -3,14 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../ui/tabs';
 import { useDealTable } from '@/hooks/customhooks/DealsHooks/useDealTable';
 import { RefreshCw } from 'lucide-react';
 import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import SubadminIdsSelect from '../../InvestorSection/CustomSelects/SubadminIdsSelect';
 const DealsTable = lazy(() => import('./DealsTable'));
 
 const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
@@ -63,24 +57,12 @@ const ShowDeals: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     <>
       {!isSubadmin && (
         <div className="flex mt-5">
-          <Select
-            onValueChange={handleSubAdminIdChange}
+          <SubadminIdsSelect
+            list={subadminIds?.subadmins ?? []}
+            handleChange={handleSubAdminIdChange}
             value={subadmin_id ?? ''}
-          >
-            <SelectTrigger className="rounded-none w-[444px] cursor-pointer border border-[#383739] bg-black/40">
-              <SelectValue placeholder="Select Sub-Admin" />
-            </SelectTrigger>
-            <SelectContent className="rounded-none">
-              {subadminIds?.subadmins?.map(subadmin => (
-                <SelectItem
-                  key={subadmin?.subadmin_id}
-                  value={String(subadmin?.subadmin_id)}
-                >
-                  {subadmin?.subadmin_name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            isItForDeals={true}
+          />
           <Button
             onClick={handleRefreshIds}
             disabled={isRefreshing1}

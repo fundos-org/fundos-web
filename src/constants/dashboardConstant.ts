@@ -20,6 +20,8 @@ export interface DashboardStatistics {
 export interface SubadminId {
   subadmin_id: string;
   subadmin_name: string;
+  user_count?: number | null;
+  deal_count?: number | null;
 }
 
 export interface SubadminIdsResponse {

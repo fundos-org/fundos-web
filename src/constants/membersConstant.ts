@@ -1,4 +1,5 @@
 import { DealStatus } from './dealsConstant';
+import { InvestorType, KycStatus, OnboardingStatus } from './investorsConstant';
 
 export interface Member {
   user_id: string;
@@ -49,9 +50,10 @@ export interface InvestorEntity {
   investor_id: string;
   name: string;
   mail: string;
-  type: 'entity' | 'individual';
+  type: InvestorType;
   deals_invested: number;
-  kyc_status: 'pending' | 'verified' | 'rejected';
+  kyc_status: KycStatus;
+  onboarding_status: OnboardingStatus;
   mca_key: string;
   joined_on: string;
   profile_pic: string;

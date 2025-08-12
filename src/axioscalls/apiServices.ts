@@ -40,6 +40,11 @@ import { AxiosError, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 import axiosInstance from './axiosConfig';
+import {
+  InvestorType,
+  KycStatus,
+  OnboardingStatus,
+} from '@/constants/investorsConstant';
 
 const baseOrigin = import.meta.env.VITE_BASE_ORIGIN;
 const reverseProxyPath = import.meta.env.VITE_REVERSE_PROXY_ENV;
@@ -726,16 +731,30 @@ export const deleteInvestor = async (
   }
 };
 
-export const getInvestors = async (
-  pageNumber: number,
-  pageSize: number,
-  subadmin_id?: string
-): Promise<InvestorsListResponse> => {
+export const getInvestors = async ({
+  pageNumber,
+  pageSize,
+  subAdminId,
+  onboarding_status,
+  investor_type,
+  kyc_status,
+}: Partial<{
+  pageNumber: number;
+  pageSize: number;
+  subAdminId?: string;
+  onboarding_status?: OnboardingStatus;
+  investor_type?: InvestorType;
+  kyc_status?: KycStatus;
+}>): Promise<InvestorsListResponse> => {
   try {
     const url = new URL(`${baseUrl}/v1/subadmin/investors/list`);
-    url.searchParams.set('page', pageNumber.toString());
-    url.searchParams.set('per_page', pageSize.toString());
-    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
+    url.searchParams.set('page', pageNumber?.toString() ?? '1');
+    url.searchParams.set('per_page', pageSize?.toString() ?? '10');
+    if (subAdminId) url.searchParams.set('subadmin_id', subAdminId);
+    if (onboarding_status)
+      url.searchParams.set('onboarding_status', onboarding_status);
+    if (investor_type) url.searchParams.set('investor_type', investor_type);
+    if (kyc_status) url.searchParams.set('kyc_status', kyc_status);
     const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {

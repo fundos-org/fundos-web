@@ -41,6 +41,13 @@ import {
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { AppEnums } from '@/constants/enums';
+import SubadminIdsSelect from '../CustomSelects/SubadminIdsSelect';
+import FilterSelect from '../CustomSelects/FilterSelect';
+import {
+  InvestorType,
+  KycStatus,
+  OnboardingStatus,
+} from '@/constants/investorsConstant';
 // import { useLoader } from '@/hooks/useLoader';
 const InvestorFileDisplayDialog = lazy(
   () => import('../DialogItems/InvestorFileDisplayDialog')
@@ -74,6 +81,9 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [sendDetails, setSendDetails] = useState<InvestorEntity>();
   const [editUser, setEditUser] = useState<OpenEditDialog | null>(null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
+  const [investor_type, setInvestorType] = useState<InvestorType>();
+  const [onboarding_status, setOnboardingStatus] = useState<OnboardingStatus>();
+  const [kyc_status, setKycStatus] = useState<KycStatus>();
   const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
@@ -88,7 +98,15 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     isLoading: isFetching,
     error,
     refetch,
-  } = useInvestors(pageNumber, pageSize, subAdminId, isSubadmin);
+  } = useInvestors({
+    pageNumber,
+    pageSize,
+    subAdminId,
+    isSubadmin,
+    investor_type,
+    onboarding_status,
+    kyc_status,
+  });
 
   useEffect(() => {
     // Suggestion: Only set subAdminId if it's undefined and subadminIds is available
@@ -184,24 +202,12 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
           </div>
           {!isSubadmin && (
             <div className="flex">
-              <Select
-                onValueChange={handleSubAdminIdChange}
+              <SubadminIdsSelect
+                list={subadminIds?.subadmins ?? []}
+                handleChange={handleSubAdminIdChange}
                 value={subAdminId ?? ''}
-              >
-                <SelectTrigger className="rounded-none w-[200px] cursor-pointer border border-[#383739] bg-black/40">
-                  <SelectValue placeholder="Select Sub-Admin" />
-                </SelectTrigger>
-                <SelectContent className="rounded-none">
-                  {subadminIds?.subadmins?.map(subadmin => (
-                    <SelectItem
-                      key={subadmin?.subadmin_id}
-                      value={String(subadmin?.subadmin_id)}
-                    >
-                      {subadmin?.subadmin_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                isItForDeals={false}
+              />
               <Button
                 onClick={handleRefreshIds}
                 disabled={isRefreshing1}
@@ -224,11 +230,37 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                 <TableHead className="text-zinc-400 pl-4">Action</TableHead>
                 <TableHead className="text-zinc-400">Name</TableHead>
                 <TableHead className="text-zinc-400">Mail</TableHead>
-                <TableHead className="text-zinc-400">Type</TableHead>
+                <TableHead className="text-zinc-400">
+                  <FilterSelect
+                    enumObject={InvestorType}
+                    handleChange={value =>
+                      setInvestorType(value as InvestorType)
+                    }
+                    value={investor_type ?? ''}
+                    placeholder="Investor Type"
+                  />
+                </TableHead>
+                <TableHead className="text-zinc-400">
+                  <FilterSelect
+                    enumObject={OnboardingStatus}
+                    handleChange={value =>
+                      setOnboardingStatus(value as OnboardingStatus)
+                    }
+                    value={onboarding_status ?? ''}
+                    placeholder="Onboarding Status"
+                  />
+                </TableHead>
                 <TableHead className="text-zinc-400 text-center">
                   Deal Invested
                 </TableHead>
-                <TableHead className="text-zinc-400">KYC Status</TableHead>
+                <TableHead className="text-zinc-400">
+                  <FilterSelect
+                    enumObject={KycStatus}
+                    handleChange={value => setKycStatus(value as KycStatus)}
+                    value={kyc_status ?? ''}
+                    placeholder="KYC Status"
+                  />
+                </TableHead>
                 <TableHead className="text-zinc-400">Joining Date</TableHead>
                 <TableHead className="text-zinc-400">
                   Capital Commit(INR)
@@ -271,6 +303,9 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     </TableCell>
                     <TableCell className="font-medium uppercase">
                       {investor.type}
+                    </TableCell>
+                    <TableCell className="font-medium uppercase">
+                      {investor.onboarding_status}
                     </TableCell>
                     <TableCell className="font-medium text-center">
                       {investor.deals_invested}
