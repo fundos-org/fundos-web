@@ -45,7 +45,7 @@ export const useInvestors = ({
         investor_type,
       }),
     {
-      enabled: !!subAdminId || isSubadmin || !!pageNumber || !!pageSize,
+      enabled: (!!subAdminId || isSubadmin) && !!pageNumber && !!pageSize,
       refetchOnWindowFocus: false,
       retry: 2,
       onError: (error: Error) => {

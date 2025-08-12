@@ -75,22 +75,23 @@ const sessCapture = () => {
 const test =
   'deals/pitch_decks/18e75944-883f-46b5-b716-22c61cc3a061_20250510134038.png'; //delete later
 
-const pageSizesList = [6, 10, 20, 50];
+const pageSizesList = [10, 20, 50, 100];
 
 const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [sendDetails, setSendDetails] = useState<InvestorEntity>();
   const [editUser, setEditUser] = useState<OpenEditDialog | null>(null);
   const [openDetails, setOpenDetails] = useState<boolean>(false);
-  const [investor_type, setInvestorType] = useState<InvestorType>();
-  const [onboarding_status, setOnboardingStatus] = useState<OnboardingStatus>();
-  const [kyc_status, setKycStatus] = useState<KycStatus>();
+  const [investor_type, setInvestorType] = useState<InvestorType | undefined>();
+  const [onboarding_status, setOnboardingStatus] = useState<
+    OnboardingStatus | undefined
+  >();
+  const [kyc_status, setKycStatus] = useState<KycStatus | undefined>();
   const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(6);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
   const [subAdminId, setSubAdminId] = useState<string | undefined>(sessCapture);
-  // const { showLoader, hideLoader } = useLoader();
   const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isSubadmin);
   const { mutate: deleteInvestor } = useInvestorDelete();
   const {
@@ -171,6 +172,13 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     setOpenDetails(true);
     setSendDetails(investor);
   };
+
+  const clearFilters = () => {
+    setInvestorType(undefined);
+    setOnboardingStatus(undefined);
+    setKycStatus(undefined);
+  };
+
   return (
     <>
       <div className="w-full border border-[#2A2A2B]">
@@ -201,32 +209,42 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
             </Tooltip>
           </div>
           {!isSubadmin && (
-            <div className="flex">
-              <SubadminIdsSelect
-                list={subadminIds?.subadmins ?? []}
-                handleChange={handleSubAdminIdChange}
-                value={subAdminId ?? ''}
-                isItForDeals={false}
-              />
-              <Button
-                onClick={handleRefreshIds}
-                disabled={isRefreshing1}
-                className="rounded-none border border-[#383739] cursor-pointer"
-                title="Refresh data"
-              >
-                <RefreshCw
-                  className={`w-5 h-5 text-zinc-400 ${
-                    isRefreshing1 ? 'animate-spin' : null
-                  } transition-transform duration-200 hover:text-zinc-300`}
+            <div className="flex gap-3">
+              {(onboarding_status || kyc_status || investor_type) && (
+                <Button
+                  onClick={clearFilters}
+                  className="rounded-none border border-[#383739] cursor-pointer"
+                >
+                  Clear Filters
+                </Button>
+              )}
+              <div className="flex">
+                <SubadminIdsSelect
+                  list={subadminIds?.subadmins ?? []}
+                  handleChange={handleSubAdminIdChange}
+                  value={subAdminId ?? ''}
+                  isItForDeals={false}
                 />
-              </Button>
+                <Button
+                  onClick={handleRefreshIds}
+                  disabled={isRefreshing1}
+                  className="rounded-none border border-[#383739] cursor-pointer"
+                  title="Refresh data"
+                >
+                  <RefreshCw
+                    className={`w-5 h-5 text-zinc-400 ${
+                      isRefreshing1 ? 'animate-spin' : null
+                    } transition-transform duration-200 hover:text-zinc-300`}
+                  />
+                </Button>
+              </div>
             </div>
           )}
         </div>
         <div className="grid w-full [&>div]:min-h-[56vh] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
-              <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom after:border-zinc-400/60 border-zinc-400/60">
+              <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom after:border-zinc-400/60 border-zinc-400/60 hover:bg-black">
                 <TableHead className="text-zinc-400 pl-4">Action</TableHead>
                 <TableHead className="text-zinc-400">Name</TableHead>
                 <TableHead className="text-zinc-400">Mail</TableHead>
@@ -301,16 +319,16 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     <TableCell className="font-medium">
                       {investor.mail}
                     </TableCell>
-                    <TableCell className="font-medium uppercase">
+                    <TableCell className="font-medium text-center">
                       {investor.type}
                     </TableCell>
-                    <TableCell className="font-medium uppercase">
+                    <TableCell className="font-medium">
                       {investor.onboarding_status}
                     </TableCell>
                     <TableCell className="font-medium text-center">
                       {investor.deals_invested}
                     </TableCell>
-                    <TableCell className="font-medium uppercase">
+                    <TableCell className="font-medium text-center">
                       {investor.kyc_status}
                     </TableCell>
                     <TableCell className="font-medium">

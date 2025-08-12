@@ -28,7 +28,7 @@ const SubadminIdsSelect: FC<{
               value={String(subadmin?.subadmin_id)}
             >
               <span>{subadmin?.subadmin_name}</span>
-              {isItForDeals ? (
+              {!isItForDeals ? (
                 <span>(Users: {subadmin?.user_count})</span>
               ) : (
                 <span>(Deals: {subadmin?.deal_count})</span>

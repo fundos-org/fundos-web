@@ -16,19 +16,20 @@ const FilterSelect: FC<{
   return (
     <>
       <Select onValueChange={handleChange} value={value}>
-        <SelectTrigger className="rounded-none cursor-pointer border border-[#383739] bg-black/40">
+        <SelectTrigger className="rounded-none cursor-pointer border-none bg-black/40 flex items-center justify-between">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className="rounded-none bg-black border border-gray-700 text-white">
-          {Object.values(enumObject).map(enumValue => (
-            <SelectItem
-              className="flex w-full justify-between rounded-none cursor-pointer"
-              key={enumValue}
-              value={enumValue}
-            >
-              {enumValue}
-            </SelectItem>
-          ))}
+          {enumObject &&
+            Object.values(enumObject).map(enumValue => (
+              <SelectItem
+                className="flex w-full justify-between rounded-none cursor-pointer"
+                key={enumValue}
+                value={enumValue}
+              >
+                {enumValue}
+              </SelectItem>
+            ))}
         </SelectContent>
       </Select>
     </>
