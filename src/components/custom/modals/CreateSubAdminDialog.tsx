@@ -33,7 +33,7 @@ export interface FormData {
 }
 
 function CreateSubAdminDialog() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [subAdminId, setSubAdminId] = useState('');
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>

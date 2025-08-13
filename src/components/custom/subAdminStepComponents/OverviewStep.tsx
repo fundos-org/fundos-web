@@ -5,15 +5,8 @@ import { useSubadminDetails } from '@/hooks/customhooks/SubAdminsHooks/useSubadm
 import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import toast from 'react-hot-toast';
 
-// interface Response {
-//   name: string;
-//   username: string;
-//   password: string;
-//   invite_code: string;
-// }
-
 const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
-  const { data } = useSubadminDetails(subAdminId);
+  const { data } = useSubadminDetails('3a67afc8-5e60-44d1-a4f3-2f07b2f069ae');
   const { data: logo } = useAwsFileObjectKey(AWS_BUCKET_NAME, data?.logo ?? '');
   const handleClick = async () => {
     const response = await shareDetails(subAdminId);
@@ -25,7 +18,7 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   return (
     <div className="relative text-white w-full">
       {data && (
-        <div className="p-5 mb-10 bg-[#1C2526]">
+        <div className="p-5 mb-5 bg-[#1C2526] border border-zinc-600">
           <div className="mb-5">
             <p className="text-lg font-medium">
               Congratulations, sub-admin created!
@@ -35,21 +28,23 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
             </p>
           </div>
           <div className="flex gap-4 mb-6 bg-[#1C2526]">
-            <div className="w-16 h-16 bg-white rounded flex items-center justify-center">
+            <div className="w-16 h-16 bg-white flex items-center justify-center">
               {logo && (
                 <img
                   src={logo}
                   className="max-w-full max-h-full object-contain"
-                  alt="investor"
+                  alt="suabdmin"
                 />
               )}
             </div>
             <div className="flex-1">
-              <p className="text-lg font-medium">{data?.name}'s investiee</p>
+              <p className="text-lg font-medium capitalize">
+                {data?.name}'s Investiee
+              </p>
               <p className="text-sm text-gray-400">
                 App link:{' '}
-                <a href={appLink} className="underline text-blue-400">
-                  {appLink}
+                <a href={data.app_link} className="underline text-blue-400">
+                  {data.app_link}
                 </a>
               </p>
             </div>
@@ -77,5 +72,3 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
 };
 
 export default OverviewStep;
-
-const appLink = 'www.applink.com/pratyush-investiee';

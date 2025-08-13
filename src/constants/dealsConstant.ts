@@ -147,6 +147,7 @@ export interface SubadminDetailsResponse {
   password: string;
   reenter_password: string;
   app_name: string;
+  app_link: string;
   invite_code: string;
   app_theme: string;
   success: boolean;
