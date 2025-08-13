@@ -20,7 +20,6 @@ const AppRoutes = () => {
         {/* /admin and /admin/subadmin */}
         <Route path={AppRoute.ADMIN}>
           <Route
-            index
             path={AppRoute.ADMIN_SUBADMIN}
             element={
               <Layout>
@@ -29,6 +28,7 @@ const AppRoutes = () => {
             }
           />
           <Route
+            index
             path={AppRoute.ADMIN_DASHBOARD}
             element={
               <Layout>

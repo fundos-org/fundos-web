@@ -101,7 +101,6 @@ export default function AppSidebar() {
   const [sessionData, setSessionData] = useState<SessionData | null>(null);
   const [items, setItems] = useState<Route[]>([]);
   const location = useLocation();
-  // const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -111,15 +110,6 @@ export default function AppSidebar() {
         const parsedData: SessionData = JSON.parse(storedData);
         setSessionData(parsedData);
         setItems(routes[parsedData.role]);
-        // Set items based on hostname
-        // const hostname = window.location.hostname;
-        // if (hostname === 'admin.fundos.com') {
-        //   setItems(routes.admin);
-        // } else if (hostname === 'subadmin.fundos.com') {
-        //   setItems(routes.subadmin);
-        // } else {
-        //   setItems(routes.kyc);
-        // }
       }
     } catch (error) {
       console.error('Error parsing session data:', error);
@@ -192,17 +182,6 @@ export default function AppSidebar() {
                 <AvatarFallback>BS</AvatarFallback>
               </Avatar>
             </div>
-            {/* <div className="flex-1">
-              <div className="flex gap-2">
-                <h4 className="text-white font-medium capitalize">
-                  {sessionData?.name ?? 'User'}
-                </h4>
-                <ShortDetailsPopover />
-              </div>
-              <p className="text-sm text-gray-400">
-                {sessionData?.invite_code ?? 'You dont need invite code 😉'}
-              </p>
-            </div> */}
             <ShortDetailsPopover />
             <AlertDialog>
               <AlertDialogTrigger asChild>

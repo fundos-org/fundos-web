@@ -239,7 +239,7 @@ export default function BulkOnboarding() {
         />
 
         {/* Upload Section */}
-        <div className="px-8 pb-8">
+        <div className=" pb-8">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-xl font-semibold mb-1">Upload file</h2>
