@@ -6,7 +6,7 @@ import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import toast from 'react-hot-toast';
 
 const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
-  const { data } = useSubadminDetails('3a67afc8-5e60-44d1-a4f3-2f07b2f069ae');
+  const { data } = useSubadminDetails(subAdminId);
   const { data: logo } = useAwsFileObjectKey(AWS_BUCKET_NAME, data?.logo ?? '');
   const handleClick = async () => {
     const response = await shareDetails(subAdminId);
