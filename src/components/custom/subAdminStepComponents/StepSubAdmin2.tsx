@@ -120,9 +120,21 @@ const StepSubAdmin2: React.FC = () => {
         </Label>
         <Input
           id="appname"
-          {...register('appname', { required: 'App name is required' })}
+          {...register('appname', {
+            required: 'App name is required',
+            pattern: {
+              value: /^[a-zA-Z0-9]*$/, // Allows only alphanumeric characters
+              message: 'App name cannot contain -, _, or spaces',
+            },
+            setValueAs: value => value.toLowerCase(), // Converts input to lowercase
+          })}
           placeholder="Enter app name"
           className="rounded-none text-white"
+          onChange={e => {
+            e.target.value = e.target.value
+              .replace(/[-_\s]/g, '') // Remove -, _, and spaces
+              .toLowerCase(); // Convert to lowercase
+          }}
         />
         {errors.appname && (
           <p className="text-red-400 text-sm">
