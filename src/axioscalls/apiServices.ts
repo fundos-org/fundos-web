@@ -807,13 +807,15 @@ export const getInvestorDealInvestments = async (
 export const getInvestorTransactions = async (
   pageNumber: number,
   pageSize: number,
-  investor_id: string
+  investor_id: string,
+  subadmin_id?: string
 ): Promise<InvestorTransactionsResponse> => {
   try {
     const url = new URL(`${baseUrl}/v1/subadmin/investors/transactions`);
     url.searchParams.set('page', pageNumber.toString());
     url.searchParams.set('per_page', pageSize.toString());
     url.searchParams.set('investor_id', investor_id);
+    if (subadmin_id) url.searchParams.set('subadmin_id', subadmin_id);
     const response = await axiosInstance.get(url.toString());
     return response.data;
   } catch (error) {

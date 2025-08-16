@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { AppEnums } from '@/constants/enums';
 import { useInvestorTransactions } from '@/hooks/customhooks/MembersHooks/useInvestorTransactions';
 import { FC, useState } from 'react';
 
@@ -29,7 +30,15 @@ const pageSizesList = [3, 6, 9, 18, 50];
 const InvestorTransactions: FC<{ investor_id: string }> = ({ investor_id }) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
-  const { data } = useInvestorTransactions(pageNumber, pageSize, investor_id);
+  const [subadminIdFromSession] = useState<string | undefined | null>(() =>
+    sessionStorage.getItem(AppEnums.CAPDRPDWNCHGE)
+  );
+  const { data } = useInvestorTransactions(
+    pageNumber,
+    pageSize,
+    investor_id,
+    subadminIdFromSession
+  );
 
   const handleNext = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();

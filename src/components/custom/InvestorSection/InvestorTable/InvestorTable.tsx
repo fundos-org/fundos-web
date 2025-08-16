@@ -149,7 +149,10 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     setPageNumber(1);
   };
 
-  const handleSubAdminIdChange = (id: string) => setSubAdminId(id);
+  const handleSubAdminIdChange = (id: string) => {
+    setSubAdminId(id);
+    sessionStorage.setItem(AppEnums.CAPDRPDWNCHGE, id);
+  };
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -308,7 +311,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     >
                       <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
                         <img
-                          src={investor.profile_pic}
+                          src={investor?.profile_pic}
                           className="w-full h-full object-cover"
                           alt="dp"
                         />

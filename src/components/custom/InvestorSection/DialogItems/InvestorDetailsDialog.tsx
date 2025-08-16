@@ -72,7 +72,7 @@ const InvestorDetailsDialog: FC<{
               </div>
               <div className="flex flex-col justify-around">
                 <p className="text-3xl font-bold">{name}</p>
-                <span className="border border-[#383739] text-white bg-zinc-400/20 text-center uppercase">
+                <span className="border border-[#383739] text-white bg-zinc-400/20 text-center uppercase px-7">
                   {type} Investor
                 </span>
                 <p>Joined on: {joined_on}</p>

@@ -25,6 +25,7 @@ const InvestorDocuments: FC<{ investor_id: string }> = ({ investor_id }) => {
       <div className="flex gap-5 flex-wrap">
         {Object.entries(data?.documents ?? {}).map(([key]) => (
           <Card
+            key={key}
             className="bg-[#383739 border-[#383739] w-[15rem] h-[13rem] cursor-pointer rounded-none flex justify-between p-0"
             onClick={() => setAwsObjectKey(test)}
           >

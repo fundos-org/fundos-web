@@ -4,6 +4,7 @@ export const enum AppEnums {
   ACCESS_TOKEN = 'access_token',
   REFRESH_TOKEN = 'refresh_token',
   AWS_FILE = 'awsFile',
+  CAPDRPDWNCHGE = 'captureDropDownChange',
 }
 
 export const AWS_BUCKET_NAME =
