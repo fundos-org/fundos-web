@@ -125,7 +125,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
             </div>
             <hr className="mt-3" />
             <div className="w-full mt-4 flex justify-between items-center">
-              <div>
+              {/* <div>
                 <p className="text-sm text-zinc-400 mb-1">
                   {(((fund_raised_till_now ?? 1) / commitment) * 100).toFixed(
                     2
@@ -135,6 +135,15 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                 <Progress
                   className="bg-white border border-zinc-600 w-30 rounded-none"
                   value={((fund_raised_till_now ?? 1) / commitment) * 100}
+                />
+              </div> */}
+              <div className="w-80 ml-auto mr-5">
+                <p className="text-sm text-zinc-400 mb-1">
+                  {fund_raised_till_now ?? 0}% raised
+                </p>
+                <Progress
+                  className="bg-black border border-zinc-600 w-full rounded-none h-[4px] [&>div]:bg-white"
+                  value={fund_raised_till_now ?? 0}
                 />
               </div>
               <Menubar className="rounded-none bg-[#1a1a1a] border-0 text-white">

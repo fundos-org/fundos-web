@@ -29,7 +29,8 @@ const SupportPopover = () => {
             fundos.services.com
           </AlertDialogTitle>
           <AlertDialogDescription className="text-gray-500">
-            If you have any questions or concerns, please contact us via email.
+            If you have any questions or concerns, please contact us via
+            Whatsapp.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -40,7 +41,14 @@ const SupportPopover = () => {
             className="text-white hover:bg-slate-600 border border-[#383739] rounded-none cursor-pointer"
             asChild
           >
-            <a href="mailto:user.email.com">Send Email</a>
+            {/* <a href="mailto:user.email.com">Send Email</a> */}
+            <a
+              href="https://wa.me/917406095777"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Whatsapp us
+            </a>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -23,7 +23,7 @@ const Step2: React.FC = () => {
   const industry = watch('industry');
 
   return (
-    <div className="grid gap-4">
+    <div className="h-[50vh] overflow-auto grid gap-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="industry" className="text-right text-white">
           Industry

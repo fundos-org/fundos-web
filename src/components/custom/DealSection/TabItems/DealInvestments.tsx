@@ -24,14 +24,14 @@ import {
 } from '@/components/ui/table';
 import { InvestorForDeals } from '@/constants/dealsConstant';
 import { useDealInvestorInvestments } from '@/hooks/customhooks/DealsHooks/useDealInvestorInvestments';
-import { RefreshCw, SquareArrowOutUpRight, FileText } from 'lucide-react';
-import { FC, lazy, Suspense, useState } from 'react';
-const InvestorFileDisplayDialog = lazy(
-  () => import('../../InvestorSection/DialogItems/InvestorFileDisplayDialog')
-);
+import { RefreshCw, SquareArrowOutUpRight } from 'lucide-react';
+import { FC, useState } from 'react';
+// const InvestorFileDisplayDialog = lazy(
+//   () => import('../../InvestorSection/DialogItems/InvestorFileDisplayDialog')
+// );
 
-const test =
-  'deals/pitch_decks/18e75944-883f-46b5-b716-22c61cc3a061_20250510134038.png'; //delete later
+// const test =
+//   'deals/pitch_decks/18e75944-883f-46b5-b716-22c61cc3a061_20250510134038.png'; //delete later
 
 const pageSizesList = [6, 10, 20, 50];
 
@@ -39,7 +39,7 @@ const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
+  // const [awsObjectKey, setAwsObjectKey] = useState<string | null>(null);
   const { data, error, isLoading, refetch } = useDealInvestorInvestments(
     deal_id,
     pageNumber,
@@ -110,7 +110,7 @@ const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
                 <TableHead className="text-zinc-400">Commitments</TableHead>
                 <TableHead className="text-zinc-400">Date</TableHead>
                 <TableHead className="text-zinc-400">Status</TableHead>
-                <TableHead className="text-zinc-400">Term Sheet</TableHead>
+                {/* <TableHead className="text-zinc-400">Term Sheet</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
@@ -141,12 +141,12 @@ const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
                     <TableCell className="font-medium">
                       {investor.status}
                     </TableCell>
-                    <TableCell className="font-medium">
+                    {/* <TableCell className="font-medium">
                       <FileText
                         onClick={() => setAwsObjectKey(test)} // investor.term_sheet_key
                         className="cursor-pointer"
                       />
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))
               ) : (
@@ -221,13 +221,13 @@ const DealInvestments: FC<{ deal_id: string }> = ({ deal_id }) => {
           </div>
         </Pagination>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
+      {/* <Suspense fallback={<div>Loading...</div>}>
         <InvestorFileDisplayDialog
           // awsObjectKey={sendDetails?.investor_id} // needed this comment
           awsObjectKey={awsObjectKey}
           setAwsObjectKey={setAwsObjectKey}
         />
-      </Suspense>
+      </Suspense> */}
     </>
   );
 };

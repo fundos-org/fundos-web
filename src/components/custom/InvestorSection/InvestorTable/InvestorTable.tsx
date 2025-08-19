@@ -72,9 +72,6 @@ const sessCapture = () => {
   return subadmin_id;
 };
 
-const test =
-  'deals/pitch_decks/18e75944-883f-46b5-b716-22c61cc3a061_20250510134038.png'; //delete later
-
 const pageSizesList = [10, 20, 50, 100];
 
 const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
@@ -342,7 +339,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     </TableCell>
                     <TableCell className="font-medium">
                       <FileText
-                        onClick={() => setAwsObjectKey(test)}
+                        onClick={() => setAwsObjectKey(investor.mca_key)}
                         className="cursor-pointer"
                       />
                     </TableCell>
@@ -461,7 +458,6 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
       </Suspense>
       <Suspense fallback={<div>Loading...</div>}>
         <InvestorFileDisplayDialog
-          // awsObjectKey={sendDetails?.investor_id} // needed this comment
           awsObjectKey={awsObjectKey}
           setAwsObjectKey={setAwsObjectKey}
         />

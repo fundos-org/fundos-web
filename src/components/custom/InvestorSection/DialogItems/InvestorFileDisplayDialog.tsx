@@ -18,6 +18,7 @@ const AdvancedInvestorFileDialog: FC<{
     AWS_BUCKET_NAME,
     awsObjectKey ?? ''
   );
+  console.log(awsObjectKey);
 
   return (
     <>

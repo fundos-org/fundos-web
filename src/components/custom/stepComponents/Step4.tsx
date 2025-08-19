@@ -22,7 +22,7 @@ const Step4: React.FC = () => {
   const investmentSchemeAppendixFile = watch('investmentSchemeAppendixFile');
 
   return (
-    <div className="grid gap-4">
+    <div className="h-[50vh] overflow-auto grid gap-4">
       <div className="w-full flex flex-col gap-2">
         <Label htmlFor="currentValuation" className="text-right text-white">
           Current Valuation (

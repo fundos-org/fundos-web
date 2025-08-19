@@ -13,7 +13,7 @@ const Step3: React.FC = () => {
   } = useFormContext();
 
   return (
-    <div className="grid gap-4">
+    <div className="h-[50vh] overflow-auto grid gap-4">
       <div className="flex flex-col gap-2 mr-3">
         <Label htmlFor="companyStage" className="text-right text-white">
           Company Stage
