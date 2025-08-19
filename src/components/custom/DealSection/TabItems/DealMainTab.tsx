@@ -4,6 +4,7 @@ const AboutDeal = lazy(() => import('./AboutDeal'));
 const DealInvestments = lazy(() => import('./DealInvestments'));
 const DealTransactions = lazy(() => import('./DealTransactions'));
 const DealDocuments = lazy(() => import('./DealDocuments'));
+const DealCommitments = lazy(() => import('./DealCommitments'));
 
 const DealMainTab: FC<{ deal_id: string }> = ({ deal_id }) => {
   return (
@@ -15,6 +16,12 @@ const DealMainTab: FC<{ deal_id: string }> = ({ deal_id }) => {
             className="cursor-pointer text-white border-0 data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2"
           >
             About
+          </TabsTrigger>
+          <TabsTrigger
+            value="commitments"
+            className="cursor-pointer text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2"
+          >
+            Commitments
           </TabsTrigger>
           <TabsTrigger
             value="investments"
@@ -54,6 +61,11 @@ const DealMainTab: FC<{ deal_id: string }> = ({ deal_id }) => {
       <TabsContent value="documents" className="w-full flex gap-5 flex-wrap">
         <Suspense fallback={<div>Loading...</div>}>
           <DealDocuments deal_id={deal_id} />
+        </Suspense>
+      </TabsContent>
+      <TabsContent value="commitments" className="w-full flex gap-5 flex-wrap">
+        <Suspense fallback={<div>Loading...</div>}>
+          <DealCommitments deal_id={deal_id} />
         </Suspense>
       </TabsContent>
     </Tabs>

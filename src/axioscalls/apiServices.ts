@@ -41,6 +41,7 @@ import toast from 'react-hot-toast';
 import { z } from 'zod';
 import axiosInstance from './axiosConfig';
 import {
+  InvestorCommitmentsResponse,
   InvestorType,
   KycStatus,
   OnboardingStatus,
@@ -657,13 +658,13 @@ export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
 };
 
 export const getDealInvestorCommitments = async (
-  deal_id: string
-  // pageNumber: number,
-  // pageSize: number
-): Promise<DealInvestorsResponse> => {
+  deal_id: string,
+  pageNumber: number,
+  pageSize: number
+): Promise<InvestorCommitmentsResponse> => {
   try {
     const response = await axiosInstance.get(
-      `${baseUrl}/v1/deal/committed-investors?deal_id=${deal_id}`
+      `${baseUrl}/v1/deal/committed-investors?deal_id=${deal_id}&page=${pageNumber}&per_page=${pageSize}`
     );
     return response.data;
   } catch (error) {

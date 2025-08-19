@@ -1,65 +1,4 @@
-export const data = [
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC COMPLETED',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC COMPLETED',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'BANK DETAILS PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-  {
-    name: 'John Carter',
-    email: 'John@carlo.com',
-    capitalCommitted: '₹ 30,00,000',
-    kycStatus: 'KYC PENDING',
-  },
-];
+import { Pagination } from './dealsConstant';
 
 export type Investor = {
   name: string;
@@ -93,4 +32,17 @@ export enum KycStatus {
   PENDING = 'PENDING',
   VERIFIED = 'VERIFIED',
   REJECTED = 'REJECTED',
+}
+
+interface InvestorCommitment {
+  investor_id: string;
+  committed_amount: number;
+  investor_name: string;
+  email: string;
+  phone: number;
+}
+
+export interface InvestorCommitmentsResponse {
+  pagination: Pagination;
+  commitments: InvestorCommitment[];
 }
