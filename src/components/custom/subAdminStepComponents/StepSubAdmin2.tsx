@@ -5,7 +5,13 @@ import { Input } from '@/components/ui/input';
 import { getRandomCode } from '@/lib/randomInviteCodeGenertor';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
-import { Copy, RefreshCw } from 'lucide-react';
+import {
+  Copy,
+  RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
+  Loader2,
+} from 'lucide-react';
 import { validateFields } from '@/axioscalls/apiServices';
 
 const StepSubAdmin2: React.FC = () => {
@@ -22,6 +28,12 @@ const StepSubAdmin2: React.FC = () => {
   const [code, setCode] = useState<string>('');
   const username = watch('username');
   const appname = watch('appname');
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState<null | boolean>(
+    null
+  );
+  const [isCheckingApp, setIsCheckingApp] = useState(false);
+  const [appAvailable, setAppAvailable] = useState<null | boolean>(null);
 
   // Generate random code on component mount
   useEffect(() => {
@@ -52,6 +64,8 @@ const StepSubAdmin2: React.FC = () => {
   // Debounced username uniqueness validation
   useEffect(() => {
     if (!username) return;
+    setIsCheckingUsername(true);
+    setUsernameAvailable(null);
     const current = username as string;
     const handle = setTimeout(async () => {
       try {
@@ -61,11 +75,20 @@ const StepSubAdmin2: React.FC = () => {
             type: 'server',
             message: 'Username already in use',
           });
+          setUsernameAvailable(false);
         } else if (errors.username && errors.username.type === 'server') {
           clearErrors('username');
+          setUsernameAvailable(true);
+        } else {
+          setUsernameAvailable(true);
         }
       } catch {
         // Ignore server errors for debounced validation
+      } finally {
+        // prevent race condition: ensure value hasn't changed
+        if (current === getValues('username')) {
+          setIsCheckingUsername(false);
+        }
       }
     }, 300);
     return () => clearTimeout(handle);
@@ -75,6 +98,8 @@ const StepSubAdmin2: React.FC = () => {
   // Debounced app name uniqueness validation
   useEffect(() => {
     if (!appname) return;
+    setIsCheckingApp(true);
+    setAppAvailable(null);
     // App name is normalized to lowercase and without separators already
     const current = appname as string;
     const handle = setTimeout(async () => {
@@ -85,11 +110,19 @@ const StepSubAdmin2: React.FC = () => {
             type: 'server',
             message: 'App name already in use',
           });
+          setAppAvailable(false);
         } else if (errors.appname && errors.appname.type === 'server') {
           clearErrors('appname');
+          setAppAvailable(true);
+        } else {
+          setAppAvailable(true);
         }
       } catch {
         // Ignore server errors for debounced validation
+      } finally {
+        if (current === getValues('appname')) {
+          setIsCheckingApp(false);
+        }
       }
     }, 300);
     return () => clearTimeout(handle);
@@ -107,6 +140,9 @@ const StepSubAdmin2: React.FC = () => {
               type: 'server',
               message: 'Username already in use',
             });
+            setUsernameAvailable(false);
+          } else {
+            setUsernameAvailable(true);
           }
         } catch {
           // ignore restore validation failure
@@ -120,6 +156,9 @@ const StepSubAdmin2: React.FC = () => {
               type: 'server',
               message: 'App name already in use',
             });
+            setAppAvailable(false);
+          } else {
+            setAppAvailable(true);
           }
         } catch {
           // ignore restore validation failure
@@ -133,21 +172,45 @@ const StepSubAdmin2: React.FC = () => {
   return (
     <div className="grid gap-4">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="username" className="text-right text-white">
-          Username
-        </Label>
-        <Input
-          id="username"
-          {...register('username', {
-            required: 'Username is required',
-            minLength: {
-              value: 3,
-              message: 'Username must be at least 3 characters',
-            },
-          })}
-          placeholder="Enter username"
-          className="rounded-none text-white"
-        />
+        <div className="flex justify-between items-center">
+          <Label htmlFor="username" className="text-white">
+            Username
+          </Label>
+          <div className="flex items-center gap-2 text-sm">
+            {isCheckingUsername && (
+              <span className="flex items-center gap-1 text-gray-400">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Checking...
+              </span>
+            )}
+            {!isCheckingUsername && username && usernameAvailable === true && (
+              <span className="flex items-center gap-1 text-green-500">
+                <CheckCircle2 className="h-4 w-4" />
+                {String(username)} available
+              </span>
+            )}
+            {!isCheckingUsername && username && usernameAvailable === false && (
+              <span className="flex items-center gap-1 text-yellow-400">
+                <AlertTriangle className="h-4 w-4" />
+                {String(username)} already exists
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="relative">
+          <Input
+            id="username"
+            {...register('username', {
+              required: 'Username is required',
+              minLength: {
+                value: 3,
+                message: 'Username must be at least 3 characters',
+              },
+            })}
+            placeholder="Enter username"
+            className="rounded-none text-white"
+          />
+        </div>
         {errors.username && (
           <p className="text-red-400 text-sm">
             {String(errors.username.message)}
@@ -202,27 +265,46 @@ const StepSubAdmin2: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="appname" className="text-right text-white">
-          App Name
-        </Label>
-        <Input
-          id="appname"
-          {...register('appname', {
-            required: 'App name is required',
-            pattern: {
-              value: /^[a-zA-Z0-9]*$/,
-              message: 'App name cannot contain -, _, or spaces',
-            },
-            setValueAs: value => value.toLowerCase(),
-          })}
-          placeholder="Enter app name"
-          className="rounded-none text-white"
-          onChange={e => {
-            e.target.value = e.target.value
-              .replace(/[-_\s]/g, '')
-              .toLowerCase();
-          }}
-        />
+        <div className="flex justify-between items-center">
+          <Label htmlFor="appname" className="text-white">
+            App Name
+          </Label>
+          <div className="flex items-center gap-2 text-sm">
+            {isCheckingApp && (
+              <span className="flex items-center gap-1 text-gray-400">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Checking...
+              </span>
+            )}
+            {!isCheckingApp && appname && appAvailable === true && (
+              <span className="flex items-center gap-1 text-green-500">
+                <CheckCircle2 className="h-4 w-4" />
+                {String(appname)} available
+              </span>
+            )}
+            {!isCheckingApp && appname && appAvailable === false && (
+              <span className="flex items-center gap-1 text-yellow-400">
+                <AlertTriangle className="h-4 w-4" />
+                {String(appname)} already exists
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="relative">
+          <Input
+            id="appname"
+            {...register('appname', {
+              required: 'App name is required',
+              pattern: {
+                value: /^[a-zA-Z0-9]*$/,
+                message: 'App name cannot contain -, _, or spaces',
+              },
+              setValueAs: value => value.toLowerCase().replace(/[-_\s]/g, ''),
+            })}
+            placeholder="Enter app name"
+            className="rounded-none text-white"
+          />
+        </div>
         {errors.appname && (
           <p className="text-red-400 text-sm">
             {String(errors.appname.message)}

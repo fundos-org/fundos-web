@@ -43,7 +43,11 @@ const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
               </p>
               <p className="text-sm text-gray-400">
                 App link:{' '}
-                <a href={data.app_link} className="underline text-blue-400">
+                <a
+                  href={data.app_link}
+                  target="_blank"
+                  className="underline text-blue-400"
+                >
                   {data.app_link}
                 </a>
               </p>

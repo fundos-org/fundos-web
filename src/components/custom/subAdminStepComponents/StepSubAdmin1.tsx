@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ImageInput from '../ImageUpload';
 import { validateFields } from '@/axioscalls/apiServices';
+import { CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 
 const StepSubAdmin1: React.FC = () => {
   const {
@@ -14,10 +15,17 @@ const StepSubAdmin1: React.FC = () => {
     watch,
     setError,
     clearErrors,
+    getValues,
   } = useFormContext();
   const logo = watch('logo');
   const email = watch('subadminmail');
   const contact = watch('subadmincontact');
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+  const [emailAvailable, setEmailAvailable] = useState<null | boolean>(null);
+  const [isCheckingContact, setIsCheckingContact] = useState(false);
+  const [contactAvailable, setContactAvailable] = useState<null | boolean>(
+    null
+  );
 
   // Re-validate on mount to restore server errors after rerenders/unmounts
   useEffect(() => {
@@ -34,6 +42,9 @@ const StepSubAdmin1: React.FC = () => {
               type: 'server',
               message: 'Email already in use',
             });
+            setEmailAvailable(false);
+          } else {
+            setEmailAvailable(true);
           }
         } catch {
           // ignore restore validation failure
@@ -50,6 +61,9 @@ const StepSubAdmin1: React.FC = () => {
                 type: 'server',
                 message: 'Contact number already in use',
               });
+              setContactAvailable(false);
+            } else {
+              setContactAvailable(true);
             }
           }
         } catch {
@@ -66,6 +80,8 @@ const StepSubAdmin1: React.FC = () => {
     if (!email) return;
     // Skip server check if client-side pattern error exists
     if (errors.subadminmail && errors.subadminmail.type === 'pattern') return;
+    setIsCheckingEmail(true);
+    setEmailAvailable(null);
     const currentEmail = email as string;
     const handle = setTimeout(async () => {
       try {
@@ -75,14 +91,22 @@ const StepSubAdmin1: React.FC = () => {
             type: 'server',
             message: 'Email already in use',
           });
+          setEmailAvailable(false);
         } else if (
           errors.subadminmail &&
           errors.subadminmail.type === 'server'
         ) {
           clearErrors('subadminmail');
+          setEmailAvailable(true);
+        } else {
+          setEmailAvailable(true);
         }
       } catch {
         // Silently ignore server errors for debounce validation
+      } finally {
+        if (currentEmail === getValues('subadminmail')) {
+          setIsCheckingEmail(false);
+        }
       }
     }, 300);
     return () => clearTimeout(handle);
@@ -95,6 +119,8 @@ const StepSubAdmin1: React.FC = () => {
     // Strip non-digits for validation request
     const numericContact = String(contact).replace(/\D/g, '');
     if (numericContact.length < 10) return;
+    setIsCheckingContact(true);
+    setContactAvailable(null);
     const handle = setTimeout(async () => {
       try {
         const available = await validateFields('contact', numericContact);
@@ -103,14 +129,25 @@ const StepSubAdmin1: React.FC = () => {
             type: 'server',
             message: 'Contact number already in use',
           });
+          setContactAvailable(false);
         } else if (
           errors.subadmincontact &&
           errors.subadmincontact.type === 'server'
         ) {
           clearErrors('subadmincontact');
+          setContactAvailable(true);
+        } else {
+          setContactAvailable(true);
         }
       } catch {
         // Silently ignore server errors for debounce validation
+      } finally {
+        if (
+          numericContact ===
+          String(getValues('subadmincontact')).replace(/\D/g, '')
+        ) {
+          setIsCheckingContact(false);
+        }
       }
     }, 300);
     return () => clearTimeout(handle);
@@ -157,9 +194,31 @@ const StepSubAdmin1: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="subadminmail" className="text-right text-white">
-              Sub Admin Email<span className="text-red-400">*</span>
-            </Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="subadminmail" className="text-white">
+                Sub Admin Email<span className="text-red-400">*</span>
+              </Label>
+              <div className="flex items-center gap-2 text-sm">
+                {isCheckingEmail && (
+                  <span className="flex items-center gap-1 text-gray-400">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Checking...
+                  </span>
+                )}
+                {!isCheckingEmail && email && emailAvailable === true && (
+                  <span className="flex items-center gap-1 text-green-500">
+                    <CheckCircle2 className="h-4 w-4" />
+                    {String(email)} available
+                  </span>
+                )}
+                {!isCheckingEmail && email && emailAvailable === false && (
+                  <span className="flex items-center gap-1 text-yellow-400">
+                    <AlertTriangle className="h-4 w-4" />
+                    {String(email)} already exists
+                  </span>
+                )}
+              </div>
+            </div>
             <Input
               id="subadminmail"
               type="email"
@@ -183,9 +242,31 @@ const StepSubAdmin1: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="subadmincontact" className="text-right text-white">
-          Sub Admin Contact<span className="text-red-400">*</span>
-        </Label>
+        <div className="flex justify-between items-center">
+          <Label htmlFor="subadmincontact" className="text-white">
+            Sub Admin Contact<span className="text-red-400">*</span>
+          </Label>
+          <div className="flex items-center gap-2 text-sm">
+            {isCheckingContact && (
+              <span className="flex items-center gap-1 text-gray-400">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Checking...
+              </span>
+            )}
+            {!isCheckingContact && contact && contactAvailable === true && (
+              <span className="flex items-center gap-1 text-green-500">
+                <CheckCircle2 className="h-4 w-4" />
+                {String(contact)} available
+              </span>
+            )}
+            {!isCheckingContact && contact && contactAvailable === false && (
+              <span className="flex items-center gap-1 text-yellow-400">
+                <AlertTriangle className="h-4 w-4" />
+                {String(contact)} already exists
+              </span>
+            )}
+          </div>
+        </div>
         <Input
           minLength={10}
           maxLength={10}
