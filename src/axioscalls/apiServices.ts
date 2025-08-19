@@ -236,11 +236,26 @@ export const createProfile = async (
 ) => {
   const formData = new FormData();
   if (logo) formData.append('logo', logo);
-  const response = await axiosInstance.post(
-    `${baseUrl}/v1/admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`,
-    formData
-  );
-  return response.data;
+  try {
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/admin/subadmins/create/profile?name=${name}&email=${email}&contact=${contact}&about=${about}`,
+      formData
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      type ApiError = { message?: string; detail?: string };
+      const data = error.response?.data as ApiError | undefined;
+      const message =
+        data?.message ||
+        data?.detail ||
+        error.message ||
+        'Failed to create profile';
+      toast.error(message);
+      throw new Error(message);
+    }
+    throw new Error('An unexpected error occurred');
+  }
 };
 
 export const createCredentials = async (
@@ -263,6 +278,16 @@ export const createCredentials = async (
     }
   );
   toast.success('Sub Admin created successfully!');
+  return response.data;
+};
+
+export const validateFields = async (
+  field_type: 'app_name' | 'username' | 'email' | 'contact',
+  value: string | number
+) => {
+  const response = await axiosInstance.get(
+    `${baseUrl}/v1/utils/check-unique?field_type=${field_type}&value=${value}`
+  );
   return response.data;
 };
 
@@ -382,32 +407,6 @@ export const resetPasswordAssign = async (
     }
   }
 };
-
-// export const fetchTransactionList = createAsyncThunk<
-//   MemberApiResponse,
-//   void,
-//   { rejectValue: CommonError }
-// >('members/fetchTransactionList', async (_, { rejectWithValue }) => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `${baseUrl}/v1/subadmin/dashboard/transactions`
-//     );
-//     return response.data;
-//   } catch (error: unknown) {
-//     // Handle axios or network errors
-//     if (isAxiosError(error) && error.response?.data) {
-//       const errorData = error.response.data as CommonError;
-//       if (errorData.isSuccess !== undefined && errorData.message) {
-//         return rejectWithValue(errorData);
-//       }
-//     }
-//     // Fallback for unexpected errors
-//     return rejectWithValue({
-//       isSuccess: false,
-//       message: 'Failed to fetch deals',
-//     });
-//   }
-// });
 
 export const appLogin = async (
   data: LoginFormData,
@@ -652,6 +651,25 @@ export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
       throw new Error(error.message);
     } else {
       console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const getDealInvestorCommitments = async (
+  deal_id: string
+  // pageNumber: number,
+  // pageSize: number
+): Promise<DealInvestorsResponse> => {
+  try {
+    const response = await axiosInstance.get(
+      `${baseUrl}/v1/deal/committed-investors?deal_id=${deal_id}`
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      throw new Error(error.message);
+    } else {
       throw new Error('An unexpected error occurred');
     }
   }

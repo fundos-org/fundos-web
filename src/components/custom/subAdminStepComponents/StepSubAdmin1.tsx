@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ImageInput from '../ImageUpload';
+import { validateFields } from '@/axioscalls/apiServices';
 
 const StepSubAdmin1: React.FC = () => {
   const {
@@ -11,8 +12,110 @@ const StepSubAdmin1: React.FC = () => {
     formState: { errors },
     setValue,
     watch,
+    setError,
+    clearErrors,
   } = useFormContext();
   const logo = watch('logo');
+  const email = watch('subadminmail');
+  const contact = watch('subadmincontact');
+
+  // Re-validate on mount to restore server errors after rerenders/unmounts
+  useEffect(() => {
+    const restore = async () => {
+      // Email
+      if (
+        email &&
+        !(errors.subadminmail && errors.subadminmail.type === 'pattern')
+      ) {
+        try {
+          const available = await validateFields('email', String(email));
+          if (available === false) {
+            setError('subadminmail', {
+              type: 'server',
+              message: 'Email already in use',
+            });
+          }
+        } catch {
+          // ignore restore validation failure
+        }
+      }
+      // Contact
+      if (contact) {
+        try {
+          const numericContact = String(contact).replace(/\D/g, '');
+          if (numericContact.length >= 10) {
+            const available = await validateFields('contact', numericContact);
+            if (available === false) {
+              setError('subadmincontact', {
+                type: 'server',
+                message: 'Contact number already in use',
+              });
+            }
+          }
+        } catch {
+          // ignore restore validation failure
+        }
+      }
+    };
+    restore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Debounced email uniqueness validation
+  useEffect(() => {
+    if (!email) return;
+    // Skip server check if client-side pattern error exists
+    if (errors.subadminmail && errors.subadminmail.type === 'pattern') return;
+    const currentEmail = email as string;
+    const handle = setTimeout(async () => {
+      try {
+        const available = await validateFields('email', currentEmail);
+        if (available === false) {
+          setError('subadminmail', {
+            type: 'server',
+            message: 'Email already in use',
+          });
+        } else if (
+          errors.subadminmail &&
+          errors.subadminmail.type === 'server'
+        ) {
+          clearErrors('subadminmail');
+        }
+      } catch {
+        // Silently ignore server errors for debounce validation
+      }
+    }, 300);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email]);
+
+  // Debounced contact uniqueness validation
+  useEffect(() => {
+    if (!contact) return;
+    // Strip non-digits for validation request
+    const numericContact = String(contact).replace(/\D/g, '');
+    if (numericContact.length < 10) return;
+    const handle = setTimeout(async () => {
+      try {
+        const available = await validateFields('contact', numericContact);
+        if (available === false) {
+          setError('subadmincontact', {
+            type: 'server',
+            message: 'Contact number already in use',
+          });
+        } else if (
+          errors.subadmincontact &&
+          errors.subadmincontact.type === 'server'
+        ) {
+          clearErrors('subadmincontact');
+        }
+      } catch {
+        // Silently ignore server errors for debounce validation
+      }
+    }, 300);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contact]);
 
   return (
     <div className="grid gap-4">

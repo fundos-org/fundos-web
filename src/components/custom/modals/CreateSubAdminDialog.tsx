@@ -141,8 +141,8 @@ function CreateSubAdminDialog() {
       // Store the submitted data for this step
       setSubmittedData(prev => ({ ...prev, [activeStep]: stepData }));
       setActiveStep(prev => prev + 1);
-    } catch (error) {
-      console.error('Error submitting step:', error);
+    } catch {
+      // ignore error
     }
   };
 

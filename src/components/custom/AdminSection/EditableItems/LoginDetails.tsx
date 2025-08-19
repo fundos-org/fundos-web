@@ -103,7 +103,9 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
               )}
             />
             {errors.username && (
-              <p className="text-red-500 text-sm">{errors.username.message}</p>
+              <p className="text-red-500 text-sm text-start">
+                {errors.username.message}
+              </p>
             )}
           </div>
 
@@ -124,7 +126,9 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
               )}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
+              <p className="text-red-500 text-sm text-start">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
@@ -145,7 +149,7 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
               )}
             />
             {errors.reenter_password && (
-              <p className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm text-start">
                 {errors.reenter_password.message}
               </p>
             )}

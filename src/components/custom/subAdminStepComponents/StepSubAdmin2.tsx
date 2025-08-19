@@ -6,6 +6,7 @@ import { getRandomCode } from '@/lib/randomInviteCodeGenertor';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Copy, RefreshCw } from 'lucide-react';
+import { validateFields } from '@/axioscalls/apiServices';
 
 const StepSubAdmin2: React.FC = () => {
   const {
@@ -13,9 +14,14 @@ const StepSubAdmin2: React.FC = () => {
     formState: { errors },
     getValues,
     setValue,
+    watch,
+    setError,
+    clearErrors,
   } = useFormContext();
 
   const [code, setCode] = useState<string>('');
+  const username = watch('username');
+  const appname = watch('appname');
 
   // Generate random code on component mount
   useEffect(() => {
@@ -42,6 +48,87 @@ const StepSubAdmin2: React.FC = () => {
         toast.error('Failed to copy code.');
       });
   };
+
+  // Debounced username uniqueness validation
+  useEffect(() => {
+    if (!username) return;
+    const current = username as string;
+    const handle = setTimeout(async () => {
+      try {
+        const available = await validateFields('username', current);
+        if (available === false) {
+          setError('username', {
+            type: 'server',
+            message: 'Username already in use',
+          });
+        } else if (errors.username && errors.username.type === 'server') {
+          clearErrors('username');
+        }
+      } catch {
+        // Ignore server errors for debounced validation
+      }
+    }, 300);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
+
+  // Debounced app name uniqueness validation
+  useEffect(() => {
+    if (!appname) return;
+    // App name is normalized to lowercase and without separators already
+    const current = appname as string;
+    const handle = setTimeout(async () => {
+      try {
+        const available = await validateFields('app_name', current);
+        if (available === false) {
+          setError('appname', {
+            type: 'server',
+            message: 'App name already in use',
+          });
+        } else if (errors.appname && errors.appname.type === 'server') {
+          clearErrors('appname');
+        }
+      } catch {
+        // Ignore server errors for debounced validation
+      }
+    }, 300);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appname]);
+
+  // Re-validate on mount to restore server errors after rerenders/unmounts
+  useEffect(() => {
+    const restore = async () => {
+      if (username) {
+        try {
+          const available = await validateFields('username', String(username));
+          if (available === false) {
+            setError('username', {
+              type: 'server',
+              message: 'Username already in use',
+            });
+          }
+        } catch {
+          // ignore restore validation failure
+        }
+      }
+      if (appname) {
+        try {
+          const available = await validateFields('app_name', String(appname));
+          if (available === false) {
+            setError('appname', {
+              type: 'server',
+              message: 'App name already in use',
+            });
+          }
+        } catch {
+          // ignore restore validation failure
+        }
+      }
+    };
+    restore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="grid gap-4">
@@ -123,17 +210,17 @@ const StepSubAdmin2: React.FC = () => {
           {...register('appname', {
             required: 'App name is required',
             pattern: {
-              value: /^[a-zA-Z0-9]*$/, // Allows only alphanumeric characters
+              value: /^[a-zA-Z0-9]*$/,
               message: 'App name cannot contain -, _, or spaces',
             },
-            setValueAs: value => value.toLowerCase(), // Converts input to lowercase
+            setValueAs: value => value.toLowerCase(),
           })}
           placeholder="Enter app name"
           className="rounded-none text-white"
           onChange={e => {
             e.target.value = e.target.value
-              .replace(/[-_\s]/g, '') // Remove -, _, and spaces
-              .toLowerCase(); // Convert to lowercase
+              .replace(/[-_\s]/g, '')
+              .toLowerCase();
           }}
         />
         {errors.appname && (
