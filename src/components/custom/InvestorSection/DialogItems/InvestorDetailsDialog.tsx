@@ -12,25 +12,30 @@ import { InvestorEntity } from '@/constants/membersConstant';
 const InvestorMainTab = lazy(() => import('../TabItems/InvestorMainTab'));
 
 const InvestorDetailsDialog: FC<{
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  details?: InvestorEntity;
-}> = ({ open, onOpenChange, details }) => {
+  investor?: InvestorEntity | null;
+  setInvestor?: (open: InvestorEntity | null) => void;
+}> = ({ investor, setInvestor }) => {
   const {
     name,
     deals_invested,
+    deals_committed,
     joined_on,
     profile_pic,
     type,
     capital_commitment,
     investor_id,
-  } = details ?? {};
+  } = investor ?? {};
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={investor ? Object.keys(investor).length > 0 : false}
+      onOpenChange={open => {
+        if (!open) setInvestor?.(null);
+      }}
+    >
       <DialogContent
         aria-describedby={undefined}
-        onInteractOutside={e => e.preventDefault()}
+        // onInteractOutside={e => e.preventDefault()}
         className={cn(
           'fixed inset-0 z-50 p-10 mx-[20rem] my-[0rem] rounded-none shadow-none w-[calc(100vw-20rem)] h-screen max-w-none max-h-none bg-black'
         )}
@@ -45,7 +50,7 @@ const InvestorDetailsDialog: FC<{
                 <span className="p-1">
                   <ChevronLeft
                     className="text-3xl font-bold cursor-pointer hover:opacity-50"
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => setInvestor?.(null)}
                   />
                 </span>
               </DialogClose>
@@ -79,10 +84,18 @@ const InvestorDetailsDialog: FC<{
               </div>
             </div>
             <div className="flex gap-5 px-5 py-2">
-              <div className="flex flex-col items-center">
-                <h2 className="text-5xl">{deals_invested}</h2>
-                <small className="text-muted">Deals</small>
-              </div>
+              {deals_invested && (
+                <div className="flex flex-col items-center">
+                  <h2 className="text-5xl">{deals_invested}</h2>
+                  <small className="text-muted">Deals Invested</small>
+                </div>
+              )}
+              {deals_committed && (
+                <div className="flex flex-col items-center">
+                  <h2 className="text-5xl">{deals_committed}</h2>
+                  <small className="text-muted">Deals Committed</small>
+                </div>
+              )}
               <div className="border-l border-[#383739] h-17"></div>
               <div className="flex flex-col items-center">
                 <h2 className="text-5xl">{capital_commitment}</h2>

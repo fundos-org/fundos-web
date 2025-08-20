@@ -52,6 +52,7 @@ export interface InvestorEntity {
   mail: string;
   type: InvestorType;
   deals_invested: number;
+  deals_committed: number;
   kyc_status: KycStatus;
   onboarding_status: OnboardingStatus;
   mca_key: string;
@@ -176,4 +177,9 @@ export interface InvestorDocumentsResponse {
   investor_id: string;
   documents: Documents;
   success: boolean;
+}
+
+export interface InvestorCommitmentsResponse {
+  pagination: Pagination;
+  commitments: InvestorEntity[];
 }

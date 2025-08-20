@@ -21,9 +21,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { InvestorEntity } from '@/constants/membersConstant';
 import { useDealInvestorCommitments } from '@/hooks/customhooks/DealsHooks/useDealInvestorCommitments';
 import { RefreshCw, SquareArrowOutUpRight } from 'lucide-react';
-import { FC, useState } from 'react';
+import { FC, lazy, Suspense, useState } from 'react';
+const InvestorDetailsDialog = lazy(
+  () => import('../../InvestorSection/DialogItems/InvestorDetailsDialog')
+);
 
 const pageSizesList = [6, 10, 20, 50];
 
@@ -31,7 +35,7 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(6);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  //   const [openInvestorDialog, setOpenInvestorDialog] = useState<string>();
+  const [investor, setInvestor] = useState<InvestorEntity | null>();
   const { data, error, isLoading, refetch } = useDealInvestorCommitments(
     deal_id,
     pageNumber,
@@ -68,7 +72,7 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
     try {
       await refetch();
     } finally {
-      setTimeout(() => setIsRefreshing(false), 500); // Small delay for better UX
+      setTimeout(() => setIsRefreshing(false), 500);
     }
   };
   return (
@@ -84,7 +88,6 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
             className="flex gap-3 p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
             title="Refresh data"
           >
-            {/* <span>Refresh:</span> */}
             <RefreshCw
               className={`w-5 h-5 text-zinc-400 ${
                 isRefreshing || isLoading ? 'animate-spin' : null
@@ -92,7 +95,7 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
             />
           </button>
         </div>
-        <div className="grid w-full [&>div]:max-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
+        <div className="grid w-full [&>div]:min-h-[calc(100vh-30rem)] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom-0 after:border-zinc-400/60">
@@ -100,8 +103,10 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
                 <TableHead className="text-zinc-400">
                   Commitment Amount
                 </TableHead>
+                <TableHead className="text-zinc-400">Deal Commited</TableHead>
                 <TableHead className="text-zinc-400">Email</TableHead>
-                <TableHead className="text-zinc-400">Phone</TableHead>
+                <TableHead className="text-zinc-400">Type</TableHead>
+                <TableHead className="text-zinc-400">Kyc Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="overflow-hidden">
@@ -111,18 +116,27 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
                     className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
                     key={commitment.investor_id}
                   >
-                    <TableCell className="font-medium flex items-center py-2 cursor-pointer hover:underline">
-                      <span className="mt-2">{commitment.investor_name}</span>
+                    <TableCell
+                      className="font-medium flex items-center py-2 cursor-pointer hover:underline"
+                      onClick={() => setInvestor(commitment)}
+                    >
+                      <span className="mt-2">{commitment.name}</span>
                       <SquareArrowOutUpRight className="w-3 ml-1 mt-2 text-blue-400" />
                     </TableCell>
-                    <TableCell className="font-medium">
-                      {commitment.committed_amount}
+                    <TableCell className="font-medium text-center">
+                      {commitment.capital_commitment}
+                    </TableCell>
+                    <TableCell className="font-medium text-center">
+                      {commitment.deals_committed}
                     </TableCell>
                     <TableCell className="font-medium capitalize">
-                      {commitment.email}
+                      {commitment.mail}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {commitment.phone}
+                      {commitment.type}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {commitment.kyc_status}
                     </TableCell>
                   </TableRow>
                 ))
@@ -198,6 +212,9 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
           </div>
         </Pagination>
       </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <InvestorDetailsDialog investor={investor} setInvestor={setInvestor} />
+      </Suspense>
     </>
   );
 };

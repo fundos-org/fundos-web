@@ -14,7 +14,7 @@ const envSuffix = import.meta.env.VITE_REVERSE_PROXY_ENV;
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 // Store refresh token promise to prevent multiple simultaneous refreshes

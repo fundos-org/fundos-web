@@ -75,9 +75,8 @@ const sessCapture = () => {
 const pageSizesList = [10, 20, 50, 100];
 
 const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
-  const [sendDetails, setSendDetails] = useState<InvestorEntity>();
+  const [investor, setInvestor] = useState<InvestorEntity | null>();
   const [editUser, setEditUser] = useState<OpenEditDialog | null>(null);
-  const [openDetails, setOpenDetails] = useState<boolean>(false);
   const [investor_type, setInvestorType] = useState<InvestorType | undefined>();
   const [onboarding_status, setOnboardingStatus] = useState<
     OnboardingStatus | undefined
@@ -166,11 +165,6 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
     } finally {
       setTimeout(() => setIsRefreshing1(false), 500); // Small delay for better UX
     }
-  };
-
-  const goInsideDialog = (investor: InvestorEntity) => {
-    setOpenDetails(true);
-    setSendDetails(investor);
   };
 
   const clearFilters = () => {
@@ -304,7 +298,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     </TableCell>
                     <TableCell
                       className="font-medium flex items-center py-2 cursor-pointer hover:underline"
-                      onClick={() => goInsideDialog(investor)}
+                      onClick={() => setInvestor(investor)}
                     >
                       <div className="w-5 h-5 mr-2 mt-2 overflow-hidden rounded-full">
                         <img
@@ -444,11 +438,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
         </Pagination>
       </div>
       <Suspense fallback={<div>Loading...</div>}>
-        <InvestorDetailsDialog
-          open={openDetails}
-          onOpenChange={setOpenDetails}
-          details={sendDetails}
-        />
+        <InvestorDetailsDialog investor={investor} setInvestor={setInvestor} />
       </Suspense>
       <Suspense fallback={<div className="spinner">Loading...</div>}>
         <InvestorEditDialog

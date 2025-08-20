@@ -27,6 +27,7 @@ import {
 import { AppEnums } from '@/constants/enums';
 import {
   InvestmentDealsResponse,
+  InvestorCommitmentsResponse,
   InvestorDetailsResponse,
   InvestorDocumentsResponse,
   InvestorMetadataResponse,
@@ -41,7 +42,6 @@ import toast from 'react-hot-toast';
 import { z } from 'zod';
 import axiosInstance from './axiosConfig';
 import {
-  InvestorCommitmentsResponse,
   InvestorType,
   KycStatus,
   OnboardingStatus,

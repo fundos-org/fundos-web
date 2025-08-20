@@ -1,5 +1,3 @@
-import { Pagination } from './dealsConstant';
-
 export type Investor = {
   name: string;
   email: string;
@@ -32,17 +30,4 @@ export enum KycStatus {
   PENDING = 'PENDING',
   VERIFIED = 'VERIFIED',
   REJECTED = 'REJECTED',
-}
-
-interface InvestorCommitment {
-  investor_id: string;
-  committed_amount: number;
-  investor_name: string;
-  email: string;
-  phone: number;
-}
-
-export interface InvestorCommitmentsResponse {
-  pagination: Pagination;
-  commitments: InvestorCommitment[];
 }
