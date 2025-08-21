@@ -100,10 +100,12 @@ const DealCommitments: FC<{ deal_id: string }> = ({ deal_id }) => {
             <TableHeader>
               <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom-0 after:border-zinc-400/60">
                 <TableHead className="text-zinc-400">Name</TableHead>
-                <TableHead className="text-zinc-400">
-                  Commitment Amount
+                <TableHead className="text-zinc-400 text-center">
+                  Commitment
                 </TableHead>
-                <TableHead className="text-zinc-400">Deal Commited</TableHead>
+                <TableHead className="text-zinc-400 text-center">
+                  Deal Commited
+                </TableHead>
                 <TableHead className="text-zinc-400">Email</TableHead>
                 <TableHead className="text-zinc-400">Type</TableHead>
                 <TableHead className="text-zinc-400">Kyc Status</TableHead>
