@@ -76,6 +76,21 @@ export const createDraft = async (): Promise<DraftResponse> => {
   }
 };
 
+export const uploadUnitStatement = async (
+  unit_statement: File | null,
+  user_id: string
+) => {
+  const formData = new FormData();
+  if (unit_statement) {
+    formData.append('unit_statement', unit_statement);
+  }
+  const response = await axiosInstance.post(
+    `${baseUrl}/v1/admin/unit-statement/upload?user_id=${user_id}`,
+    formData
+  );
+  toast.success(response.data.message || 'Uploaded successfully');
+  return response.data;
+};
 export const companyDetailsTrigger = async (
   companyName: string,
   aboutCompany: string,
