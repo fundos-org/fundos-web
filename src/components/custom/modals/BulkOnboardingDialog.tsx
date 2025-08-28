@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
 import {
   ChangeEvent,
   Dispatch,
@@ -21,6 +21,12 @@ import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
 import { useBulkOnboarding } from '@/hooks/customhooks/AdminHooks/useBulkOnboarding';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const userSchema = z.object({
   email: z
@@ -144,6 +150,30 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     };
   };
 
+  const getErrorMessages = (user: BulkOnboardingUserData) => {
+    const { errors } = getValidation(user);
+    const messages: string[] = [];
+
+    const isEmpty = (value: string | undefined | null) =>
+      value === undefined || value === null || value.trim() === '';
+
+    if (isEmpty(user.email)) messages.push('Email is required');
+    if (isEmpty(user.pan_number)) messages.push('PAN is required');
+    if (isEmpty(user.phone)) messages.push('Phone number is required');
+    if (isEmpty(user.capital_commitment))
+      messages.push('Capital commitment is required');
+
+    Object.entries(errors).forEach(([field, fieldErrors]) => {
+      if (fieldErrors) {
+        messages.push(
+          ...fieldErrors.map(msg => `${field.replace('_', ' ')}: ${msg}`)
+        );
+      }
+    });
+
+    return messages;
+  };
+
   const summary = rows.reduce(
     (acc, row) => {
       const { errors } = getValidation(row);
@@ -261,7 +291,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                     isEmpty(user.email);
                   const panInvalid =
                     !!errors.pan_number ||
-                    !!inputErrors[`${idx}-pan`] ||
+                    !!inputErrors[`${idx}-pan_number`] ||
                     isEmpty(user.pan_number);
                   const phoneInvalid =
                     !!errors.phone ||
@@ -269,14 +299,9 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                     isEmpty(user.phone);
                   const capitalInvalid =
                     !!errors.capital_commitment ||
-                    !!inputErrors[`${idx}-cc`] ||
+                    !!inputErrors[`${idx}-capital_commitment`] ||
                     isEmpty(user.capital_commitment);
-                  const remark = getRemark(user, {
-                    emailInvalid,
-                    panInvalid,
-                    phoneInvalid,
-                    capitalInvalid,
-                  });
+                  const errorMessages = getErrorMessages(user);
 
                   return (
                     <tr
@@ -359,16 +384,31 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                           </div>
                         </div>
                       </td>
-                      <td className={fintechTd}>
-                        <span
-                          className={
-                            remark === 'Valid Values'
-                              ? 'text-green-400 font-semibold'
-                              : 'text-red-400 font-semibold'
-                          }
-                        >
-                          {remark}
-                        </span>
+                      <td className={fintechTd + ' text-center'}>
+                        {errorMessages.length === 0 ? (
+                          <CheckCircle
+                            className="text-green-400 mx-auto"
+                            size={18}
+                          />
+                        ) : (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <AlertCircle
+                                  className="text-red-400 cursor-help mx-auto"
+                                  size={18}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <ul className="list-disc pl-4 space-y-1">
+                                  {errorMessages.map((msg, i) => (
+                                    <li key={i}>{msg}</li>
+                                  ))}
+                                </ul>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
                       </td>
                       <td className={fintechTd + ' text-center'}>
                         <button
@@ -405,24 +445,3 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
 });
 
 export default BulkOnboardingDialog;
-
-const getRemark = (
-  user: BulkOnboardingUserData,
-  validationFlags: Record<string, boolean>
-) => {
-  if (
-    !user.email ||
-    !user.pan_number ||
-    !user.phone ||
-    !user.capital_commitment
-  ) {
-    return 'Empty Values';
-  }
-
-  if (validationFlags.emailInvalid) return 'Invalid Email';
-  if (validationFlags.panInvalid) return 'Invalid PAN';
-  if (validationFlags.phoneInvalid) return 'Invalid Phone';
-  if (validationFlags.capitalInvalid) return 'Invalid CC';
-
-  return 'Valid Values';
-};
