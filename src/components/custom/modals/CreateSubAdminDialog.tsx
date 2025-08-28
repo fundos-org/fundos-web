@@ -18,6 +18,8 @@ import {
   shareDetails,
 } from '@/axioscalls/apiServices';
 import toast from 'react-hot-toast';
+import { useQueryClient } from 'react-query';
+import { QueryEnums } from '@/queryEnums';
 
 export interface FormData {
   logo: File | null;
@@ -38,6 +40,7 @@ function CreateSubAdminDialog() {
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
+  const queryClient = useQueryClient();
   const methods = useForm<FormData>({
     defaultValues: {
       logo: null,
@@ -134,6 +137,7 @@ function CreateSubAdminDialog() {
             values.invitecode
           );
           await shareDetails(subAdminId);
+          queryClient.invalidateQueries(QueryEnums.SubAdmins);
           break;
         default:
           return null;

@@ -183,3 +183,12 @@ export interface InvestorCommitmentsResponse {
   pagination: Pagination;
   commitments: InvestorEntity[];
 }
+
+export interface InvestorOnboardingBulk {
+  email: string;
+  pan_number: string;
+  phone: string;
+  capital_commitment: number;
+}
+
+export type InvestorOnboardingBulkPayload = InvestorOnboardingBulk[];

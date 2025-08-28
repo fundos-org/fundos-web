@@ -31,6 +31,7 @@ import {
   InvestorDetailsResponse,
   InvestorDocumentsResponse,
   InvestorMetadataResponse,
+  InvestorOnboardingBulkPayload,
   InvestorsListResponse,
   InvestorTransactionsResponse,
   MemberApiResponse,
@@ -38,7 +39,6 @@ import {
   UpdateInvestorResponse,
 } from '@/constants/membersConstant';
 import { AxiosError, isAxiosError } from 'axios';
-import toast from 'react-hot-toast';
 import { z } from 'zod';
 import axiosInstance from './axiosConfig';
 import {
@@ -55,7 +55,6 @@ const baseUrl = reverseProxyPath
   ? new URL(reverseProxyPath, validatedBaseUrl).toString()
   : validatedBaseUrl;
 
-// Create async thunk for creating a draft deal
 export const createDraft = async (): Promise<DraftResponse> => {
   try {
     const response = await axiosInstance.post(
@@ -88,7 +87,6 @@ export const uploadUnitStatement = async (
     `${baseUrl}/v1/admin/unit-statement/upload?user_id=${user_id}`,
     formData
   );
-  toast.success(response.data.message || 'Uploaded successfully');
   return response.data;
 };
 export const companyDetailsTrigger = async (
@@ -106,7 +104,6 @@ export const companyDetailsTrigger = async (
     `${baseUrl}/v1/deal/web/company-details?deal_id=${dealId}&company_name=${companyName}&about_company=${aboutCompany}&investment_scheme_appendix=${investmentSchemeAppendix}`,
     formData
   );
-  toast.success(response.data.message);
   return response.data;
 };
 
@@ -125,7 +122,6 @@ export const industryProblemTrigger = async (
       business_model: businessModel,
     }
   );
-  toast.success(response.data.message);
   return response.data;
 };
 
@@ -142,7 +138,6 @@ export const customerSegmentTrigger = async (
       target_customer_segment: targetCustomerSegment,
     }
   );
-  toast.success(response.data.message);
   return response.data;
 };
 
@@ -170,7 +165,6 @@ export const valuationTrigger = async (
     `${baseUrl}/v1/deal/web/valuation?deal_id=${dealId}&current_valuation=${currentValuation}&round_size=${roundSize}&syndicate_commitment=${syndicateCommitment}&minimum_investment=${minimumInvestment}`,
     formData
   );
-  toast.success(response.data.message);
   return response.data;
 };
 
@@ -195,7 +189,6 @@ export const securitiesTrigger = async (
       }
     );
     localStorage.removeItem(AppEnums.DEAL_DRAFT);
-    toast.success(response.data.message);
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -210,8 +203,6 @@ export const securitiesTrigger = async (
         'Failed to trigger securities';
       const errorCode =
         axiosError.response?.data?.code || axiosError.code || 'UNKNOWN_ERROR';
-
-      // Throw a structured error for React Query or caller to handle
       throw new Error(
         `Securities API failed: ${errorMessage} (Code: ${errorCode})`
       );
@@ -267,7 +258,6 @@ export const createProfile = async (
         data?.detail ||
         error.message ||
         'Failed to create profile';
-      toast.error(message);
       throw new Error(message);
     }
     throw new Error('An unexpected error occurred');
@@ -293,7 +283,6 @@ export const createCredentials = async (
       invite_code,
     }
   );
-  toast.success('Sub Admin created successfully!');
   return response.data;
 };
 
@@ -449,7 +438,25 @@ export const addMember = async (email: string) => {
     return response.data;
   } catch (error) {
     if (isAxiosError(error)) {
-      toast.error(`Error: ${error.message}`);
+      throw new Error(error.message);
+    } else {
+      console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred');
+    }
+  }
+};
+
+export const bulkOnboardingCheck = async (
+  newUsers: InvestorOnboardingBulkPayload
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `${baseUrl}/v1/subadmin/bulk-onboarding/check`,
+      newUsers
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error)) {
       throw new Error(error.message);
     } else {
       console.error('Unexpected error:', error);
@@ -463,12 +470,10 @@ export const shareDetails = async (subadmin_id: string) => {
     const response = await axiosInstance.get(
       `${baseUrl}/v1/admin/subadmins/send/invitation/?subadmin_id=${subadmin_id}`
     );
-    toast.success(response.data.message);
     return response.data;
   } catch (error) {
     console.log('Error in apiAadhaarOtpSend:', error);
     if (isAxiosError(error)) {
-      toast.error(`Error: ${error.message}`);
       throw new Error(error.message);
     } else {
       console.error('Unexpected error:', error);
@@ -477,7 +482,6 @@ export const shareDetails = async (subadmin_id: string) => {
   }
 };
 
-// React Query Tanstack
 export const getSubadmins = async (
   pageNumber: number,
   pageSize: number
@@ -663,7 +667,6 @@ export const changeDealStatus = async (deal_id: string, status: DealStatus) => {
   } catch (error) {
     console.log('Error in changeDealStatus:', error);
     if (isAxiosError(error)) {
-      toast.error(`Error: ${error.message}`);
       throw new Error(error.message);
     } else {
       console.error('Unexpected error:', error);
