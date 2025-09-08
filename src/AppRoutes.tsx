@@ -7,6 +7,8 @@ const KycDashboard = lazy(() => import('./pages/KycDashboard'));
 const SubadminDashboard = lazy(() => import('./pages/SubadminDashboard'));
 const Deals = lazy(() => import('./pages/Deals'));
 const Members = lazy(() => import('./pages/Members'));
+const Insights = lazy(() => import('./pages/Insights'));
+const AdminInsights = lazy(() => import('./pages/AdminInsights'));
 const Settings = lazy(() => import('./pages/Settings'));
 const SubAdmin = lazy(() => import('./pages/SubAdmin'));
 const SignIn = lazy(() => import('./pages/SignIn'));
@@ -45,6 +47,14 @@ const AppRoutes = () => {
             }
           />
           <Route
+            path={AppRoute.ADMIN_INSIGHTS}
+            element={
+              <Layout>
+                <AdminInsights />
+              </Layout>
+            }
+          />
+          <Route
             path={AppRoute.ADMIN_DEALS}
             element={
               <Layout>
@@ -78,6 +88,14 @@ const AppRoutes = () => {
             element={
               <Layout>
                 <Members />
+              </Layout>
+            }
+          />
+          <Route
+            path={AppRoute.SUBADMIN_INSIGHTS}
+            element={
+              <Layout>
+                <Insights />
               </Layout>
             }
           />

@@ -87,35 +87,39 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-blue-200',
     };
   } else {
-    // return {
-    //   name: 'Fund Manager',
-    //   role: 'subadmin',
-    //   background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
-    //   cardBg: 'bg-zinc-900/40',
-    //   inputBg: 'bg-gray-800',
-    //   inputBorder: 'border-gray-600',
-    //   inputText: 'text-white',
-    //   focusRing: 'focus:ring-gray-500',
-    //   buttonBg: 'bg-white cursor-pointer',
-    //   buttonHover: 'hover:bg-gray-200',
-    //   buttonText: 'text-black',
-    //   starColor: 'bg-white',
-    // };
+
     return {
-      name: 'Admin',
-      role: 'admin',
-      background: 'gradient-bg-fundos',
-      cardBg:
-        'bg-white/10 hover:bg-zinc-800/80 transition-all duration-300 ease-in-out',
-      inputBg: 'bg-blue-100',
-      inputText: 'text-black',
-      inputBorder: 'border-gray-500',
-      focusRing: 'focus:ring-blue-400',
-      buttonBg: 'bg-black cursor-pointer border border-zinc-700',
-      buttonHover: 'hover:bg-gray-600',
-      buttonText: 'text-white',
-      starColor: 'bg-blue-200',
+      name: 'Fund Manager',
+      role: 'subadmin',
+      background: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+      cardBg: 'bg-zinc-900/40',
+      inputBg: 'bg-gray-800',
+      inputBorder: 'border-gray-600',
+      inputText: 'text-white',
+      focusRing: 'focus:ring-gray-500',
+      buttonBg: 'bg-white cursor-pointer',
+      buttonHover: 'hover:bg-gray-200',
+      buttonText: 'text-black',
+      starColor: 'bg-white',
     };
+    
+
+    // return {
+    //   name: 'Admin',
+    //   role: 'admin',
+    //   background: 'gradient-bg-fundos',
+    //   cardBg:
+    //     'bg-white/10 hover:bg-zinc-800/80 transition-all duration-300 ease-in-out',
+    //   inputBg: 'bg-blue-100',
+    //   inputText: 'text-black',
+    //   inputBorder: 'border-gray-500',
+    //   focusRing: 'focus:ring-blue-400',
+    //   buttonBg: 'bg-black cursor-pointer border border-zinc-700',
+    //   buttonHover: 'hover:bg-gray-600',
+    //   buttonText: 'text-white',
+    //   starColor: 'bg-blue-200',
+    // };
+    
   }
 };
 
