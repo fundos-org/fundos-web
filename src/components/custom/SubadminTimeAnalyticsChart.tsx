@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import ChartControls from './ChartControls';
 import { exportToCSV, exportToExcel, exportToPDF, formatChartDataForExport } from '@/utils/exportUtils';
-import { analyticsApi, BaseAnalyticsParams } from '@/axioscalls/analyticsApi';
+import { analyticsApi, TimeSeriesParams } from '@/axioscalls/analyticsApi';
 import { useState, useMemo, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -50,44 +50,27 @@ export default function SubadminTimeAnalyticsChart() {
     setError(null);
     
     try {
-      let response;
-      const params: BaseAnalyticsParams = {
+      const params: TimeSeriesParams = {
+        metric_type: selectedMetric,
         ...(dateRange.start && { start_date: dateRange.start }),
         ...(dateRange.end && { end_date: dateRange.end }),
       };
 
-      // For now, we'll use existing APIs and map them to the time-based format
-      // This will need to be updated when the backend provides time-series APIs
-      switch (selectedMetric) {
-        case 'ONBOARDED_INVESTORS':
-          response = await analyticsApi.getOnboardedInvestors(params);
-          break;
-        case 'TRANSACTIONS':
-          response = await analyticsApi.getTransactions(params);
-          break;
-        case 'KYC_COMPLETED':
-          // Placeholder - will use KYC API when available
-          response = { data: [] };
-          break;
-        case 'INVESTOR_TYPES':
-          response = await analyticsApi.getInvestorTypes(params);
-          break;
-        default:
-          response = await analyticsApi.getOnboardedInvestors(params);
-      }
+      // Use the new optimized time-series API
+      const response = await analyticsApi.getTimeSeriesData(params);
 
-      // Transform the data to time-based format
-      const transformedData: ChartDataItem[] = response.data?.map((item: any, index: number) => ({
-        time: item.month || item.type || `Period ${index + 1}`,
-        value: item.investors || item.transactions || item.count || 0,
-        date: item.date || new Date().toISOString(),
+      // Transform the API response to chart format
+      const transformedData: ChartDataItem[] = response.data?.map((item) => ({
+        time: item.time_period, // Already in "YYYY-MM" format from API
+        value: item.value,
+        date: item.date,
       })) || [];
 
       setData(transformedData);
     } catch (error) {
-      console.error('Error fetching metrics data:', error);
-      setError('Failed to load metrics data');
-      toast.error('Failed to load metrics data');
+      console.error('Error fetching time-series data:', error);
+      setError('Failed to load time-series data');
+      toast.error('Failed to load time-series data');
     } finally {
       setLoading(false);
     }

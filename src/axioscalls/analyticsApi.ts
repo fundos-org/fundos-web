@@ -139,6 +139,40 @@ export interface SendReminderResponse {
   message: string;
 }
 
+// New Time-Series Analytics Interfaces
+export interface TimeSeriesParams {
+  metric_type: 'ONBOARDED_INVESTORS' | 'TRANSACTIONS' | 'KYC_COMPLETED' | 'INVESTOR_TYPES';
+  start_date?: string;  // Format: YYYY-MM-DD
+  end_date?: string;    // Format: YYYY-MM-DD
+  subadmin_id?: string; // Required for admin users, auto-detected for subadmin users
+}
+
+export interface TimeSeriesResponse {
+  data: Array<{
+    time_period: string;   // Format: "2024-01", "2024-02" (YYYY-MM)
+    value: number;         // Count for that period
+    date: string;          // ISO 8601 date for the first day of the month
+  }>;
+  total_count: number;
+  metric_type: 'ONBOARDED_INVESTORS' | 'TRANSACTIONS' | 'KYC_COMPLETED' | 'INVESTOR_TYPES';
+}
+
+// KYC Distribution Interfaces
+export interface KycDistributionParams {
+  start_date?: string;  // Format: YYYY-MM-DD
+  end_date?: string;    // Format: YYYY-MM-DD
+  subadmin_id?: string; // Required for admin users, auto-detected for subadmin users
+}
+
+export interface KycDistributionResponse {
+  data: Array<{
+    status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'VERIFIED' | 'REJECTED';
+    count: number;
+    percentage: number;  // Percentage of total users
+  }>;
+  total_users: number;
+}
+
 // API Parameters Types
 export interface TimeMetricsParams {
   metric_type: 'TOTAL_USERS' | 'DEALS' | 'ONBOARDING_STATUS' | 'KYC_STATUS' | 'TRANSACTIONS' | 'PAYMENT_STATUS';
@@ -392,6 +426,56 @@ class AnalyticsAPI {
       return response.data;
     } catch (error) {
       this.handleError(error, 'sendReminder');
+      throw error;
+    }
+  }
+
+  // New Time-Series Analytics API
+  async getTimeSeriesData(params: TimeSeriesParams): Promise<TimeSeriesResponse> {
+    try {
+      const session = JSON.parse(sessionStorage.getItem('userSession') || '{}');
+      const userRole = session?.role?.toLowerCase();
+      const currentSubadminId = session?.subadmin?.id;
+      
+      const finalParams: any = { ...params };
+      
+      // Handle subadmin_id logic for admin vs subadmin users
+      if (userRole === 'admin') {
+        // For admin users accessing specific subadmin data, subadmin_id should be provided
+      } else if (userRole === 'subadmin' && currentSubadminId) {
+        finalParams.subadmin_id = currentSubadminId;
+      }
+
+      const url = this.buildUrl('/subadmin/analytics/time-series', finalParams);
+      const response = await axiosInstance.get(url);
+      return response.data;
+    } catch (error) {
+      this.handleError(error, 'getTimeSeriesData');
+      throw error;
+    }
+  }
+
+  // New KYC Distribution API
+  async getKycDistribution(params: KycDistributionParams): Promise<KycDistributionResponse> {
+    try {
+      const session = JSON.parse(sessionStorage.getItem('userSession') || '{}');
+      const userRole = session?.role?.toLowerCase();
+      const currentSubadminId = session?.subadmin?.id;
+      
+      const finalParams: any = { ...params };
+      
+      // Handle subadmin_id logic for admin vs subadmin users
+      if (userRole === 'admin') {
+        // For admin users accessing specific subadmin data, subadmin_id should be provided
+      } else if (userRole === 'subadmin' && currentSubadminId) {
+        finalParams.subadmin_id = currentSubadminId;
+      }
+
+      const url = this.buildUrl('/subadmin/analytics/kyc-distribution', finalParams);
+      const response = await axiosInstance.get(url);
+      return response.data;
+    } catch (error) {
+      this.handleError(error, 'getKycDistribution');
       throw error;
     }
   }
