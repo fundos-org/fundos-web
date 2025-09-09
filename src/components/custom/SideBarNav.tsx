@@ -19,6 +19,7 @@ import {
   LucideProps,
   LogOut,
   Mail,
+  BarChart3,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card } from '../ui/card';
@@ -77,6 +78,7 @@ const routes: Routes = {
     },
     { title: 'Deals', url: AppRoute.SUBADMIN_DEALS, icon: ScrollText },
     { title: 'Members', url: AppRoute.SUBADMIN_MEMBERS, icon: Users },
+    { title: 'Insights', url: AppRoute.SUBADMIN_INSIGHTS, icon: BarChart3 },
     // { title: 'Settings', url: AppRoute.SUBADMIN_SETTINGS, icon: Settings },
   ],
   admin: [
@@ -87,12 +89,9 @@ const routes: Routes = {
     },
     { title: 'Sub Admin', url: AppRoute.ADMIN_SUBADMIN, icon: UserRoundPen },
     { title: 'Users', url: AppRoute.ADMIN_MEMBERS, icon: Users },
+    { title: 'Insights', url: AppRoute.ADMIN_INSIGHTS, icon: BarChart3 },
     { title: 'Deals', url: AppRoute.ADMIN_DEALS, icon: ScrollText },
-    {
-      title: 'Communications',
-      url: AppRoute.SUBADMIN_COMMUNICATION,
-      icon: Mail,
-    },
+    { title: 'Communications', url: AppRoute.SUBADMIN_COMMUNICATION, icon: Mail},
   ],
   kyc: [{ title: 'KYC Dashboard', url: AppRoute.KYC_DASHBOARD, icon: Users }],
 };

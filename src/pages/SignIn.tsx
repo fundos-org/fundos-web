@@ -87,6 +87,7 @@ const getColorScheme = (): ColorScheme => {
       starColor: 'bg-blue-200',
     };
   } else {
+
     return {
       name: 'Fund Manager',
       role: 'subadmin',
@@ -101,21 +102,24 @@ const getColorScheme = (): ColorScheme => {
       buttonText: 'text-black',
       starColor: 'bg-white',
     };
-    return {
-      name: 'Admin',
-      role: 'admin',
-      background: 'gradient-bg-fundos',
-      cardBg:
-        'bg-white/10 hover:bg-zinc-800/80 transition-all duration-300 ease-in-out',
-      inputBg: 'bg-blue-100',
-      inputText: 'text-black',
-      inputBorder: 'border-gray-500',
-      focusRing: 'focus:ring-blue-400',
-      buttonBg: 'bg-black cursor-pointer border border-zinc-700',
-      buttonHover: 'hover:bg-gray-600',
-      buttonText: 'text-white',
-      starColor: 'bg-blue-200',
-    };
+    
+
+    // return {
+    //   name: 'Admin',
+    //   role: 'admin',
+    //   background: 'gradient-bg-fundos',
+    //   cardBg:
+    //     'bg-white/10 hover:bg-zinc-800/80 transition-all duration-300 ease-in-out',
+    //   inputBg: 'bg-blue-100',
+    //   inputText: 'text-black',
+    //   inputBorder: 'border-gray-500',
+    //   focusRing: 'focus:ring-blue-400',
+    //   buttonBg: 'bg-black cursor-pointer border border-zinc-700',
+    //   buttonHover: 'hover:bg-gray-600',
+    //   buttonText: 'text-white',
+    //   starColor: 'bg-blue-200',
+    // };
+    
   }
 };
 
