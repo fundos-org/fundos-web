@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
 import {
   ChangeEvent,
   Dispatch,
@@ -21,31 +21,27 @@ import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
 import { useBulkOnboarding } from '@/hooks/customhooks/AdminHooks/useBulkOnboarding';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const userSchema = z.object({
-  email: z
-    .email('Invalid Email')
-    .min(1, 'Email is required')
-    .or(z.literal('').transform(() => undefined))
-    .or(z.literal(null).transform(() => undefined)),
+  email: z.string().min(1, 'Email is required').email('Invalid Email'),
   pan_number: z
     .string()
     .min(1, 'PAN is required')
-    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN')
-    .or(z.literal('').transform(() => undefined))
-    .or(z.literal(null).transform(() => undefined)),
+    .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN'),
   phone: z
     .string()
     .min(1, 'Phone number is required')
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
-    .or(z.literal('').transform(() => undefined))
-    .or(z.literal(null).transform(() => undefined)),
+    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
   capital_commitment: z
     .string()
     .min(1, 'Capital commitment is required')
-    .regex(/^\d+(\.\d{1,2})?$/, 'Invalid capital commitment')
-    .or(z.literal('').transform(() => undefined))
-    .or(z.literal(null).transform(() => undefined)),
+    .regex(/^\d+(\.\d{1,2})?$/, 'Invalid capital commitment'),
   remark: z.string().optional(),
 });
 
@@ -89,7 +85,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
   const validateField = (field: string, value: string) => {
     const schema =
       userSchema.shape[field as keyof Omit<BulkOnboardingUserData, 'remark'>];
-    const result = schema.safeParse(value || '');
+    const result = schema.safeParse(value);
     return result.success
       ? ''
       : result.error.issues[0]?.message || 'Invalid input';
@@ -129,6 +125,20 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     });
   };
 
+  const handleAddRow = () => {
+    setRows(prev => [
+      ...prev,
+      {
+        email: '',
+        pan_number: '',
+        phone: '',
+        capital_commitment: '',
+        remark: '',
+      },
+    ]);
+    setSelected(prev => [...prev, true]);
+  };
+
   const getValidation = (row: BulkOnboardingUserData) => {
     const safeRow = {
       ...row,
@@ -144,20 +154,36 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     };
   };
 
+  const getErrorMessages = (user: BulkOnboardingUserData) => {
+    const { errors } = getValidation(user);
+    const messages: string[] = [];
+
+    Object.entries(errors).forEach(([field, fieldErrors]) => {
+      if (fieldErrors) {
+        messages.push(
+          ...fieldErrors.map(
+            msg =>
+              `${field
+                .replace('_', ' ')
+                .split(' ')
+                .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+                .join(' ')}: ${msg}`
+          )
+        );
+      }
+    });
+
+    return messages;
+  };
+
   const summary = rows.reduce(
     (acc, row) => {
       const { errors } = getValidation(row);
-      const isEmpty = (value: string | undefined | null) =>
-        value === undefined || value === null || value === '';
       if (
         !errors.email &&
         !errors.pan_number &&
         !errors.phone &&
-        !errors.capital_commitment &&
-        !isEmpty(row.email) &&
-        !isEmpty(row.pan_number) &&
-        !isEmpty(row.phone) &&
-        !isEmpty(row.capital_commitment)
+        !errors.capital_commitment
       ) {
         acc.ready += 1;
       } else {
@@ -251,32 +277,18 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                 </tr>
               </thead>
               <tbody>
-                {rows.slice(0, 20).map((user, idx) => {
+                {rows.map((user, idx) => {
                   const { errors } = getValidation(user);
-                  const isEmpty = (value: string | undefined | null) =>
-                    value === undefined || value === null || value === '';
                   const emailInvalid =
-                    !!errors.email ||
-                    !!inputErrors[`${idx}-email`] ||
-                    isEmpty(user.email);
+                    !!errors.email || !!inputErrors[`${idx}-email`];
                   const panInvalid =
-                    !!errors.pan_number ||
-                    !!inputErrors[`${idx}-pan`] ||
-                    isEmpty(user.pan_number);
+                    !!errors.pan_number || !!inputErrors[`${idx}-pan_number`];
                   const phoneInvalid =
-                    !!errors.phone ||
-                    !!inputErrors[`${idx}-phone`] ||
-                    isEmpty(user.phone);
+                    !!errors.phone || !!inputErrors[`${idx}-phone`];
                   const capitalInvalid =
                     !!errors.capital_commitment ||
-                    !!inputErrors[`${idx}-cc`] ||
-                    isEmpty(user.capital_commitment);
-                  const remark = getRemark(user, {
-                    emailInvalid,
-                    panInvalid,
-                    phoneInvalid,
-                    capitalInvalid,
-                  });
+                    !!inputErrors[`${idx}-capital_commitment`];
+                  const errorMessages = getErrorMessages(user);
 
                   return (
                     <tr
@@ -359,16 +371,31 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                           </div>
                         </div>
                       </td>
-                      <td className={fintechTd}>
-                        <span
-                          className={
-                            remark === 'Valid Values'
-                              ? 'text-green-400 font-semibold'
-                              : 'text-red-400 font-semibold'
-                          }
-                        >
-                          {remark}
-                        </span>
+                      <td className={fintechTd + ' text-center'}>
+                        {errorMessages.length === 0 ? (
+                          <CheckCircle
+                            className="text-green-400 mx-auto"
+                            size={18}
+                          />
+                        ) : (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <AlertCircle
+                                  className="text-red-400 cursor-help mx-auto"
+                                  size={18}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <ul className="list-disc pl-4 space-y-1">
+                                  {errorMessages.map((msg, i) => (
+                                    <li key={i}>{msg}</li>
+                                  ))}
+                                </ul>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
                       </td>
                       <td className={fintechTd + ' text-center'}>
                         <button
@@ -392,37 +419,25 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
             Showing {rows.length} users records
           </p>
         </div>
-        <Button
-          className="rounded-none text-black mx-auto"
-          variant="outline"
-          onClick={handleConfirm}
-        >
-          Confirm Onboarding
-        </Button>
+        <div className="flex justify-end gap-2 mt-4">
+          <Button
+            className="rounded-none text-black"
+            variant="outline"
+            onClick={handleAddRow}
+          >
+            Add New Row
+          </Button>
+          <Button
+            className="rounded-none text-black"
+            variant="outline"
+            onClick={handleConfirm}
+          >
+            Confirm Onboarding
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
 });
 
 export default BulkOnboardingDialog;
-
-const getRemark = (
-  user: BulkOnboardingUserData,
-  validationFlags: Record<string, boolean>
-) => {
-  if (
-    !user.email ||
-    !user.pan_number ||
-    !user.phone ||
-    !user.capital_commitment
-  ) {
-    return 'Empty Values';
-  }
-
-  if (validationFlags.emailInvalid) return 'Invalid Email';
-  if (validationFlags.panInvalid) return 'Invalid PAN';
-  if (validationFlags.phoneInvalid) return 'Invalid Phone';
-  if (validationFlags.capitalInvalid) return 'Invalid CC';
-
-  return 'Valid Values';
-};
