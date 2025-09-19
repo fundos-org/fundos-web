@@ -1,11 +1,12 @@
 import { getCommunicationEmails } from '@/axioscalls/apiServices';
 import { QueryEnums } from '@/queryEnums';
-import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
 export const useCommunicationEmails = (
   subadmin_id?: string,
-  isSubadmin?: boolean
+  isSubadmin?: boolean,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
 ) => {
   return useQuery(
     [QueryEnums.CommunicationEmails, subadmin_id],
@@ -16,10 +17,8 @@ export const useCommunicationEmails = (
       retry: 2,
       keepPreviousData: true, // useful for pagination
       // staleTime: 1000 * 60 * 60, // 1 hour
-      onSuccess: () => toast.success('Investor Details fetched successfully'),
-      onError: (error: Error) => {
-        toast.error(`Fetch investors failed: ${error.message}`);
-      },
+      onSuccess,
+      onError,
     }
   );
 };

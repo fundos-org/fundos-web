@@ -3,8 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SetStateAction, Dispatch } from 'react';
 import { Upload } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { DealDetails as DDInterface } from '@/constants/dealsConstant';
 import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
 import {
@@ -59,6 +58,7 @@ const DealDetails: React.FC<{
   setDealId: Dispatch<SetStateAction<string | null>>;
   handleUpdateDetails: (value: Partial<DDInterface>) => void;
 }> = ({ details, setDealId, handleUpdateDetails }) => {
+  const notification = useNotification();
   const {
     control,
     handleSubmit,
@@ -76,6 +76,9 @@ const DealDetails: React.FC<{
       pitch_video_url: details?.pitch_video_url || '',
     },
   });
+
+  // Check if any fields have been modified
+  const hasChanges = Object.keys(dirtyFields).length > 0;
 
   // Watch the pitch_deck_url and pitch_video_url fields for changes
   const pitchDeckValue = watch('pitch_deck_url');
@@ -124,23 +127,20 @@ const DealDetails: React.FC<{
     if (Object.keys(updatedData).length > 0) {
       handleUpdateDetails(updatedData);
     } else {
-      toast.error('There is nothing to submit');
+      notification.error('Nothing to Submit', 'There are no changes to submit');
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 px-10 py-5 h-full flex flex-col justify-between gap-2"
+      className="space-y-6 w-full"
     >
-      <div className="flex flex-col gap-5">
-        <div>
-          <Label
-            htmlFor="current_valuation"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Current Valuation
-          </Label>
+          </label>
           <Controller
             name="current_valuation"
             control={control}
@@ -149,25 +149,22 @@ const DealDetails: React.FC<{
                 type="number"
                 {...field}
                 onChange={e => field.onChange(Number(e.target.value))}
-                placeholder="Current Valuation"
-                className={`${errors.current_valuation ? 'border-red-500' : ''} rounded-none`}
+                placeholder="Enter current valuation"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.current_valuation ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.current_valuation && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.current_valuation.message}
             </p>
           )}
         </div>
 
-        <div>
-          <Label
-            htmlFor="round_size"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Round Size
-          </Label>
+          </label>
           <Controller
             name="round_size"
             control={control}
@@ -176,23 +173,20 @@ const DealDetails: React.FC<{
                 type="number"
                 {...field}
                 onChange={e => field.onChange(Number(e.target.value))}
-                placeholder="Round Size"
-                className={`${errors.round_size ? 'border-red-500' : ''} rounded-none`}
+                placeholder="Enter round size"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.round_size ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.round_size && (
-            <p className="text-red-500 text-sm">{errors.round_size.message}</p>
+            <p className="text-red-600 text-sm">{errors.round_size.message}</p>
           )}
         </div>
 
-        <div>
-          <Label
-            htmlFor="syndicate_commitment"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Syndicate Commitment
-          </Label>
+          </label>
           <Controller
             name="syndicate_commitment"
             control={control}
@@ -201,71 +195,56 @@ const DealDetails: React.FC<{
                 type="number"
                 {...field}
                 onChange={e => field.onChange(Number(e.target.value))}
-                placeholder="Syndicate Commitment"
-                className={`${errors.syndicate_commitment ? 'border-red-500' : ''} rounded-none`}
+                placeholder="Enter syndicate commitment"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.syndicate_commitment ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.syndicate_commitment && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.syndicate_commitment.message}
             </p>
           )}
         </div>
 
-        <div>
-          <Label
-            htmlFor="conversion_terms"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Conversion Terms
-          </Label>
+          </label>
           <Controller
             name="conversion_terms"
             control={control}
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Conversion Terms"
-                className={`${errors.conversion_terms ? 'border-red-500' : ''} rounded-none`}
+                placeholder="Enter conversion terms"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.conversion_terms ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.conversion_terms && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.conversion_terms.message}
             </p>
           )}
         </div>
 
-        <div className="w-full">
-          <Label
-            htmlFor="instrument_type"
-            className="block text-sm font-medium text-gray-300 mb-1"
-          >
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Instrument Type
-          </Label>
+          </label>
           <Controller
             name="instrument_type"
             control={control}
             render={({ field }) => (
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger
-                  className={`${errors.instrument_type ? 'border-red-500' : ''} rounded-none w-full`}
-                >
-                  <SelectValue
-                    placeholder="Select Instrument Type"
-                    className="w-full"
-                  />
+                <SelectTrigger className={`w-full bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.instrument_type ? 'border-red-500' : ''}`}>
+                  <SelectValue placeholder="Select Instrument Type" />
                 </SelectTrigger>
-                <SelectContent className="rounded-none text-white bg-[#1a1a1a]">
+                <SelectContent className="bg-white border border-gray-200 rounded-lg">
                   <SelectGroup>
                     {instrumentTypes.map(type => (
-                      <SelectItem
-                        key={type.value}
-                        value={type.value}
-                        className="rounded-none"
-                      >
+                      <SelectItem key={type.value} value={type.value}>
                         {type.name}
                       </SelectItem>
                     ))}
@@ -275,14 +254,14 @@ const DealDetails: React.FC<{
             )}
           />
           {errors.instrument_type && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.instrument_type.message}
             </p>
           )}
         </div>
-        <div className="flex gap-10">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Pitch Deck
             </label>
             <Controller
@@ -320,19 +299,16 @@ const DealDetails: React.FC<{
               )}
             />
             {errors.pitch_deck_url && (
-              <p className="text-red-500 text-sm">
+              <p className="text-red-600 text-sm">
                 {errors.pitch_deck_url.message}
               </p>
             )}
           </div>
 
-          <div>
-            <Label
-              htmlFor="pitch_video_url"
-              className="block text-sm font-medium text-gray-300 mb-1"
-            >
+          <div className="space-y-3">
+            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Pitch Video
-            </Label>
+            </label>
             <Controller
               name="pitch_video_url"
               control={control}
@@ -395,17 +371,22 @@ const DealDetails: React.FC<{
         </div>
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
         <button
           type="button"
           onClick={() => setDealId(null)}
-          className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
+          className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
         >
           Close
         </button>
         <button
           type="submit"
-          className="bg-white text-black hover:opacity-50 px-10 py-2 cursor-pointer"
+          disabled={!hasChanges}
+          className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+            hasChanges
+              ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
         >
           Submit
         </button>

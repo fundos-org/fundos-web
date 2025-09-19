@@ -124,32 +124,32 @@ export default function AppSidebar() {
   };
 
   return (
-    <Sidebar className="p-3 bg-gray-900">
-      <SidebarHeader className="text-3xl font-bold text-white bg-gray-900">
-        <img src={'/logo.svg'} width="150" alt="Fundos" />
+    <Sidebar className="p-3 fundos-sidebar-admin">
+      <SidebarHeader className="text-3xl font-bold p-6 bg-white text-gray-900">
+        <img src={'/fundos_revamped.png'} width="150" alt="Fundos" />
       </SidebarHeader>
-      <SidebarContent className="bg-gray-900 text-white">
+      <SidebarContent className="bg-white text-gray-900">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-2 px-3">
               {items.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     className={`${
                       location.pathname === item.url
-                        ? 'bg-white text-black'
-                        : 'text-white hover:bg-yellow-50'
-                    } rounded-none p-5`}
+                        ? 'bg-blue-100 text-blue-900 shadow-md'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    } rounded-lg p-3 transition-all duration-200`}
                   >
                     <Link
                       to={item.url}
-                      className="flex items-center text-xl py-6 px-4 gap-4"
+                      className="flex items-center text-base py-3 px-3 gap-3 font-medium"
                       aria-current={
                         location.pathname === item.url ? 'page' : undefined
                       }
                     >
-                      <item.icon />
+                      <item.icon size={20} />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -159,13 +159,13 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="bg-gray-900">
-        <div className="bg-gray-900 rounded-none border-0 p-5 text-white flex items-start justify-between">
+      <SidebarFooter className="bg-white border-t border-gray-200">
+        <div className="rounded-lg border-0 p-4 flex items-start justify-between bg-white text-gray-900">
           <div className="flex items-center gap-4">
             <SupportPopover />
           </div>
         </div>
-        <Card className="bg-gray-800 rounded-none border-0 p-5 text-white flex items-center justify-between">
+        <Card className="rounded-lg border p-4 flex items-center justify-between bg-gray-50 text-gray-900 border-gray-200">
           <div className="flex items-center gap-4 w-full">
             <div className="relative">
               <Avatar className="w-10 h-10 rounded-full">
@@ -178,7 +178,9 @@ export default function AppSidebar() {
                   width="40"
                   alt={sessionData?.name ?? 'Fund Manager'}
                 />
-                <AvatarFallback>BS</AvatarFallback>
+                <AvatarFallback className="bg-gray-200 text-gray-700">
+                  {sessionData?.name?.charAt(0) || 'U'}
+                </AvatarFallback>
               </Avatar>
             </div>
             <ShortDetailsPopover />
@@ -186,28 +188,28 @@ export default function AppSidebar() {
               <AlertDialogTrigger asChild>
                 <button
                   aria-label="Log out"
-                  className="focus:outline-none focus:ring-2 focus:ring-yellow-50"
+                  className="focus:outline-none focus:ring-2 transition-colors focus:ring-blue-200 text-gray-500 hover:text-gray-700"
                 >
-                  <LogOut className="text-gray-400 hover:text-white" />
+                  <LogOut size={18} />
                 </button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="bg-gray-900 text-white border-gray-700 rounded-none">
+              <AlertDialogContent className="border rounded-lg bg-white text-gray-900 border-gray-200">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-2xl">
+                  <AlertDialogTitle className="text-xl font-semibold">
                     Are you sure you want to log out?
                   </AlertDialogTitle>
-                  <AlertDialogDescription className="text-gray-500">
+                  <AlertDialogDescription className="text-gray-600">
                     Logging out will end your current session. You will need to
                     log in again to access your account.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none">
+                  <AlertDialogCancel className="px-6 border rounded-lg bg-gray-100 text-gray-900 hover:bg-gray-200 border-gray-300">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleLogOut}
-                    className="bg-red-600 text-white hover:bg-red-700 rounded-none cursor-pointer"
+                    className="bg-red-600 text-white hover:bg-red-700 rounded-lg cursor-pointer px-6"
                   >
                     Log Out
                   </AlertDialogAction>

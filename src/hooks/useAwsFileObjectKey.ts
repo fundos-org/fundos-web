@@ -1,10 +1,13 @@
-import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { AppEnums, AWS_REGION } from '@/constants/enums';
 
-export const useAwsFileObjectKey = (bucket: string, key: string) => {
+export const useAwsFileObjectKey = (
+  bucket: string, 
+  key: string,
+  onError?: (error: Error) => void
+) => {
   return useQuery(
     [AppEnums.AWS_FILE, bucket, key],
     () => getFileUrl(bucket, key),
@@ -12,9 +15,7 @@ export const useAwsFileObjectKey = (bucket: string, key: string) => {
       enabled: !!bucket && !!key,
       refetchOnWindowFocus: false,
       retry: 2,
-      onError: (error: Error) => {
-        toast.error(`Fetch investors failed: ${error.message}`);
-      },
+      onError,
     }
   );
 };

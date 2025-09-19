@@ -6,6 +6,7 @@ export enum QueryEnums {
   SubadminIds = 'subadminIds',
   SubAdminDetails = 'subAdminDetails',
   SubadminDashboardMetadata = 'subadminDashboardMetadata',
+  SubadminTransactions = 'subadminTransactions',
 
   Investors = 'investors',
   InvestorDetails = 'investorDetails',

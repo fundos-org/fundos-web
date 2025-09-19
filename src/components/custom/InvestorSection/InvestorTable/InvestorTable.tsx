@@ -6,6 +6,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { formatEnumToText } from '@/lib/formatUtils';
 import {
   Select,
   SelectContent,
@@ -86,9 +87,8 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
   const [subAdminId, setSubAdminId] = useState<string | undefined>(sessCapture);
-  const { data: subadminIds, refetch: refetchIds } = useSubadminIds(isSubadmin);
+  const { data: subadminIds } = useSubadminIds(isSubadmin);
   const { mutate: deleteInvestor } = useInvestorDelete();
   const {
     data,
@@ -158,14 +158,6 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
       setTimeout(() => setIsRefreshing(false), 500); // Small delay for better UX
     }
   };
-  const handleRefreshIds = async () => {
-    setIsRefreshing1(true);
-    try {
-      await refetchIds();
-    } finally {
-      setTimeout(() => setIsRefreshing1(false), 500); // Small delay for better UX
-    }
-  };
 
   const clearFilters = () => {
     setInvestorType(undefined);
@@ -175,74 +167,56 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
 
   return (
     <>
-      <div className="w-full border border-[#2A2A2B]">
-        <div className="flex justify-between items-center py-3 bg-[#2A2A2B] px-5">
-          <div className="flex gap-2">
-            <h1 className="text-2xl text-zinc-400">ONBOARDED INVESTORS</h1>
+      <div className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="flex justify-between items-center py-4 bg-gray-50 px-6 border-b border-gray-200">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">Onboarded Investors</h2>
+          </div>
+          <div className="flex items-center gap-3">
+            {!isSubadmin && (
+              <SubadminIdsSelect
+                list={subadminIds?.subadmins ?? []}
+                handleChange={handleSubAdminIdChange}
+                value={subAdminId ?? ''}
+                isItForDeals={false}
+              />
+            )}
+            <Button
+              onClick={clearFilters}
+              className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 rounded-lg px-4 py-2 transition-colors"
+              title="Clear all filters"
+            >
+              Clear Filters
+            </Button>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={handleRefresh}
                   disabled={isRefreshing || isFetching}
-                  className="flex gap-3 rounded-full items-center px-1.5 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
+                  className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   title="Refresh data"
                 >
                   <RefreshCw
-                    className={`w-5 h-5 text-zinc-400 ${
-                      isRefreshing || isFetching ? 'animate-spin' : null
-                    } transition-transform duration-200 hover:text-zinc-300`}
+                    className={`w-5 h-5 text-gray-600 ${
+                      isRefreshing || isFetching ? 'animate-spin' : ''
+                    }`}
                   />
                 </button>
               </TooltipTrigger>
-              <TooltipContent
-                side="right"
-                className="bg-[#ffffff40] border border-[#ffffff70] rounded-none [&>svg]:fill-blue-900"
-              >
+              <TooltipContent className="bg-white border border-gray-200 rounded-lg">
                 <strong>Refresh to get Fresh Data</strong>
               </TooltipContent>
             </Tooltip>
           </div>
-          {!isSubadmin && (
-            <div className="flex gap-3">
-              {(onboarding_status || kyc_status || investor_type) && (
-                <Button
-                  onClick={clearFilters}
-                  className="rounded-none border border-[#383739] cursor-pointer"
-                >
-                  Clear Filters
-                </Button>
-              )}
-              <div className="flex">
-                <SubadminIdsSelect
-                  list={subadminIds?.subadmins ?? []}
-                  handleChange={handleSubAdminIdChange}
-                  value={subAdminId ?? ''}
-                  isItForDeals={false}
-                />
-                <Button
-                  onClick={handleRefreshIds}
-                  disabled={isRefreshing1}
-                  className="rounded-none border border-[#383739] cursor-pointer"
-                  title="Refresh data"
-                >
-                  <RefreshCw
-                    className={`w-5 h-5 text-zinc-400 ${
-                      isRefreshing1 ? 'animate-spin' : null
-                    } transition-transform duration-200 hover:text-zinc-300`}
-                  />
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
         <div className="grid w-full [&>div]:min-h-[56vh] [&>div]:border-0 custom-scrollbar-table">
           <Table className="rounded-none">
             <TableHeader>
-              <TableRow className="[&>*]:whitespace-nowrap sticky bg-black z-2 top-0 after:content-[''] after:inset-x-0 after:h-px after:border-b after:absolute after:bottom after:border-zinc-400/60 border-zinc-400/60 hover:bg-black">
-                <TableHead className="text-zinc-400 pl-4">Action</TableHead>
-                <TableHead className="text-zinc-400">Name</TableHead>
-                <TableHead className="text-zinc-400">Mail</TableHead>
-                <TableHead className="text-zinc-400">
+              <TableRow className="[&>*]:whitespace-nowrap sticky bg-gray-50 z-2 top-0 border-b border-gray-200 hover:bg-gray-50">
+                <TableHead className="font-semibold text-gray-900 pl-4">Action</TableHead>
+                <TableHead className="font-semibold text-gray-900">Name</TableHead>
+                <TableHead className="font-semibold text-gray-900">Mail</TableHead>
+                <TableHead className="font-semibold text-gray-900">
                   <FilterSelect
                     enumObject={InvestorType}
                     handleChange={value =>
@@ -252,7 +226,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     placeholder="Investor Type"
                   />
                 </TableHead>
-                <TableHead className="text-zinc-400">
+                <TableHead className="font-semibold text-gray-900">
                   <FilterSelect
                     enumObject={OnboardingStatus}
                     handleChange={value =>
@@ -262,10 +236,10 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     placeholder="Onboarding Status"
                   />
                 </TableHead>
-                <TableHead className="text-zinc-400 text-center">
+                <TableHead className="font-semibold text-gray-900 text-center">
                   Deal Invested
                 </TableHead>
-                <TableHead className="text-zinc-400">
+                <TableHead className="font-semibold text-gray-900">
                   <FilterSelect
                     enumObject={KycStatus}
                     handleChange={value => setKycStatus(value as KycStatus)}
@@ -273,16 +247,16 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                     placeholder="KYC Status"
                   />
                 </TableHead>
-                <TableHead className="text-zinc-400">Joining Date</TableHead>
-                <TableHead className="text-zinc-400">
+                <TableHead className="font-semibold text-gray-900">Joining Date</TableHead>
+                <TableHead className="font-semibold text-gray-900">
                   Capital Commit(INR)
                 </TableHead>
-                <TableHead className="text-zinc-400">MCA</TableHead>
+                <TableHead className="font-semibold text-gray-900">MCA</TableHead>
                 {isSubadmin && (
-                  <TableHead className="text-zinc-400">Edit</TableHead>
+                  <TableHead className="font-semibold text-gray-900">Edit</TableHead>
                 )}
                 {isSubadmin && (
-                  <TableHead className="text-zinc-400">Bin</TableHead>
+                  <TableHead className="font-semibold text-gray-900">Bin</TableHead>
                 )}
               </TableRow>
             </TableHeader>
@@ -290,7 +264,7 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
               {data?.investors && data.investors.length > 0 ? (
                 data.investors.map((investor: InvestorEntity) => (
                   <TableRow
-                    className="border-[#2A2A2B] odd:bg-muted/5 [&>*]:whitespace-nowrap"
+                    className="border-b border-gray-200 hover:bg-gray-50 [&>*]:whitespace-nowrap"
                     key={investor.investor_id}
                   >
                     <TableCell className="font-medium pl-4">
@@ -314,16 +288,16 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                       {investor.mail}
                     </TableCell>
                     <TableCell className="font-medium text-center">
-                      {investor.type}
+                      {formatEnumToText(investor.type)}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {investor.onboarding_status}
+                      {formatEnumToText(investor.onboarding_status)}
                     </TableCell>
                     <TableCell className="font-medium text-center">
                       {investor.deals_invested}
                     </TableCell>
                     <TableCell className="font-medium text-center">
-                      {investor.kyc_status}
+                      {formatEnumToText(investor.kyc_status)}
                     </TableCell>
                     <TableCell className="font-medium">
                       {investor.joined_on}
@@ -366,10 +340,10 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
                   </TableRow>
                 ))
               ) : (
-                <TableRow className="h-100 hover:bg-black">
+                <TableRow className="h-100 hover:bg-gray-50">
                   <TableCell
                     colSpan={isSubadmin ? 12 : 10}
-                    className="text-center py-8 text-zinc-400"
+                    className="text-center py-8 text-gray-500"
                   >
                     No investor found
                   </TableCell>
@@ -378,25 +352,29 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
             </TableBody>
           </Table>
         </div>
-        <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
-          <span>Total records: {data?.pagination.total_records}</span>
-          <PaginationContent className="gap-10">
+        <Pagination className="bg-gray-50 border-t border-gray-200 p-4 flex justify-between items-center">
+          <span className="text-sm text-gray-600">Total records: {data?.pagination.total_records}</span>
+          <PaginationContent className="gap-2">
             <PaginationItem
               className={`${!pagination?.has_prev ? 'hidden' : null} cursor-pointer`}
             >
               <PaginationPrevious
-                className="rounded-none"
+                className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 rounded-lg"
                 onClick={handlePrev}
                 aria-disabled={!pagination?.has_prev}
               />
             </PaginationItem>
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               {Array.from(
                 { length: pagination?.total_pages || 1 },
                 (_, idx) => (
                   <PaginationItem key={idx + 1} className="cursor-pointer">
                     <PaginationLink
-                      className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'} rounded-none`}
+                      className={`border border-gray-300 rounded-lg ${
+                        pageNumber === idx + 1 
+                          ? 'bg-blue-600 text-white border-blue-600' 
+                          : 'bg-white text-gray-700 hover:bg-gray-50'
+                      }`}
                       isActive={pageNumber === idx + 1}
                       onClick={e => {
                         e.preventDefault();
@@ -412,23 +390,30 @@ const InvestorTable: FC<{ isSubadmin: boolean }> = ({ isSubadmin }) => {
             <PaginationItem
               className={`${!pagination?.has_next ? 'hidden' : null} cursor-pointer`}
             >
-              <PaginationNext className="rounded-none" onClick={handleNext} />
+              <PaginationNext 
+                className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 rounded-lg" 
+                onClick={handleNext} 
+              />
             </PaginationItem>
           </PaginationContent>
-          <div className="flex items-center">
-            <label htmlFor="pageSizeSelect" className="text-sm font-medium">
-              Records per page:&nbsp;
+          <div className="flex items-center gap-2">
+            <label htmlFor="pageSizeSelect" className="text-sm font-medium text-gray-600">
+              Records per page:
             </label>
             <Select
               onValueChange={handlePageSizeChange}
               defaultValue={String(pageSize)}
             >
-              <SelectTrigger className="rounded-none w-[100px]">
+              <SelectTrigger className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 rounded-lg w-[100px]">
                 <SelectValue placeholder="Select Page Size" />
               </SelectTrigger>
-              <SelectContent className="rounded-none">
+              <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
                 {pageSizesList.map(ps => (
-                  <SelectItem key={ps} value={String(ps)}>
+                  <SelectItem 
+                    key={ps} 
+                    value={String(ps)}
+                    className="cursor-pointer hover:bg-gray-50 text-gray-900"
+                  >
                     {ps}
                   </SelectItem>
                 ))}

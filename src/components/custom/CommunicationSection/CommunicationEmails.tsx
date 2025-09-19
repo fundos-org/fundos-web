@@ -19,6 +19,7 @@ import {
 import { RefreshCw } from 'lucide-react';
 import { useSubadminIds } from '@/hooks/customhooks/SubAdminsHooks/useSubadminIds';
 import isThisSubadmin from '@/lib/isSubadmin';
+import { useNotification } from '../NotificationProvider';
 
 export type EmailTemplateKeys =
   | 'welcome_mail'
@@ -31,21 +32,57 @@ const CommunicationEmails: React.FC = () => {
     subadminIds?.subadmins?.[0].subadmin_id
   );
   const [isSubadmin] = useState(isThisSubadmin);
+  const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
+  const notification = useNotification();
+
   const {
     data: emails,
     isLoading,
     error,
-  } = useCommunicationEmails(subadminId, isSubadmin);
-  const { mutate: updateEmail } = useEditCommunicationEmails(subadminId);
-  const [isRefreshing1, setIsRefreshing1] = useState<boolean>(false);
+  } = useCommunicationEmails(
+    subadminId, 
+    isSubadmin,
+    () => {
+      notification.success(
+        'Data Loaded',
+        'Email templates fetched successfully',
+        { duration: 3000 }
+      );
+    },
+    (error: Error) => {
+      notification.error(
+        'Loading Failed',
+        `Failed to fetch email templates: ${error.message}`,
+        { duration: 4000 }
+      );
+    }
+  );
+
+  const { mutate: updateEmail } = useEditCommunicationEmails(
+    subadminId,
+    () => {
+      notification.success(
+        'Template Updated',
+        'Communication email template updated successfully',
+        { duration: 4000 }
+      );
+    },
+    (error: Error) => {
+      notification.error(
+        'Update Failed',
+        error.message || 'Failed to update email template',
+        { duration: 4000 }
+      );
+    }
+  );
 
   if (isLoading) {
-    return <div className="text-white p-4">Loading email templates...</div>;
+    return <div className="text-gray-600 p-4">Loading email templates...</div>;
   }
 
   if (error) {
     return (
-      <div className="text-red-500 p-4">Error loading email templates</div>
+      <div className="text-red-600 p-4">Error loading email templates</div>
     );
   }
 
@@ -67,15 +104,15 @@ const CommunicationEmails: React.FC = () => {
 
   return (
     <>
-      <div className="flex mb-5">
+      <div className="flex gap-3 mb-6">
         <Select onValueChange={handleSubAdminIdChange} value={subadminId ?? ''}>
-          <SelectTrigger className="rounded-none w-[250px] cursor-pointer border border-[#383739] bg-black/40">
+          <SelectTrigger className="w-64 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg">
             <SelectValue placeholder="Select Sub-Admin" />
           </SelectTrigger>
-          <SelectContent className="rounded-none bg-[#393738]">
+          <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
             {subadminIds?.subadmins?.map(subadmin => (
               <SelectItem
-                className="bg-[#2a2a2a] rounded-none text-white"
+                className="text-gray-900 hover:bg-gray-50 cursor-pointer"
                 key={subadmin?.subadmin_id}
                 value={String(subadmin?.subadmin_id)}
               >
@@ -87,32 +124,32 @@ const CommunicationEmails: React.FC = () => {
         <Button
           onClick={handleRefreshIds}
           disabled={isRefreshing1}
-          className="rounded-none border border-[#383739] cursor-pointer"
+          className="border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-lg px-3"
           title="Refresh data"
         >
           <RefreshCw
-            className={`w-5 h-5 text-zinc-400 ${
-              isRefreshing1 ? 'animate-spin' : null
-            } transition-transform duration-200 hover:text-zinc-300`}
+            className={`w-5 h-5 ${
+              isRefreshing1 ? 'animate-spin' : ''
+            } transition-transform duration-200`}
           />
         </Button>
       </div>
       <Accordion
         type="single"
         collapsible
-        className="w-full space-y-2"
+        className="w-full space-y-4"
         aria-label="Email templates accordion"
       >
         {emailTypes.map(({ key, label }, index) => (
           <AccordionItem
             key={key}
             value={`item-${index + 1}`}
-            className="w-full border-none px-5 pb-5 bg-[#383739]"
+            className="w-full border border-gray-200 rounded-lg bg-white shadow-sm"
           >
-            <AccordionTrigger className="cursor-pointer">
+            <AccordionTrigger className="px-6 py-4 text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors">
               {label}
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="px-0 pb-0">
               <EmailEditor
                 mail={emails?.[key]}
                 handleUpdateEmail={updateEmail}

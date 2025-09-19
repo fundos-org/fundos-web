@@ -1,9 +1,7 @@
 import { updateInvestorDetails } from '@/axioscalls/apiServices';
 import { UpdateInvestorRequest } from '@/constants/membersConstant';
 import { QueryEnums } from '@/queryEnums';
-import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
-
 interface OpenEditDialog {
   investor_id: string;
   subadmin_id?: string;
@@ -16,10 +14,7 @@ export const useInvestorEditDetails = (params: OpenEditDialog | null) => {
   return useMutation({
     mutationFn: (details: UpdateInvestorRequest) =>
       updateInvestorDetails(investor_id!, details, subadmin_id!),
-    onSuccess: response => {
-      toast.success(
-        response?.message && 'Investor Details updated successfully'
-      );
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QueryEnums.InvestorDetails, investor_id],
       });
@@ -30,9 +25,6 @@ export const useInvestorEditDetails = (params: OpenEditDialog | null) => {
         queryKey: [QueryEnums.Investors, subadmin_id],
         exact: false,
       });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed updating details.');
     },
   });
 };

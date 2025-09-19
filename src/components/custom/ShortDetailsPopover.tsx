@@ -45,55 +45,54 @@ const ShortDetailsPopover = () => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <div className="flex-1 cursor-pointer">
-          <div className="flex gap-2">
-            <h4 className="text-white font-medium capitalize">
+          <div className="flex gap-2 items-center">
+            <h4 className="text-gray-900 font-medium capitalize">
               {sessionData?.name ?? 'User'}
             </h4>
-            <SquareArrowOutUpRight className="text-gray-400 w-4 hover:text-white" />
+            <SquareArrowOutUpRight className="text-gray-500 w-4 hover:text-blue-600 transition-colors" />
           </div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-600">
             {sessionData?.invite_code ?? 'You dont need invite code 😉'}
           </p>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-gray-900 text-white border-gray-700 rounded-none min-w-2xl p-10">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-2xl">
+      <AlertDialogContent className="bg-white border border-gray-200 rounded-lg shadow-xl max-w-3xl max-h-[85vh] overflow-y-auto p-4">
+        <AlertDialogHeader className="pb-3">
+          <AlertDialogTitle className="text-xl font-semibold text-gray-900">
             Account Details
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-gray-500">
-            View your account details below. Click the copy icon to copy each
-            value.
+          <AlertDialogDescription className="text-sm text-gray-600">
+            View your account details below. Click the copy icon to copy each value.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="space-y-4 py-4">
+        <div className="space-y-3 py-2">
           {fields.map(({ label, key, value }) => (
-            <div key={key} className="flex items-center gap-2">
-              <label className="w-1/5 text-sm text-gray-300">{label}</label>
+            <div key={key} className="flex items-center gap-4">
+              <label className="w-24 text-xs font-medium text-gray-600 uppercase tracking-wide flex-shrink-0">{label}</label>
               <div className="relative flex-1">
                 <input
                   type="text"
                   value={value}
                   readOnly
-                  className="w-full bg-gray-800 text-white border-none rounded-none px-3 py-2 text-sm focus:outline-none"
+                  className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 pr-10 rounded-lg text-sm focus:outline-none"
                 />
                 <button
                   onClick={() => handleCopy(value, key)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-700 rounded-full"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-200 rounded-md transition-colors"
                   aria-label={`Copy ${label}`}
                 >
                   {copiedField === key ? (
-                    <Check size={16} className="text-green-500" />
+                    <Check size={14} className="text-green-600" />
                   ) : (
-                    <Clipboard size={16} className="text-gray-300" />
+                    <Clipboard size={14} className="text-gray-500" />
                   )}
                 </button>
               </div>
             </div>
           ))}
         </div>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none">
+        <AlertDialogFooter className="pt-3">
+          <AlertDialogCancel className="cursor-pointer border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-4 py-2 font-medium transition-colors">
             Close
           </AlertDialogCancel>
         </AlertDialogFooter>

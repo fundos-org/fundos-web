@@ -73,15 +73,14 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 flex flex-col justify-between gap-4 bg-[#383739] text-white p-4"
+      className="space-y-6 flex flex-col justify-between gap-4 bg-gray-50 text-gray-900 p-6 border-t border-gray-200"
       aria-label={`${emailType} editor form`}
     >
-      <hr className="border-b border-zinc-600" />
       <div className="flex flex-col gap-6">
         <div>
           <Label
             htmlFor={`${emailType}-subject`}
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-gray-700 mb-2"
           >
             Subject
           </Label>
@@ -94,9 +93,9 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
                 disabled={!edit}
                 id={`${emailType}-subject`}
                 placeholder="Enter email subject"
-                className={`rounded-none bg-[#000] text-white border ${
-                  errors.subject ? 'border-red-500' : 'border-[#2a2a2a]'
-                } focus:ring-2 focus:ring-blue-500`}
+                className={`bg-white text-gray-900 border rounded-lg ${
+                  errors.subject ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                } focus:ring-2 disabled:bg-gray-100 disabled:text-gray-500`}
                 aria-invalid={!!errors.subject}
                 aria-describedby={
                   errors.subject ? `${emailType}-subject-error` : undefined
@@ -107,9 +106,9 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
           {errors.subject && (
             <p
               id={`${emailType}-subject-error`}
-              className="text-red-500 text-sm mt-1"
+              className="text-red-600 text-sm mt-1 flex items-center gap-1"
             >
-              {errors.subject.message}
+              ⚠️ {errors.subject.message}
             </p>
           )}
         </div>
@@ -117,7 +116,7 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
         <div>
           <Label
             htmlFor={`${emailType}-body`}
-            className="block text-sm font-medium text-gray-300 mb-2"
+            className="block text-sm font-medium text-gray-700 mb-2"
           >
             Body
           </Label>
@@ -130,9 +129,9 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
                 disabled={!edit}
                 id={`${emailType}-body`}
                 placeholder="Enter email body"
-                className={`rounded-none bg-[#000] text-white border ${
-                  errors.body ? 'border-red-500' : 'border-[#2a2a2a]'
-                } min-h-[400px] resize-y focus:ring-2 focus:ring-blue-500`}
+                className={`bg-white text-gray-900 border rounded-lg ${
+                  errors.body ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                } min-h-[400px] resize-y focus:ring-2 disabled:bg-gray-100 disabled:text-gray-500`}
                 aria-invalid={!!errors.body}
                 aria-describedby={
                   errors.body ? `${emailType}-body-error` : undefined
@@ -143,41 +142,41 @@ const EmailEditor: React.FC<EmailEditorProps> = ({
           {errors.body && (
             <p
               id={`${emailType}-body-error`}
-              className="text-red-500 text-sm mt-1"
+              className="text-red-600 text-sm mt-1 flex items-center gap-1"
             >
-              {errors.body.message}
+              ⚠️ {errors.body.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
         {edit ? (
           <>
             <Button
               type="button"
               onClick={() => setEdit(false)}
               variant="outline"
-              className="bg-[#383739] text-white hover:bg-[#4a4a4a] border-[#2a2a2a] rounded-none"
+              className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
               disabled={isSubmitting}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-white text-black hover:bg-gray-200 rounded-none cursor-pointer"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-2.5 font-medium transition-colors"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Saving...' : 'Save'}
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
             </Button>
           </>
         ) : (
           <Button
             type="button"
-            className="bg-destructive text-white text-xl rounded-none cursor-pointer w-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-2.5 font-medium transition-colors"
             onClick={() => setEdit(true)}
           >
-            Edit
+            Edit Template
           </Button>
         )}
       </div>

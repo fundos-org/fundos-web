@@ -155,11 +155,11 @@ const StepSubAdmin1: React.FC = () => {
   }, [contact]);
 
   return (
-    <div className="grid gap-4">
+    <div className="space-y-6">
       <div className="flex gap-6">
         <div>
-          <Label htmlFor="logo" className="text-right text-white">
-            Upload Logo<span className="text-red-400">*</span>
+          <Label htmlFor="logo" className="text-sm font-medium text-gray-700">
+            Upload Logo<span className="text-red-500">*</span>
           </Label>
           <ImageInput
             image={logo}
@@ -167,54 +167,56 @@ const StepSubAdmin1: React.FC = () => {
             setImage={file => setValue('logo', file, { shouldValidate: true })}
           />
           {errors.logo && (
-            <p className="text-red-400 text-sm">
+            <p className="text-red-500 text-sm flex items-center mt-1">
+              <span className="mr-1">⚠️</span>
               {String(errors.logo.message)}
             </p>
           )}
         </div>
 
-        <div className="w-full flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="subadminname" className="text-right text-white">
-              Sub Admin Name<span className="text-red-400">*</span>
+        <div className="w-full space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="subadminname" className="text-sm font-medium text-gray-700">
+              Sub Admin Name<span className="text-red-500">*</span>
             </Label>
             <Input
               id="subadminname"
               {...register('subadminname', {
                 required: 'Subadmin name is required',
               })}
-              placeholder="Enter subadmin name"
-              className="rounded-none text-white"
+              placeholder="Enter sub admin name"
+              className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
             />
             {errors.subadminname && (
-              <p className="text-red-400 text-sm">
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
                 {String(errors.subadminname.message)}
               </p>
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="subadminmail" className="text-white">
-                Sub Admin Email<span className="text-red-400">*</span>
+              <Label htmlFor="subadminmail" className="text-sm font-medium text-gray-700">
+                Sub Admin Email<span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center gap-2 text-sm">
                 {isCheckingEmail && (
-                  <span className="flex items-center gap-1 text-gray-400">
+                  <span className="flex items-center gap-1 text-gray-500">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Checking...
                   </span>
                 )}
                 {!isCheckingEmail && email && emailAvailable === true && (
-                  <span className="flex items-center gap-1 text-green-500">
+                  <span className="flex items-center gap-1 text-green-600">
                     <CheckCircle2 className="h-4 w-4" />
-                    {String(email)} available
+                    Available
                   </span>
                 )}
                 {!isCheckingEmail && email && emailAvailable === false && (
-                  <span className="flex items-center gap-1 text-yellow-400">
+                  <span className="flex items-center gap-1 text-red-500">
                     <AlertTriangle className="h-4 w-4" />
-                    {String(email)} already exists
+                    Already exists
                   </span>
                 )}
               </div>
@@ -229,11 +231,12 @@ const StepSubAdmin1: React.FC = () => {
                   message: 'Invalid email address',
                 },
               })}
-              placeholder="Enter subadmin email"
-              className="rounded-none text-white"
+              placeholder="Enter sub admin email"
+              className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
             />
             {errors.subadminmail && (
-              <p className="text-red-400 text-sm">
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
                 {String(errors.subadminmail.message)}
               </p>
             )}
@@ -241,28 +244,28 @@ const StepSubAdmin1: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <Label htmlFor="subadmincontact" className="text-white">
-            Sub Admin Contact<span className="text-red-400">*</span>
+          <Label htmlFor="subadmincontact" className="text-sm font-medium text-gray-700">
+            Contact Number<span className="text-red-500">*</span>
           </Label>
           <div className="flex items-center gap-2 text-sm">
             {isCheckingContact && (
-              <span className="flex items-center gap-1 text-gray-400">
+              <span className="flex items-center gap-1 text-gray-500">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Checking...
               </span>
             )}
             {!isCheckingContact && contact && contactAvailable === true && (
-              <span className="flex items-center gap-1 text-green-500">
+              <span className="flex items-center gap-1 text-green-600">
                 <CheckCircle2 className="h-4 w-4" />
-                {String(contact)} available
+                Available
               </span>
             )}
             {!isCheckingContact && contact && contactAvailable === false && (
-              <span className="flex items-center gap-1 text-yellow-400">
+              <span className="flex items-center gap-1 text-red-500">
                 <AlertTriangle className="h-4 w-4" />
-                {String(contact)} already exists
+                Already exists
               </span>
             )}
           </div>
@@ -279,27 +282,32 @@ const StepSubAdmin1: React.FC = () => {
             },
           })}
           placeholder="Enter contact number"
-          className="rounded-none text-white"
+          className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
         />
         {errors.subadmincontact && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-500 text-sm flex items-center mt-1">
+            <span className="mr-1">⚠️</span>
             {String(errors.subadmincontact.message)}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="about" className="text-right text-white">
-          About<span className="text-red-400">*</span>
+      <div className="space-y-2">
+        <Label htmlFor="about" className="text-sm font-medium text-gray-700">
+          About<span className="text-red-500">*</span>
         </Label>
         <Textarea
           id="about"
           {...register('about', { required: 'About is required' })}
-          placeholder="Enter about subadmin"
-          className="rounded-none text-white"
+          placeholder="Enter description about the sub admin"
+          rows={4}
+          className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors resize-none"
         />
         {errors.about && (
-          <p className="text-red-400 text-sm">{String(errors.about.message)}</p>
+          <p className="text-red-500 text-sm flex items-center mt-1">
+            <span className="mr-1">⚠️</span>
+            {String(errors.about.message)}
+          </p>
         )}
       </div>
     </div>

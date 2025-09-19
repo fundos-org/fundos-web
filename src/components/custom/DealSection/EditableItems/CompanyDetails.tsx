@@ -35,7 +35,7 @@ const CompanyDetails: FC<{
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -47,6 +47,9 @@ const CompanyDetails: FC<{
       problem_statement: details?.problem_statement || '',
     },
   });
+
+  // Check if any fields have been modified
+  const hasChanges = Object.keys(dirtyFields).length > 0;
 
   // Watch the logo_url field for changes
   const logoValue = watch('logo_url');
@@ -70,6 +73,7 @@ const CompanyDetails: FC<{
     company_website,
     problem_statement,
   }: FormData) => {
+    if (!hasChanges) return;
     handleUpdateDetails({
       logo_url,
       company_name,
@@ -82,11 +86,11 @@ const CompanyDetails: FC<{
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 px-10 py-5 h-full flex flex-col justify-between gap-2"
+      className="space-y-6 w-full"
     >
-      <div className="flex flex-col gap-5">
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Logo URL
           </label>
           <Controller
@@ -124,12 +128,12 @@ const CompanyDetails: FC<{
             )}
           />
           {errors.logo_url && (
-            <p className="text-red-500 text-sm">{errors.logo_url.message}</p>
+            <p className="text-red-600 text-sm">{errors.logo_url.message}</p>
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Company Name
           </label>
           <Controller
@@ -138,20 +142,20 @@ const CompanyDetails: FC<{
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Company Name"
-                className={`${errors.company_name ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter company name"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.company_name ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.company_name && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.company_name.message}
             </p>
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             About Company
           </label>
           <Controller
@@ -160,42 +164,20 @@ const CompanyDetails: FC<{
             render={({ field }) => (
               <Textarea
                 {...field}
-                placeholder="About Company"
-                className={`${errors.about_company ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter about company"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg min-h-[80px] ${errors.about_company ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.about_company && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.about_company.message}
             </p>
           )}
         </div>
 
-        {/* <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Company Website
-          </label>
-          <Controller
-            name="company_website"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Company Website"
-                className={`${errors.company_website ? 'border-red-500' : null} rounded-none`}
-              />
-            )}
-          />
-          {errors.company_website && (
-            <p className="text-red-500 text-sm">
-              {errors.company_website.message}
-            </p>
-          )}
-        </div> */}
-
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+        <div className="space-y-3">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Problem Statement
           </label>
           <Controller
@@ -204,30 +186,35 @@ const CompanyDetails: FC<{
             render={({ field }) => (
               <Textarea
                 {...field}
-                placeholder="Problem Statement"
-                className={`${errors.problem_statement ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter problem statement"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg min-h-[80px] ${errors.problem_statement ? 'border-red-500' : ''}`}
               />
             )}
           />
           {errors.problem_statement && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-600 text-sm">
               {errors.problem_statement.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end pt-4 border-t border-gray-200">
         <button
           type="button"
           onClick={() => setDealId(null)}
-          className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
+          className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
         >
           Close
         </button>
         <button
           type="submit"
-          className="bg-white text-black hover:opacity-50 px-10 py-2 cursor-pointer"
+          disabled={!hasChanges}
+          className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+            hasChanges
+              ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
         >
           Submit
         </button>

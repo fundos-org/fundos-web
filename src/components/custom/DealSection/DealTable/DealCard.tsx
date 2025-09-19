@@ -62,12 +62,12 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
 
   return (
     <>
-      <Card className="border border-[#383739] rounded-none bg-gradient-to-b from-[#292929] to-[#202022] text-white p-5 w-[380px] max-w-md">
+      <Card className="fundos-card-elevated border-gray-200 bg-white text-gray-900 p-4 w-full max-w-sm hover:shadow-lg transition-shadow duration-200">
         <CardContent className="p-0 flex flex-col justify-between cursor-pointer">
           <div className="cursor-pointer" onClick={() => setDetails(deal)}>
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="w-15 h-15 overflow-hidden flex items-center justify-center bg-zinc-800 rounded">
+                <div className="w-12 h-12 overflow-hidden flex items-center justify-center bg-gray-100 rounded-lg">
                   {logo && (
                     <img
                       src={logo}
@@ -83,7 +83,7 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                   deal_id={deal_id}
                   initialStatus={deal_status as DealStatus}
                 />
-                <p className="text-xs text-zinc-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   <span className="font-medium">Created on:</span>
                   <span className="ml-1">
                     {created_at ? created_at.split('T')[0] : 'N/A'}
@@ -91,88 +91,76 @@ export default function CardDeal({ deal }: { deal: DealCard }) {
                 </p>
               </div>
             </div>
-            <h2 className="text-2xl font-bold mt-4 line-clamp-1 hover:underline">
+            <h2 className="text-xl font-bold mt-3 line-clamp-1 hover:underline hover:text-blue-600 transition-colors">
               {title ? title : 'Default Deal Title'}
             </h2>
-            <small className="text-zinc-400 mt-1 line-clamp-2">
+            <small className="text-gray-600 mt-1 line-clamp-2 text-sm">
               {description
                 ? description
                 : 'Default description for the deal. This is a placeholder text.'}
             </small>
-            <div className="flex gap-2 mt-3">
-              <span className="bg-zinc-700 text-white px-3 py-1 rounded-xs text-sm border border-[#a1a1a140]">
+            <div className="flex gap-2 mt-2">
+              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
                 {getIndustryType(business_model)}
               </span>
-              <span className="bg-zinc-700 text-white px-3 py-1 rounded-xs text-sm border border-[#a1a1a140]">
+              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
                 {getCompanyStage(company_stage)}
               </span>
             </div>
           </div>
           <div>
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between mt-4">
               <div>
-                <p className="text-sm text-zinc-400">Funding round size</p>
-                <p className="text-3xl font-bold">
+                <p className="text-sm text-gray-500 font-medium">Funding round size</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {round_size ? convertToCrores(round_size) : '0'}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-zinc-400">Capital committed</p>
-                <p className="text-3xl font-bold">
+                <p className="text-sm text-gray-500 font-medium">Capital committed</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {commitment ? convertToCrores(commitment) : '0'}
                 </p>
               </div>
             </div>
-            <hr className="mt-3" />
-            <div className="w-full mt-4 flex justify-between items-center">
-              {/* <div>
-                <p className="text-sm text-zinc-400 mb-1">
-                  {(((fund_raised_till_now ?? 1) / commitment) * 100).toFixed(
-                    2
-                  )}
-                  % raised
-                </p>
-                <Progress
-                  className="bg-white border border-zinc-600 w-30 rounded-none"
-                  value={((fund_raised_till_now ?? 1) / commitment) * 100}
-                />
-              </div> */}
-              <div className="w-80 ml-auto mr-5">
-                <p className="text-sm text-zinc-400 mb-1">
+            <hr className="mt-2 border-gray-200" />
+            <div className="w-full mt-3 flex justify-between items-center">
+              <div className="flex-1 mr-4">
+                <p className="text-sm text-gray-500 mb-2">
                   {fund_raised_till_now ?? 0}% raised
                 </p>
                 <Progress
-                  className="bg-black border border-zinc-600 w-full rounded-none h-[4px] [&>div]:bg-white"
+                  className="bg-gray-200 w-full rounded-full h-2 [&>div]:bg-blue-600"
                   value={fund_raised_till_now ?? 0}
                 />
               </div>
-              <Menubar className="rounded-none bg-[#1a1a1a] border-0 text-white">
+              <Menubar className="bg-white border border-gray-200 rounded-full overflow-hidden">
                 <MenubarMenu>
-                  <MenubarTrigger className="rounded-none bg-[#1a1a1a] border-l border-t border-[#383739] text-white font-medium cursor-pointer">
-                    Manage <ChevronDown className="ml-1 h-5 w-5" />
+                  <MenubarTrigger className="bg-white border-0 text-gray-700 font-medium cursor-pointer hover:bg-gray-50 rounded-full px-4 py-2 transition-colors">
+                    Manage <ChevronDown className="ml-1 h-4 w-4" />
                   </MenubarTrigger>
-                  <MenubarContent className="bg-[#1a1a1a] text-white rounded-none border border-[#383739]">
+                  <MenubarContent className="bg-white text-gray-900 rounded-lg border border-gray-200 shadow-lg">
                     <MenubarItem
-                      className="rounded-none cursor-pointer"
+                      className="cursor-pointer hover:bg-gray-50 rounded-md px-3 py-2 flex items-center gap-2"
                       onClick={() => setDetails(deal)}
                     >
-                      <Eye /> View Deal
+                      <Eye className="w-4 h-4" /> View Deal
                     </MenubarItem>
-                    <MenubarSeparator className="border-b border-[#383739]" />
+                    <MenubarSeparator className="border-gray-200" />
                     <MenubarItem
                       onClick={() => setDealId(deal_id)}
-                      className="rounded-none cursor-pointer"
+                      className="cursor-pointer hover:bg-gray-50 rounded-md px-3 py-2 flex items-center gap-2"
                     >
-                      <PenLine />
+                      <PenLine className="w-4 h-4" />
                       Edit Deal
                     </MenubarItem>
-                    <MenubarSeparator className="border-b border-[#383739]" />
+                    <MenubarSeparator className="border-gray-200" />
                     <MenubarItem
                       onClick={() => markInactive(deal.deal_id)}
-                      className="rounded-none cursor-pointer"
+                      className="cursor-pointer hover:bg-red-50 rounded-md px-3 py-2 flex items-center gap-2"
                     >
-                      <EyeOff className="text-red-500" />
-                      <p className="text-red-500">Mark Inactive</p>
+                      <EyeOff className="w-4 h-4 text-red-500" />
+                      <span className="text-red-500">Mark Inactive</span>
                     </MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>

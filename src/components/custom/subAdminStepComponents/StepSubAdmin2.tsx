@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { getRandomCode } from '@/lib/randomInviteCodeGenertor';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { Button } from '@/components/ui/button';
 import {
   Copy,
@@ -34,6 +34,7 @@ const StepSubAdmin2: React.FC = () => {
   );
   const [isCheckingApp, setIsCheckingApp] = useState(false);
   const [appAvailable, setAppAvailable] = useState<null | boolean>(null);
+  const notification = useNotification();
 
   // Generate random code on component mount
   useEffect(() => {
@@ -54,10 +55,18 @@ const StepSubAdmin2: React.FC = () => {
     navigator.clipboard
       .writeText(code)
       .then(() => {
-        toast.success('Code copied to clipboard!');
+        notification.success(
+          'Code Copied',
+          'Invite code has been copied to clipboard!',
+          { duration: 3000 }
+        );
       })
       .catch(() => {
-        toast.error('Failed to copy code.');
+        notification.error(
+          'Copy Failed',
+          'Failed to copy code. Please try again.',
+          { duration: 3000 }
+        );
       });
   };
 
@@ -170,57 +179,56 @@ const StepSubAdmin2: React.FC = () => {
   }, []);
 
   return (
-    <div className="grid gap-4">
-      <div className="flex flex-col gap-2">
+    <div className="space-y-6">
+      <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <Label htmlFor="username" className="text-white">
-            Username
+          <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+            Username<span className="text-red-500">*</span>
           </Label>
           <div className="flex items-center gap-2 text-sm">
             {isCheckingUsername && (
-              <span className="flex items-center gap-1 text-gray-400">
+              <span className="flex items-center gap-1 text-gray-500">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Checking...
               </span>
             )}
             {!isCheckingUsername && username && usernameAvailable === true && (
-              <span className="flex items-center gap-1 text-green-500">
+              <span className="flex items-center gap-1 text-green-600">
                 <CheckCircle2 className="h-4 w-4" />
-                {String(username)} available
+                Available
               </span>
             )}
             {!isCheckingUsername && username && usernameAvailable === false && (
-              <span className="flex items-center gap-1 text-yellow-400">
+              <span className="flex items-center gap-1 text-red-500">
                 <AlertTriangle className="h-4 w-4" />
-                {String(username)} already exists
+                Already exists
               </span>
             )}
           </div>
         </div>
-        <div className="relative">
-          <Input
-            id="username"
-            {...register('username', {
-              required: 'Username is required',
-              minLength: {
-                value: 3,
-                message: 'Username must be at least 3 characters',
-              },
-            })}
-            placeholder="Enter username"
-            className="rounded-none text-white"
-          />
-        </div>
+        <Input
+          id="username"
+          {...register('username', {
+            required: 'Username is required',
+            minLength: {
+              value: 3,
+              message: 'Username must be at least 3 characters',
+            },
+          })}
+          placeholder="Enter username"
+          className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
+        />
         {errors.username && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-500 text-sm flex items-center mt-1">
+            <span className="mr-1">⚠️</span>
             {String(errors.username.message)}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="password" className="text-right text-white">
-          Password
+      <div className="space-y-2">
+        <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+          Password<span className="text-red-500">*</span>
         </Label>
         <Input
           id="password"
@@ -233,18 +241,19 @@ const StepSubAdmin2: React.FC = () => {
             },
           })}
           placeholder="Enter password"
-          className="rounded-none text-white"
+          className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
         />
         {errors.password && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-500 text-sm flex items-center mt-1">
+            <span className="mr-1">⚠️</span>
             {String(errors.password.message)}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="reenterpassword" className="text-right text-white">
-          Re-enter Password
+      <div className="space-y-2">
+        <Label htmlFor="reenterpassword" className="text-sm font-medium text-gray-700">
+          Confirm Password<span className="text-red-500">*</span>
         </Label>
         <Input
           id="reenterpassword"
@@ -255,81 +264,82 @@ const StepSubAdmin2: React.FC = () => {
               value === getValues('password') || 'Passwords do not match',
           })}
           placeholder="Re-enter password"
-          className="rounded-none text-white"
+          className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
         />
         {errors.reenterpassword && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-500 text-sm flex items-center mt-1">
+            <span className="mr-1">⚠️</span>
             {String(errors.reenterpassword.message)}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <Label htmlFor="appname" className="text-white">
-            App Name
+          <Label htmlFor="appname" className="text-sm font-medium text-gray-700">
+            App Name<span className="text-red-500">*</span>
           </Label>
           <div className="flex items-center gap-2 text-sm">
             {isCheckingApp && (
-              <span className="flex items-center gap-1 text-gray-400">
+              <span className="flex items-center gap-1 text-gray-500">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Checking...
               </span>
             )}
             {!isCheckingApp && appname && appAvailable === true && (
-              <span className="flex items-center gap-1 text-green-500">
+              <span className="flex items-center gap-1 text-green-600">
                 <CheckCircle2 className="h-4 w-4" />
-                {String(appname)} available
+                Available
               </span>
             )}
             {!isCheckingApp && appname && appAvailable === false && (
-              <span className="flex items-center gap-1 text-yellow-400">
+              <span className="flex items-center gap-1 text-red-500">
                 <AlertTriangle className="h-4 w-4" />
-                {String(appname)} already exists
+                Already exists
               </span>
             )}
           </div>
         </div>
-        <div className="relative">
-          <Input
-            id="appname"
-            {...register('appname', {
-              required: 'App name is required',
-              pattern: {
-                value: /^[a-zA-Z0-9]*$/,
-                message: 'App name cannot contain -, _, or spaces',
-              },
-              setValueAs: value => value.toLowerCase().replace(/[-_\s]/g, ''),
-            })}
-            placeholder="Enter app name"
-            className="rounded-none text-white"
-          />
-        </div>
+        <Input
+          id="appname"
+          {...register('appname', {
+            required: 'App name is required',
+            pattern: {
+              value: /^[a-zA-Z0-9]*$/,
+              message: 'App name cannot contain -, _, or spaces',
+            },
+            setValueAs: value => value.toLowerCase().replace(/[-_\s]/g, ''),
+          })}
+          placeholder="Enter app name"
+          className="rounded-lg bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors"
+        />
         {errors.appname && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-500 text-sm flex items-center mt-1">
+            <span className="mr-1">⚠️</span>
             {String(errors.appname.message)}
           </p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2 w-full">
-        <Label htmlFor="invitecode" className="text-right text-white">
-          Invite Code
+      <div className="space-y-2">
+        <Label htmlFor="invitecode" className="text-sm font-medium text-gray-700">
+          Invite Code<span className="text-red-500">*</span>
         </Label>
-        <div className="relative w-full">
+        <div className="relative">
           <Input
             value={code}
             disabled
             id="invitecode"
             {...register('invitecode', { required: 'Invite code is required' })}
-            className="pr-20 bg-gray-800 text-white rounded-none w-full"
+            className="pr-20 bg-gray-50 text-gray-900 rounded-lg border-gray-300 w-full"
           />
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 flex gap-1">
+          <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-1">
             <Button
               variant="ghost"
               size="icon"
               onClick={handleGenerateNewCode}
-              className="h-8 w-8 text-gray-400 rounded-none"
+              className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-md transition-colors"
+              title="Generate new code"
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -337,7 +347,8 @@ const StepSubAdmin2: React.FC = () => {
               variant="ghost"
               size="icon"
               onClick={handleCopyCode}
-              className="h-8 w-8 text-gray-400 rounded-none"
+              className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-md transition-colors"
+              title="Copy code"
             >
               <Copy className="h-4 w-4" />
             </Button>

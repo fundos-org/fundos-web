@@ -1,17 +1,19 @@
 import { bulkOnboarding } from '@/axioscalls/apiServices';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { useMutation } from 'react-query';
 
 export const useBulkOnboarding = () => {
+  const notification = useNotification();
+  
   return useMutation({
     mutationFn: (data: Omit<BulkOnboardingUserData, 'remark'>[]) =>
       bulkOnboarding(data),
     onSuccess: () => {
-      toast.success('Bulk Onboarding done successfully');
+      notification.success('Bulk Onboarding Complete', 'Bulk onboarding completed successfully');
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed updating emails.');
+      notification.error('Onboarding Failed', error.message || 'Failed updating emails.');
     },
   });
 };

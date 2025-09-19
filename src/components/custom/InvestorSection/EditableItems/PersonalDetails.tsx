@@ -39,7 +39,7 @@ const PersonalDetails: React.FC<{
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -52,7 +52,11 @@ const PersonalDetails: React.FC<{
     },
   });
 
+  // Check if any fields have been modified
+  const hasChanges = Object.keys(dirtyFields).length > 0;
+
   const onSubmit = ({ first_name, last_name }: FormData) => {
+    if (!hasChanges) return;
     console.log({ first_name, last_name });
     handleUpdateDetails({ first_name, last_name });
   };
@@ -65,7 +69,7 @@ const PersonalDetails: React.FC<{
       <div className="flex flex-col gap-5">
         <div className="flex space-x-4">
           <div className="w-1/2">
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               First Name
             </label>
             <Controller
@@ -74,8 +78,8 @@ const PersonalDetails: React.FC<{
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="First Name"
-                  className={`${errors.first_name ? 'border-red-500' : null} rounded-none w-full`}
+                  placeholder="Enter first name"
+                  className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.first_name ? 'border-red-500' : ''}`}
                 />
               )}
             />
@@ -86,7 +90,7 @@ const PersonalDetails: React.FC<{
             )}
           </div>
           <div className="w-1/2">
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+            <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Last Name
             </label>
             <Controller
@@ -95,8 +99,8 @@ const PersonalDetails: React.FC<{
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Last Name"
-                  className={`${errors.last_name ? 'border-red-500' : null} rounded-none w-full`}
+                  placeholder="Enter last name"
+                  className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.last_name ? 'border-red-500' : ''}`}
                 />
               )}
             />
@@ -107,7 +111,7 @@ const PersonalDetails: React.FC<{
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             E-Mail ID
           </label>
           <Controller
@@ -117,8 +121,8 @@ const PersonalDetails: React.FC<{
               <Input
                 {...field}
                 disabled
-                placeholder="E-Mail ID"
-                className={`${errors.email ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter email address"
+                className={`bg-gray-100 border border-gray-200 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed ${errors.email ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -128,7 +132,7 @@ const PersonalDetails: React.FC<{
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Phone Number
           </label>
           <Controller
@@ -138,8 +142,8 @@ const PersonalDetails: React.FC<{
               <Input
                 {...field}
                 disabled
-                placeholder="Phone Number"
-                className={`${errors.phone_number ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter phone number"
+                className={`bg-gray-100 border border-gray-200 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed ${errors.phone_number ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -151,7 +155,7 @@ const PersonalDetails: React.FC<{
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             PAN Number
           </label>
           <Controller
@@ -161,8 +165,8 @@ const PersonalDetails: React.FC<{
               <Input
                 {...field}
                 disabled
-                placeholder="PAN Number"
-                className={`${errors.pan_number ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter PAN number"
+                className={`bg-gray-100 border border-gray-200 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed ${errors.pan_number ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -172,7 +176,7 @@ const PersonalDetails: React.FC<{
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Aadhaar Number
           </label>
           <Controller
@@ -182,8 +186,8 @@ const PersonalDetails: React.FC<{
               <Input
                 {...field}
                 disabled
-                placeholder="Aadhaar Number"
-                className={`${errors.aadhaar_number ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter Aadhaar number"
+                className={`bg-gray-100 border border-gray-200 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed ${errors.aadhaar_number ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -195,17 +199,22 @@ const PersonalDetails: React.FC<{
         </div>
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end mt-8 pt-6 border-t border-gray-200">
         <button
           onClick={() => setDialogOpen(false)}
           type="button"
-          className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
+          className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
         >
           Close
         </button>
         <button
           type="submit"
-          className="bg-white text-black hover:opacity-50 px-10 py-2 cursor-pointer"
+          disabled={!hasChanges}
+          className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+            hasChanges
+              ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
         >
           Submit
         </button>

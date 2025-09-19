@@ -1,7 +1,7 @@
 import { getDealInvestorInvestments } from '@/axioscalls/apiServices';
 import { QueryEnums } from '@/queryEnums';
-import toast from 'react-hot-toast';
 import { useQuery, useQueryClient } from 'react-query';
+import { useNotification } from '@/components/custom/NotificationProvider';
 
 export const useDealInvestorInvestments = (
   deal_id: string,
@@ -9,6 +9,8 @@ export const useDealInvestorInvestments = (
   pageSize: number
 ) => {
   const queryClient = useQueryClient();
+  const notification = useNotification();
+  
   return useQuery(
     [QueryEnums.DealInvestorsInvestments, deal_id, pageNumber, pageSize],
     () => getDealInvestorInvestments(deal_id, pageNumber, pageSize),
@@ -30,11 +32,13 @@ export const useDealInvestorInvestments = (
         if (queryState) {
           // Check if the data is fresh (not from cache) using dataUpdatedAt
           const isFresh = queryState.dataUpdatedAt > Date.now() - 1000; // 1 second threshold
-          if (isFresh) toast.success('Deals Investments fetched successfully');
+          if (isFresh) {
+            notification.success('Deal Investments Loaded', 'Successfully fetched deal investments');
+          }
         }
       },
       onError: (error: Error) => {
-        toast.error(`Fetch investors failed: ${error.message}`);
+        notification.error('Failed to Load Deal Investments', error.message || 'Unable to fetch deal investments. Please try again.');
       },
     }
   );

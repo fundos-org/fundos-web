@@ -1,9 +1,15 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import CustomToggleGroup from '../CustomToggleGroup';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { securities } from '@/constants/dealsConstant';
 import { Input } from '@/components/ui/input';
 
@@ -16,46 +22,60 @@ const Step5: React.FC = () => {
   } = useFormContext();
 
   return (
-    <div className="h-[50vh] overflow-auto grid gap-4">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="instrumentType" className="text-right text-white">
+    <div className="space-y-6 w-full">
+      <div className="space-y-3">
+        <label htmlFor="instrumentType" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Instrument (Types of Securities)
-        </Label>
-        <CustomToggleGroup
-          value={watch('instrumentType')}
-          array={securities}
-          setValue={value =>
+        </label>
+        <Select
+          onValueChange={value =>
             setValue('instrumentType', value, { shouldValidate: true })
           }
-        />
+          defaultValue={watch('instrumentType')}
+        >
+          <SelectTrigger className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg">
+            <SelectValue placeholder="Select Instrument Type" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-gray-200 rounded-lg">
+            <SelectGroup>
+              {securities.map(({ name, value }) => (
+                <SelectItem key={name} value={value}>
+                  {name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         {errors.instrumentType && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.instrumentType.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="conversionTerms" className="text-right text-white">
+
+      <div className="space-y-3">
+        <label htmlFor="conversionTerms" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Conversion Terms
-        </Label>
+        </label>
         <Textarea
           id="conversionTerms"
           {...register('conversionTerms', {
             required: 'Conversion terms are required',
           })}
-          placeholder="Describe conversion terms"
-          className="rounded-none text-white"
+          placeholder="Enter conversion terms"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg min-h-[80px]"
         />
         {errors.conversionTerms && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.conversionTerms.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="managementFee" className="text-right text-white">
+
+      <div className="space-y-3">
+        <label htmlFor="managementFee" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Management Fee (%)
-        </Label>
+        </label>
         <Input
           type="number"
           id="managementFee"
@@ -63,28 +83,23 @@ const Step5: React.FC = () => {
             required: 'Management fee is required',
             pattern: {
               value: /^\d+(\.\d{1,2})?$/,
-              message: 'Enter a valid number',
-            },
-            max: {
-              value: 5,
-              message: 'Management fee cannot exceed 5%',
+              message: 'Enter a valid percentage',
             },
           })}
-          max={5}
-          step="0.01"
-          placeholder="Enter management fee"
-          className="rounded-none text-white"
+          placeholder="Enter management fee percentage"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg"
         />
         {errors.managementFee && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.managementFee.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="carryPercentage" className="text-right text-white">
+
+      <div className="space-y-3">
+        <label htmlFor="carryPercentage" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Carry Percentage (%)
-        </Label>
+        </label>
         <Input
           type="number"
           id="carryPercentage"
@@ -92,41 +107,38 @@ const Step5: React.FC = () => {
             required: 'Carry percentage is required',
             pattern: {
               value: /^\d+(\.\d{1,2})?$/,
-              message: 'Enter a valid number',
-            },
-            max: {
-              value: 20,
-              message: 'Carry percentage cannot exceed 20%',
+              message: 'Enter a valid percentage',
             },
           })}
-          max={20}
-          step="0.01"
           placeholder="Enter carry percentage"
-          className="rounded-none text-white"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg"
         />
         {errors.carryPercentage && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.carryPercentage.message)}
           </p>
         )}
       </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="isStartup"
-          checked={watch('isStartup')}
-          onCheckedChange={checked =>
-            setValue('isStartup', checked === true, { shouldValidate: true })
-          }
-        />
-        <label
-          htmlFor="isStartup"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          I agree that the Company is a Startup as per applicable provisions of
-          the SEBI (Alternative Investment Funds) Regulations, 2012
-        </label>
-        {errors.isStartup?.message && (
-          <p className="text-red-400 text-sm">
+
+      <div className="space-y-3">
+        <div className="flex items-center space-x-3">
+          <Checkbox
+            id="isStartup"
+            checked={watch('isStartup')}
+            onCheckedChange={checked =>
+              setValue('isStartup', checked, { shouldValidate: true })
+            }
+            className="border-gray-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+          />
+          <label
+            htmlFor="isStartup"
+            className="text-sm font-medium text-gray-700 cursor-pointer"
+          >
+            Is this a startup?
+          </label>
+        </div>
+        {errors.isStartup && (
+          <p className="text-red-600 text-sm">
             {String(errors.isStartup.message)}
           </p>
         )}

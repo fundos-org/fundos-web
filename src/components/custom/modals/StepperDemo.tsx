@@ -10,14 +10,14 @@ type StepperDemoProps = {
 //text-gray-900 bg-gray-100 border border-gray-300 not yet started css
 const StepperDemo: FC<StepperDemoProps> = ({ activeStep, setActiveStep }) => {
   return (
-    <ol className="space-y-4 border-r border-[#393738]">
+    <ol className="space-y-2 w-80 p-6">
       {stepsList.map((step, idx) => {
         // Completed
         if (idx < activeStep) {
           return (
             <li key={step.index}>
               <div
-                className="w-50 px-6 py-2 mr-6 bg-gray-800 border-green-800 text-green-400 cursor-pointer"
+                className="w-full px-4 py-3 rounded-lg bg-green-100 border border-green-200 text-green-800 cursor-pointer hover:bg-green-50 transition-colors"
                 role="status"
                 onClick={() => setActiveStep(step.index)}
               >
@@ -50,7 +50,7 @@ const StepperDemo: FC<StepperDemoProps> = ({ activeStep, setActiveStep }) => {
           return (
             <li key={step.index}>
               <div
-                className="w-50 px-6 py-2 mr-6  bg-gray-800 border-blue-800 text-blue-400 cursor-pointer"
+                className="w-full px-4 py-3 rounded-lg bg-blue-100 border border-blue-300 text-blue-800 cursor-pointer shadow-sm"
                 role="status"
                 onClick={() => setActiveStep(step.index)}
               >
@@ -82,7 +82,7 @@ const StepperDemo: FC<StepperDemoProps> = ({ activeStep, setActiveStep }) => {
         return (
           <li key={step.index}>
             <div
-              className="w-50 px-6 py-2 mr-6 bg-gray-800 border-gray-700 text-muted/10"
+              className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 text-gray-500"
               role="status"
             >
               <div className="flex items-center justify-between">

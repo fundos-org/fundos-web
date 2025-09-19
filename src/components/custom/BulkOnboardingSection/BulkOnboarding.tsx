@@ -231,7 +231,7 @@ export default function BulkOnboarding() {
 
   return (
     <>
-      <div className="min-h-screen w-full bg-black text-white py-10">
+      <div className="w-full bg-white text-gray-900">
         {/* Header Section */}
         <BulkOnboardInstructions
           open={openInstructions}
@@ -239,29 +239,28 @@ export default function BulkOnboarding() {
         />
 
         {/* Upload Section */}
-        <div className=" pb-8">
-          <div className="flex justify-between items-center mb-4">
+        <div className="pb-8">
+          <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-xl font-semibold mb-1">Upload file</h2>
-              <p className="text-gray-400 text-sm">
-                To ensure your data is formatted correctly, start by downloading
-                our template.
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Upload File</h2>
+              <p className="text-gray-600 text-sm">
+                To ensure your data is formatted correctly, start by downloading our template.
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
-                className="cursor-pointer bg-blue-200 text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                className="cursor-pointer bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2.5 font-medium flex items-center gap-2 rounded-lg transition-colors"
                 onClick={() => setOpenInstructions(true)}
               >
                 <Info className="w-4 h-4" />
                 Instructions
               </button>
               <button
-                className="cursor-pointer bg-white text-black px-4 py-2 font-medium flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 font-medium flex items-center gap-2 rounded-lg transition-colors"
                 onClick={handleDownloadTemplate}
               >
                 <Download className="w-4 h-4" />
-                Download template
+                Download Template
               </button>
             </div>
           </div>
@@ -281,9 +280,9 @@ export default function BulkOnboarding() {
             onClick={handleUploadAreaClick}
           >
             {fileName ? (
-              <div className="relative bg-gray-900 border-2 border-gray-700 cursor-pointer">
+              <div className="relative bg-white border-2 border-gray-200 rounded-lg cursor-pointer overflow-hidden">
                 <button
-                  className="z-2 p-3 bg-gray-900 text-red-400 absolute top-2 right-2 cursor-pointer"
+                  className="z-10 p-2 bg-white hover:bg-red-50 text-red-600 absolute top-3 right-3 cursor-pointer rounded-lg border border-gray-200 hover:border-red-200 transition-colors"
                   onClick={e => {
                     e.stopPropagation();
                     handleRemoveFile();
@@ -291,46 +290,42 @@ export default function BulkOnboarding() {
                   title="Remove file"
                   tabIndex={-1}
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trash2 className="w-4 h-4" />
                 </button>
-                <div className="w-full relative overflow-hidden flex items-center justify-center">
+                <div className="w-full relative overflow-hidden flex items-center justify-center py-12">
                   <img
                     src={'/excel-sheet.png'}
                     alt="excel sheet"
-                    className="w-auto h-full object-contain"
-                    style={{
-                      maskImage:
-                        'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 100%)',
-                      WebkitMaskImage:
-                        'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 100%)',
-                    }}
+                    className="w-auto h-32 object-contain"
                   />
-                  <div className="absolute bottom-0 bg-linear-to-b from-white to-black items-baseline-last opacity-30 w-full flex justify-center h-full p-5">
-                    Click to review: {fileName}
+                  <div className="absolute bottom-0 bg-gradient-to-t from-gray-50 to-transparent w-full flex justify-center p-4">
+                    <span className="text-gray-700 font-medium">
+                      Click to review: {fileName}
+                    </span>
                   </div>
                 </div>
               </div>
             ) : (
               <div
-                className={`bg-gray-900 border-2 border-dashed p-12 transition-colors cursor-pointer ${
-                  isDragOver ? 'border-blue-500 bg-gray-800' : 'border-gray-700'
+                className={`bg-gray-50 border-2 border-dashed rounded-lg p-12 transition-colors cursor-pointer ${
+                  isDragOver ? 'border-blue-400 bg-blue-50' : 'border-gray-300'
                 }`}
               >
                 <div className="flex flex-col items-center justify-center text-center">
                   <div className="mb-6">
                     <CloudUpload
-                      className={`w-16 h-16 ${isLoading ? 'text-blue-500 animate-pulse' : 'text-gray-600'}`}
+                      className={`w-16 h-16 ${isLoading ? 'text-blue-500 animate-pulse' : 'text-gray-400'}`}
                     />
                   </div>
                   <div className="mb-2">
-                    <span className="text-lg text-gray-300">
+                    <span className="text-lg text-gray-700">
                       {isLoading
                         ? 'Processing file...'
                         : 'Drag your file(s) or '}
                     </span>
                     {!isLoading && !fileName && (
                       <button
-                        className="text-blue-400 underline hover:text-blue-300 transition-colors"
+                        className="text-blue-600 underline hover:text-blue-700 transition-colors font-medium"
                         onClick={e => {
                           e.stopPropagation();
                           handleBrowseClick();
@@ -349,18 +344,18 @@ export default function BulkOnboarding() {
           </div>
 
           {errors.length > 0 && (
-            <div className="mt-8 bg-red-900/20 border border-red-800 p-6">
-              <h3 className="text-lg font-semibold mb-4 text-red-400">
+            <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4 text-red-800">
                 Validation Errors ({errors.length})
               </h3>
               <div className="space-y-2">
                 {errors.slice(0, 10).map((error, index) => (
-                  <p key={index} className="text-red-300 text-sm">
+                  <p key={index} className="text-red-700 text-sm">
                     • {error}
                   </p>
                 ))}
                 {errors.length > 10 && (
-                  <p className="text-red-400 text-sm mt-2">
+                  <p className="text-red-600 text-sm mt-2 font-medium">
                     ... and {errors.length - 10} more errors
                   </p>
                 )}

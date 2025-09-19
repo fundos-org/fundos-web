@@ -47,17 +47,17 @@ const BulkOnboardingTable: FC<{
   };
 
   return (
-    <div className="flex flex-col w-full border border-[#383739]">
-      <div className="flex items-center justify-between p-4 bg-[#2A2A2B] border-b border-zinc-500">
-        <h2 className="text-lg font-semibold">Bulk Onboarding User History</h2>
+    <div className="flex flex-col w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="flex items-center justify-between p-6 bg-gray-50 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-900">Bulk Onboarding User History</h2>
         {files.length > 0 ? (
           <Select onValueChange={handleChange} value={selectedFile ?? ''}>
-            <SelectTrigger className="rounded-none w-[400px] cursor-pointer border border-[#383739] bg-black/40">
-              <SelectValue placeholder="Select Sub-Admin" />
+            <SelectTrigger className="w-[400px] bg-white border border-gray-300 text-gray-700 rounded-lg">
+              <SelectValue placeholder="Select File" />
             </SelectTrigger>
-            <SelectContent className="rounded-none">
+            <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
               {files?.map(filename => (
-                <SelectItem key={filename} value={String(filename)}>
+                <SelectItem key={filename} value={String(filename)} className="text-gray-900 hover:bg-gray-50 cursor-pointer">
                   {filename}
                 </SelectItem>
               ))}
@@ -67,36 +67,48 @@ const BulkOnboardingTable: FC<{
           <span className="text-gray-500">No files available</span>
         )}
       </div>
-      <Table className="rounded-none">
-        <TableHeader className="bg-[#2A2A2B]">
-          <TableRow className="border-zinc-400/60">
-            <TableHead className="text-zinc-400">Phone</TableHead>
-            <TableHead className="text-zinc-400">Email</TableHead>
-            <TableHead className="text-zinc-400">PAN Number</TableHead>
-            <TableHead className="text-zinc-400 text-center">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-gray-50 border-b border-gray-200">
+            <TableHead className="font-semibold text-gray-900">Phone</TableHead>
+            <TableHead className="font-semibold text-gray-900">Email</TableHead>
+            <TableHead className="font-semibold text-gray-900">PAN Number</TableHead>
+            <TableHead className="font-semibold text-gray-900 text-center">
               Capital Commitment
             </TableHead>
-            <TableHead className="text-zinc-400">Check Passed</TableHead>
-            <TableHead className="text-zinc-400">Onboarded</TableHead>
+            <TableHead className="font-semibold text-gray-900">Check Passed</TableHead>
+            <TableHead className="font-semibold text-gray-900">Onboarded</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {userList &&
             userList?.map((user, idx) => (
-              <TableRow className="border-[#2A2A2B]" key={idx + 1}>
-                <TableCell className="font-medium">{user.phone}</TableCell>
-                <TableCell className="font-medium">{user.email}</TableCell>
-                <TableCell className="font-medium capitalize">
+              <TableRow className="border-b border-gray-200 hover:bg-gray-50" key={idx + 1}>
+                <TableCell className="font-medium text-gray-900">{user.phone}</TableCell>
+                <TableCell className="font-medium text-gray-900">{user.email}</TableCell>
+                <TableCell className="font-medium text-gray-900 capitalize">
                   {user.pan_number}
                 </TableCell>
-                <TableCell className="font-medium text-center">
+                <TableCell className="font-medium text-gray-900 text-center">
                   {user.capital_commitment}
                 </TableCell>
                 <TableCell className="font-medium">
-                  {user.checked ? 'Yes' : 'No'}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    user.checked 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {user.checked ? 'Yes' : 'No'}
+                  </span>
                 </TableCell>
                 <TableCell className="font-medium">
-                  {user.onboarded ? 'Yes' : 'No'}
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    user.onboarded 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {user.onboarded ? 'Yes' : 'No'}
+                  </span>
                 </TableCell>
               </TableRow>
             ))}

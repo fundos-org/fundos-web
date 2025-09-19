@@ -32,33 +32,35 @@ export default function SubAdminEditDialog({
     >
       <DialogContent
         hideCloseButton={true}
-        className="border-0 rounded-none bg-[#181C23] text-white sm:max-w-4xl max-h-[90vh]"
+        className="bg-white border border-gray-200 rounded-lg shadow-xl sm:max-w-4xl max-h-[90vh] p-0"
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
         <>
-          <DialogHeader>
-            <DialogTitle className="text-3xl text-white flex items-center justify-between">
-              Edit Sub-Admin
+          <DialogHeader className="border-b border-gray-200 p-6">
+            <DialogTitle className="text-2xl font-semibold text-gray-900 flex items-center justify-between">
+              Edit Sub Admin
               <DialogClose
                 asChild
-                className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+                className="border border-gray-300 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
               >
-                <span className="p-1">
-                  <X />
+                <span className="p-2">
+                  <X className="w-5 h-5 text-gray-600" />
                 </span>
               </DialogClose>
             </DialogTitle>
-            <hr className="border-[#232A36] my-2" />
           </DialogHeader>
-          <div className="w-full flex">
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="border-r border-gray-800"></div>
-            <Content
-              activeTab={activeTab}
-              subadminId={subadminId || ''}
-              setDialogOpen={() => setSubadminId(null)}
-            />
+          <div className="flex h-[calc(90vh-120px)]">
+            <div className="border-r border-gray-200 bg-gray-50">
+              <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+            </div>
+            <div className="flex flex-col w-full">
+              <Content
+                activeTab={activeTab}
+                subadminId={subadminId || ''}
+                setDialogOpen={() => setSubadminId(null)}
+              />
+            </div>
           </div>
         </>
       </DialogContent>
@@ -82,20 +84,22 @@ const Sidebar: React.FC<{
   ];
 
   return (
-    <div className="w-64 h-[50vh] p-4">
-      {tabs.map(tab => (
-        <button
-          key={tab.id}
-          className={`w-full text-left py-2 px-4 mb-2 text-md font-medium ${
-            activeTab === tab.label
-              ? 'bg-[#313132] text-white'
-              : ' text-gray-400 hover:bg-[#313132]'
-          }`}
-          onClick={() => setActiveTab(tab.label)}
-        >
-          {tab.label}
-        </button>
-      ))}
+    <div className="w-64 p-4">
+      <div className="space-y-2">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            className={`w-full text-left py-3 px-4 rounded-lg text-sm font-medium transition-colors ${
+              activeTab === tab.label
+                ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            }`}
+            onClick={() => setActiveTab(tab.label)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -111,28 +115,32 @@ const Content: React.FC<{
   return (
     <>
       {!error ? (
-        <div className="flex-1">
-          {activeTab === LocalEnum.PD && (
-            <Suspense fallback={<div>Loading...</div>}>
-              <ProfileDetails
-                data={subadminDetails ?? {}}
-                setDialogOpen={setDialogOpen}
-                handleUpdateDetails={updateSubAdmin}
-              />
-            </Suspense>
-          )}
-          {activeTab === LocalEnum.LD && (
-            <Suspense fallback={<div>Loading...</div>}>
-              <LoginDetails
-                data={subadminDetails as SubadminDetailsResponse}
-                setDialogOpen={setDialogOpen}
-                handleUpdateDetails={updateSubAdmin}
-              />
-            </Suspense>
-          )}
+        <div className="flex flex-col w-full h-full">
+          <div className="overflow-y-auto flex-1 p-6">
+            {activeTab === LocalEnum.PD && (
+              <Suspense fallback={<div className="flex items-center justify-center h-32 text-gray-500">Loading...</div>}>
+                <ProfileDetails
+                  data={subadminDetails ?? {}}
+                  setDialogOpen={setDialogOpen}
+                  handleUpdateDetails={updateSubAdmin}
+                />
+              </Suspense>
+            )}
+            {activeTab === LocalEnum.LD && (
+              <Suspense fallback={<div className="flex items-center justify-center h-32 text-gray-500">Loading...</div>}>
+                <LoginDetails
+                  data={subadminDetails as SubadminDetailsResponse}
+                  setDialogOpen={setDialogOpen}
+                  handleUpdateDetails={updateSubAdmin}
+                />
+              </Suspense>
+            )}
+          </div>
         </div>
       ) : (
-        <div>Not data Found</div>
+        <div className="flex items-center justify-center h-full text-gray-500">
+          No data found
+        </div>
       )}
     </>
   );

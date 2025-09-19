@@ -2,8 +2,9 @@ import { Input } from '@/components/ui/input';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useMemo } from 'react';
 import { SubadminDetailsResponse } from '@/constants/dealsConstant';
+import { Button } from '@/components/ui/button';
 
 // Define the props interface
 interface LoginDetailsProps {
@@ -49,6 +50,7 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -61,6 +63,21 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
       app_theme: data?.app_theme || '',
     },
   });
+
+  // Watch all form values to detect changes
+  const watchedValues = watch();
+
+  // Check if form has been modified
+  const hasChanges = useMemo(() => {
+    return (
+      watchedValues.username !== (data?.username || '') ||
+      watchedValues.password !== (data?.password || '') ||
+      watchedValues.reenter_password !== (data?.reenter_password || '') ||
+      watchedValues.app_name !== (data?.app_name || '') ||
+      watchedValues.invite_code !== (data?.invite_code || '') ||
+      watchedValues.app_theme !== (data?.app_theme || '')
+    );
+  }, [watchedValues, data]);
 
   const onSubmit = ({
     username,
@@ -81,14 +98,14 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
   };
 
   return (
-    <div className="text-white p-6 m-4">
+    <div className="w-full h-full flex flex-col">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 h-full flex flex-col justify-between gap-2"
+        className="flex flex-col h-full"
       >
-        <div className="flex flex-col gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+        <div className="flex-1 space-y-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
               Username
             </label>
             <Controller
@@ -97,20 +114,21 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Username"
-                  className={`${errors.username ? 'border-red-500' : ''} rounded-none w-full bg-gray-700 text-white border-gray-600 focus:border-gray-400`}
+                  placeholder="Enter username"
+                  className={`${errors.username ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'} rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors`}
                 />
               )}
             />
             {errors.username && (
-              <p className="text-red-500 text-sm text-start">
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
                 {errors.username.message}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <Controller
@@ -120,21 +138,22 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
                 <Input
                   {...field}
                   type="password"
-                  placeholder="Password"
-                  className={`${errors.password ? 'border-red-500' : ''} rounded-none w-full bg-gray-700 text-white border-gray-600 focus:border-gray-400`}
+                  placeholder="Enter password"
+                  className={`${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'} rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors`}
                 />
               )}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm text-start">
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
                 {errors.password.message}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Re-enter Password
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Confirm Password
             </label>
             <Controller
               name="reenter_password"
@@ -143,20 +162,21 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
                 <Input
                   {...field}
                   type="password"
-                  placeholder="Re-enter Password"
-                  className={`${errors.reenter_password ? 'border-red-500' : ''} rounded-none w-full bg-gray-700 text-white border-gray-600 focus:border-gray-400`}
+                  placeholder="Re-enter password"
+                  className={`${errors.reenter_password ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'} rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors`}
                 />
               )}
             />
             {errors.reenter_password && (
-              <p className="text-red-500 text-sm text-start">
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
                 {errors.reenter_password.message}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
               App Name
             </label>
             <Controller
@@ -165,18 +185,21 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="App Name"
-                  className={`${errors.app_name ? 'border-red-500' : ''} rounded-none w-full bg-gray-700 text-white border-gray-600 focus:border-gray-400`}
+                  placeholder="Enter app name"
+                  className={`${errors.app_name ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'} rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors`}
                 />
               )}
             />
             {errors.app_name && (
-              <p className="text-red-500 text-sm">{errors.app_name.message}</p>
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
+                {errors.app_name.message}
+              </p>
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
               Invite Code
             </label>
             <Controller
@@ -185,13 +208,14 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Invite Code"
-                  className={`${errors.invite_code ? 'border-red-500' : ''} rounded-none w-full bg-gray-700 text-white border-gray-600 focus:border-gray-400`}
+                  placeholder="Enter invite code"
+                  className={`${errors.invite_code ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'} rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 transition-colors`}
                 />
               )}
             />
             {errors.invite_code && (
-              <p className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm flex items-center mt-1">
+                <span className="mr-1">⚠️</span>
                 {errors.invite_code.message}
               </p>
             )}
@@ -218,20 +242,27 @@ const LoginDetails: React.FC<LoginDetailsProps> = ({
           </div> */}
         </div>
 
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={() => setDialogOpen(null)}
-            type="button"
-            className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
-          >
-            Close
-          </button>
-          <button
-            type="submit"
-            className="bg-white text-black hover:opacity-50 px-10 py-2 cursor-pointer"
-          >
-            Submit
-          </button>
+        <div className="border-t border-gray-200 bg-gray-50 p-4 mt-6">
+          <div className="flex justify-end gap-3">
+            <Button
+              type="button"
+              onClick={() => setDialogOpen(null)}
+              className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!hasChanges}
+              className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+                hasChanges
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              Save Changes
+            </Button>
+          </div>
         </div>
       </form>
     </div>

@@ -7,15 +7,16 @@ function AdminDashboard() {
   const { success, ...rest } = data ?? {};
   void success;
   const stats = rest;
+  
   return (
     <>
       <header className="flex justify-between items-center">
         <div>
-          <h2 className="text-4xl">Dashboard</h2>
+          <h2 className="fundos-dashboard-title text-gray-900">Dashboard</h2>
         </div>
       </header>
       <div className="mb-8">
-        <small className="text-gray-500">Track whom you are onboarding</small>
+        <small className="fundos-dashboard-subtitle">Track whom you are onboarding</small>
       </div>
       <StatisticCardList stats={stats} />
       <AdminOverviewTable />

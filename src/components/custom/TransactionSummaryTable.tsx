@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import ChartControls from './ChartControls';
 import { exportToCSV, exportToExcel, exportToPDF, formatChartDataForExport } from '@/utils/exportUtils';
 import { analyticsApi, TransactionSummaryParams } from '@/axioscalls/analyticsApi';
-import toast from 'react-hot-toast';
+import { useNotification } from './NotificationProvider';
 
 interface TransactionSummaryItem {
   category: 'Total Investments' | 'Pending Transactions' | 'Completed Transactions' | 'On Hold Transactions' | 'Failed Transactions';
@@ -36,6 +36,8 @@ export default function TransactionSummaryTable() {
   const [totalCount, setTotalCount] = useState(0);
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
   const [perPage] = useState(10);
+  
+  const notification = useNotification();
 
   // Fetch data from API
   const fetchTransactionSummary = async () => {
@@ -58,7 +60,7 @@ export default function TransactionSummaryTable() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch transaction summary data';
       setError(errorMessage);
-      toast.error(`Error loading transaction summary: ${errorMessage}`);
+      notification.error('Error Loading Data', `Error loading transaction summary: ${errorMessage}`);
       setData([]);
     } finally {
       setLoading(false);
@@ -102,9 +104,9 @@ export default function TransactionSummaryTable() {
   // Loading state
   if (loading && data.length === 0) {
     return (
-      <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="transaction-summary-table">
+      <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="transaction-summary-table">
         <CardContent className="flex items-center justify-center h-[400px]">
-          <div className="text-gray-400">Loading transaction summary data...</div>
+          <div className="text-gray-600">Loading transaction summary data...</div>
         </CardContent>
       </Card>
     );
@@ -113,13 +115,13 @@ export default function TransactionSummaryTable() {
   // Error state
   if (error && data.length === 0) {
     return (
-      <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="transaction-summary-table">
+      <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="transaction-summary-table">
         <CardContent className="flex items-center justify-center h-[400px]">
           <div className="text-center">
-            <div className="text-red-400 mb-2">Error loading data</div>
+            <div className="text-red-600 mb-2">Error loading data</div>
             <button 
               onClick={fetchTransactionSummary}
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="text-blue-600 hover:text-blue-800 underline"
             >
               Try again
             </button>
@@ -130,12 +132,12 @@ export default function TransactionSummaryTable() {
   }
 
   return (
-    <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="transaction-summary-table">
-      <CardHeader>
+    <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="transaction-summary-table">
+      <CardHeader className="border-b border-gray-200 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl text-gray-400">TRANSACTION SUMMARY</CardTitle>
-            <CardDescription className="text-gray-500">
+            <CardTitle className="text-xl font-semibold text-gray-900">Transaction Summary</CardTitle>
+            <CardDescription className="text-gray-600">
               Financial summary by category ({totalCount} categories)
             </CardDescription>
           </div>
@@ -152,30 +154,30 @@ export default function TransactionSummaryTable() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto custom-scrollbar-table">
           <Table>
             <TableHeader>
-              <TableRow className="border-gray-600 hover:bg-[#2A2A2B]">
-                <TableHead className="text-gray-400">Category</TableHead>
-                <TableHead className="text-gray-400">Amount</TableHead>
-                <TableHead className="text-gray-400">Count</TableHead>
+              <TableRow className="border-b border-gray-200 hover:bg-gray-50">
+                <TableHead className="text-gray-900 font-semibold">Category</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Amount</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Count</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center text-gray-400 py-8">
+                  <TableCell colSpan={3} className="text-center text-gray-600 py-8">
                     No transaction summary found for the selected criteria
                   </TableCell>
                 </TableRow>
               ) : (
                 data.map((item, index) => (
-                  <TableRow key={index} className="border-gray-600 hover:bg-[#2A2A2B]">
-                    <TableCell className="text-white font-medium">{item.category}</TableCell>
-                    <TableCell className="text-white">
+                  <TableRow key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                    <TableCell className="text-gray-900 font-medium">{item.category}</TableCell>
+                    <TableCell className="text-gray-900">
                       ₹{item.amount.toLocaleString('en-IN')}
                     </TableCell>
-                    <TableCell className="text-white">
+                    <TableCell className="text-gray-900">
                       {item.count}
                     </TableCell>
                   </TableRow>
@@ -187,8 +189,8 @@ export default function TransactionSummaryTable() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-gray-400 text-sm">
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+            <div className="text-gray-600 text-sm">
               Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, totalCount)} of {totalCount} entries
             </div>
             <div className="flex items-center space-x-2">
@@ -197,11 +199,11 @@ export default function TransactionSummaryTable() {
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1 || loading}
-                className="bg-[#2A2A2B] border-gray-600 text-white hover:bg-[#3A3A3B] rounded-none"
+                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg"
               >
                 Previous
               </Button>
-              <div className="text-white text-sm">
+              <div className="text-gray-900 text-sm">
                 Page {currentPage} of {totalPages}
               </div>
               <Button
@@ -209,7 +211,7 @@ export default function TransactionSummaryTable() {
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages || loading}
-                className="bg-[#2A2A2B] border-gray-600 text-white hover:bg-[#3A3A3B] rounded-none"
+                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg"
               >
                 Next
               </Button>

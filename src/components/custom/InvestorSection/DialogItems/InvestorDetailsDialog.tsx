@@ -3,11 +3,12 @@ import {
   DialogContent,
   DialogClose,
   DialogTitle,
+  DialogPortal,
 } from '@radix-ui/react-dialog';
+import { DialogHeader } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, X } from 'lucide-react';
-import { DialogHeader } from '@/components/ui/dialog';
-import { FC, lazy, Suspense } from 'react';
+import { FC, lazy, Suspense, useEffect } from 'react';
 import { InvestorEntity } from '@/constants/membersConstant';
 const InvestorMainTab = lazy(() => import('../TabItems/InvestorMainTab'));
 
@@ -26,6 +27,21 @@ const InvestorDetailsDialog: FC<{
     investor_id,
   } = investor ?? {};
 
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    const isOpen = investor && Object.keys(investor).length > 0;
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [investor]);
+
   return (
     <Dialog
       open={investor ? Object.keys(investor).length > 0 : false}
@@ -33,23 +49,28 @@ const InvestorDetailsDialog: FC<{
         if (!open) setInvestor?.(null);
       }}
     >
-      <DialogContent
+      <DialogPortal>
+        {/* Overlay for background distinction - only when dialog is actually open */}
+        {investor && Object.keys(investor).length > 0 && (
+          <div className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm" />
+        )}
+        
+        <DialogContent
         aria-describedby={undefined}
-        // onInteractOutside={e => e.preventDefault()}
         className={cn(
-          'fixed inset-0 z-50 p-10 mx-[20rem] my-[0rem] rounded-none shadow-none w-[calc(100vw-20rem)] h-screen max-w-none max-h-none bg-black'
+          'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[250] p-6 rounded-lg shadow-xl bg-white w-[90vw] max-w-6xl h-[90vh] max-h-[800px] overflow-y-auto'
         )}
       >
         <DialogHeader>
-          <DialogTitle className="text-3xl text-white flex items-center justify-between">
+          <DialogTitle className="text-2xl text-gray-900 font-semibold flex items-center justify-between">
             <div className="flex justify-center items-center gap-3">
               <DialogClose
                 asChild
-                className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+                className="border border-gray-300 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
               >
-                <span className="p-1">
+                <span className="p-2">
                   <ChevronLeft
-                    className="text-3xl font-bold cursor-pointer hover:opacity-50"
+                    className="w-5 h-5 text-gray-600 cursor-pointer"
                     onClick={() => setInvestor?.(null)}
                   />
                 </span>
@@ -58,48 +79,61 @@ const InvestorDetailsDialog: FC<{
             </div>
             <DialogClose
               asChild
-              className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+              className="border border-gray-300 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
             >
-              <span className="p-1">
-                <X />
+              <span className="p-2">
+                <X className="w-5 h-5 text-gray-600" />
               </span>
             </DialogClose>
           </DialogTitle>
-          <hr className="border-[#232A36] my-2" />
+          <hr className="border-gray-200 my-4" />
           <div className="flex justify-between w-full">
-            <div className="flex gap-5">
-              <div className="w-30 h-30 mr-2 mt-2 overflow-hidden">
-                <img
-                  src={profile_pic}
-                  className="w-full h-full object-cover"
-                  alt="dp"
-                />
+            <div className="flex gap-6">
+              <div className="w-24 h-24 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                {profile_pic ? (
+                  <img
+                    src={profile_pic}
+                    className="w-full h-full object-cover rounded-lg"
+                    alt="Profile"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-gray-400 text-sm">No image</span>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col justify-around">
-                <p className="text-3xl font-bold">{name}</p>
-                <span className="border border-[#383739] text-white bg-zinc-400/20 text-center uppercase px-7">
-                  {type} Investor
-                </span>
-                <p>Joined on: {joined_on}</p>
+                <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
+                <div className="w-full flex gap-3">
+                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    {type} Investor
+                  </span>
+                </div>
+                <p className="text-gray-600">Joined on: {joined_on}</p>
               </div>
             </div>
-            <div className="flex gap-5 px-5 py-2">
-              {deals_invested && (
-                <div className="flex flex-col items-center">
-                  <h2 className="text-5xl">{deals_invested}</h2>
-                  <small className="text-muted">Deals Invested</small>
+            <div className="flex flex-col items-end">
+              <div className="flex gap-8 px-6 py-4 mt-4 bg-gray-50 rounded-lg">
+                <div className="flex flex-col items-start">
+                  <small className="text-gray-500 font-medium">Deals Invested</small>
+                  <h2 className="text-3xl font-bold text-gray-900">
+                    {deals_invested || 0}
+                  </h2>
                 </div>
-              )}
-              {deals_committed && (
-                <div className="flex flex-col items-center">
-                  <h2 className="text-5xl">{deals_committed}</h2>
-                  <small className="text-muted">Deals Committed</small>
+                <div className="border-l border-gray-300 h-16"></div>
+                <div className="flex flex-col items-start">
+                  <small className="text-gray-500 font-medium">Deals Committed</small>
+                  <h2 className="text-3xl font-bold text-gray-900">
+                    {deals_committed || 0}
+                  </h2>
                 </div>
-              )}
-              <div className="border-l border-[#383739] h-17"></div>
-              <div className="flex flex-col items-center">
-                <h2 className="text-5xl">{capital_commitment}</h2>
-                <small className="text-muted">Capital Commited</small>
+                <div className="border-l border-gray-300 h-16"></div>
+                <div className="flex flex-col items-start">
+                  <small className="text-gray-500 font-medium">Capital Committed</small>
+                  <h2 className="text-3xl font-bold text-gray-900">
+                    ₹{capital_commitment?.toLocaleString() || 0}
+                  </h2>
+                </div>
               </div>
             </div>
           </div>
@@ -107,7 +141,8 @@ const InvestorDetailsDialog: FC<{
         <Suspense fallback={<div>Loading...</div>}>
           <InvestorMainTab investor_id={investor_id ?? ''} />
         </Suspense>
-      </DialogContent>
+        </DialogContent>
+      </DialogPortal>
     </Dialog>
   );
 };

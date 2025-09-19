@@ -17,50 +17,45 @@ export default function Members() {
 
   return (
     <Dialog>
-      <header className="flex justify-between items-center">
+      <header className="flex justify-between items-center mb-2">
         <div>
-          <h2 className="text-4xl">Members</h2>
+          <h1 className="fundos-dashboard-title">Members</h1>
+          <p className="fundos-dashboard-subtitle">Track whom you are onboarding</p>
         </div>
         {isSubadmin && (
           <DialogTrigger asChild>
-            <button className="bg-white text-black px-4 py-2 rounded-none cursor-pointer">
-              Add member
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors">
+              Add Member
             </button>
           </DialogTrigger>
         )}
       </header>
-      <div className="mb-8">
-        <small className="text-gray-500">Track whom you are onboarding</small>
-      </div>
-      <Tabs defaultValue="active" className="w-full my-5">
-        <div className="w-full border-b-1 border-gray-600">
-          <TabsList
-            className="justify-start rounded-none bg-transparent border-b-0 p-0"
-            style={{ width: isSubadmin ? '500px' : '300px' }}
+      <Tabs defaultValue="active" className="w-full mt-6">
+        <TabsList className="w-full justify-start bg-white border-b border-gray-200 rounded-none h-auto p-0">
+          <TabsTrigger
+            value="active"
+            className="cursor-pointer bg-transparent border-0 text-gray-600 font-medium hover:text-gray-900 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 rounded-none px-6 py-3 transition-colors"
           >
+            Investors
+          </TabsTrigger>
+          {isSubadmin && (
             <TabsTrigger
-              value="active"
-              className="cursor-pointer text-white border-0 font-semibold data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
+              value="closed"
+              className="cursor-pointer bg-transparent border-0 text-gray-600 font-medium hover:text-gray-900 data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-blue-600 data-[state=active]:text-blue-600 rounded-none px-6 py-3 transition-colors"
             >
-              Investors
+              Bulk Onboard
             </TabsTrigger>
-            {isSubadmin && (
-              <TabsTrigger
-                value="closed"
-                className="cursor-pointer text-white border-0 font-medium data-[state=active]:bg-black data-[state=active]:border-b-2 data-[state=active]:border-white rounded-none px-4 py-2 text-lg"
-              >
-                Bulk Onboard
-              </TabsTrigger>
-            )}
-          </TabsList>
-        </div>
-        <TabsContent value="active" className="w-full flex gap-5 flex-wrap">
+          )}
+        </TabsList>
+        <TabsContent value="active" className="w-full mt-6">
           {isSubadmin && <StatisticCardList stats={stats?.metadata} />}
-          <Suspense fallback={<div>Loading...</div>}>
-            <InvestorTable isSubadmin={isSubadmin} />
-          </Suspense>
+          <div className="mt-6">
+            <Suspense fallback={<div>Loading...</div>}>
+              <InvestorTable isSubadmin={isSubadmin} />
+            </Suspense>
+          </div>
         </TabsContent>
-        <TabsContent value="closed" className="w-full flex gap-5 flex-wrap">
+        <TabsContent value="closed" className="w-full mt-6">
           <BulkOnboarding />
         </TabsContent>
       </Tabs>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-// import ImageInput from '../ImageUpload';
 import { numberToIndianRupeesWords } from '@/lib/currencyToWords';
 import FileInput from '../FileInput';
 
@@ -22,17 +20,17 @@ const Step4: React.FC = () => {
   const investmentSchemeAppendixFile = watch('investmentSchemeAppendixFile');
 
   return (
-    <div className="h-[50vh] overflow-auto grid gap-4">
-      <div className="w-full flex flex-col gap-2">
-        <Label htmlFor="currentValuation" className="text-right text-white">
+    <div className="space-y-6 w-full">
+      <div className="space-y-3">
+        <label htmlFor="currentValuation" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Current Valuation (
           {currentValuation ? (
-            <small>{numberToIndianRupeesWords(currentValuation)}</small>
+            <small className="text-gray-500">{numberToIndianRupeesWords(currentValuation)}</small>
           ) : (
-            <small>{'INR'}</small>
+            <small className="text-gray-500">INR</small>
           )}
           )
-        </Label>
+        </label>
         <Input
           type="number"
           id="currentValuation"
@@ -44,24 +42,25 @@ const Step4: React.FC = () => {
             },
           })}
           placeholder="Enter current valuation"
-          className="rounded-none text-white"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg"
         />
         {errors.currentValuation?.message && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.currentValuation.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="roundSize" className="text-right text-white">
+
+      <div className="space-y-3">
+        <label htmlFor="roundSize" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Round Size (
           {roundSize ? (
-            <small>{numberToIndianRupeesWords(roundSize)}</small>
+            <small className="text-gray-500">{numberToIndianRupeesWords(roundSize)}</small>
           ) : (
-            <small>{'INR'}</small>
+            <small className="text-gray-500">INR</small>
           )}
           )
-        </Label>
+        </label>
         <Input
           type="number"
           id="roundSize"
@@ -73,24 +72,25 @@ const Step4: React.FC = () => {
             },
           })}
           placeholder="Enter round size"
-          className="rounded-none text-white"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg"
         />
         {errors.roundSize && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.roundSize.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="syndicateCommitment" className="text-right text-white">
+
+      <div className="space-y-3">
+        <label htmlFor="syndicateCommitment" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Syndicate Commitment (
           {syndicateCommitment ? (
-            <small>{numberToIndianRupeesWords(syndicateCommitment)}</small>
+            <small className="text-gray-500">{numberToIndianRupeesWords(syndicateCommitment)}</small>
           ) : (
-            <small>{'INR'}</small>
+            <small className="text-gray-500">INR</small>
           )}
           )
-        </Label>
+        </label>
         <Input
           type="number"
           id="syndicateCommitment"
@@ -102,24 +102,25 @@ const Step4: React.FC = () => {
             },
           })}
           placeholder="Enter syndicate commitment"
-          className="rounded-none text-white"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg"
         />
         {errors.syndicateCommitment && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.syndicateCommitment.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="minimumInvestment" className="text-right text-white">
+
+      <div className="space-y-3">
+        <label htmlFor="minimumInvestment" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Minimum Investment (
           {minimumInvestment ? (
-            <small>{numberToIndianRupeesWords(minimumInvestment)}</small>
+            <small className="text-gray-500">{numberToIndianRupeesWords(minimumInvestment)}</small>
           ) : (
-            <small>{'INR'}</small>
+            <small className="text-gray-500">INR</small>
           )}
           )
-        </Label>
+        </label>
         <Input
           type="number"
           id="minimumInvestment"
@@ -131,77 +132,67 @@ const Step4: React.FC = () => {
             },
           })}
           placeholder="Enter minimum investment"
-          className="rounded-none text-white"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg"
         />
         {errors.minimumInvestment && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.minimumInvestment.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-5">
-        <div>
-          <Label
-            htmlFor="investmentSchemeAppendixFile"
-            className="text-right text-white"
-          >
-            Scheme Appendix
-          </Label>
-          <FileInput
-            file={investmentSchemeAppendixFile}
-            id="investmentSchemeAppendixFile"
-            setFile={file =>
-              setValue('investmentSchemeAppendixFile', file, {
-                shouldValidate: true,
-              })
-            }
-            accept=".pdf"
-            maxSize={50 * 1024 * 1024} // 50MB
-          />
-          {errors.investmentSchemeAppendixFile && (
-            <p className="text-red-400 text-sm">
-              {String(errors.investmentSchemeAppendixFile.message)}
-            </p>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="pitchDeck" className="text-right text-white">
-            Pitch Deck Image
-          </Label>
-          <FileInput
-            file={pitchDeck}
-            id="pitchDeck"
-            setFile={file =>
-              setValue('pitchDeck', file, { shouldValidate: true })
-            }
-            accept="image/*,.pdf"
-            maxSize={50 * 1024 * 1024} // 50MB
-          />
-          {errors.pitchDeck && (
-            <p className="text-red-400 text-sm">
-              {String(errors.pitchDeck.message)}
-            </p>
-          )}
-        </div>
-        <div>
-          <Label htmlFor="pitchVideo" className="text-right text-white">
-            Pitch Video
-          </Label>
-          <FileInput
-            file={pitchVideo}
-            id="pitchVideo"
-            setFile={file =>
-              setValue('pitchVideo', file, { shouldValidate: true })
-            }
-            accept="image/*,video/*,.pdf" // Allow images, videos, and PDFs
-            maxSize={100 * 1024 * 1024} // 100MB limit
-          />
-          {errors.pitchVideo && (
-            <p className="text-red-400 text-sm">
-              {String(errors.pitchVideo.message)}
-            </p>
-          )}
-        </div>
+
+      <div className="space-y-3">
+        <label htmlFor="pitchDeck" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+          Pitch Deck
+        </label>
+        <FileInput
+          file={pitchDeck}
+          id="pitchDeck"
+          setFile={file => setValue('pitchDeck', file, { shouldValidate: true })}
+          accept=".pdf,.ppt,.pptx"
+          maxSize={50 * 1024 * 1024} // 50MB
+        />
+        {errors.pitchDeck && (
+          <p className="text-red-600 text-sm">
+            {String(errors.pitchDeck.message)}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        <label htmlFor="pitchVideo" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+          Pitch Video
+        </label>
+        <FileInput
+          file={pitchVideo}
+          id="pitchVideo"
+          setFile={file => setValue('pitchVideo', file, { shouldValidate: true })}
+          accept="video/*"
+          maxSize={100 * 1024 * 1024} // 100MB
+        />
+        {errors.pitchVideo && (
+          <p className="text-red-600 text-sm">
+            {String(errors.pitchVideo.message)}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        <label htmlFor="investmentSchemeAppendixFile" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+          Investment Scheme Appendix File
+        </label>
+        <FileInput
+          file={investmentSchemeAppendixFile}
+          id="investmentSchemeAppendixFile"
+          setFile={file => setValue('investmentSchemeAppendixFile', file, { shouldValidate: true })}
+          accept=".pdf,.doc,.docx"
+          maxSize={50 * 1024 * 1024} // 50MB
+        />
+        {errors.investmentSchemeAppendixFile && (
+          <p className="text-red-600 text-sm">
+            {String(errors.investmentSchemeAppendixFile.message)}
+          </p>
+        )}
       </div>
     </div>
   );

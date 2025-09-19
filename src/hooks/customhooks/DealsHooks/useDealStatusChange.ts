@@ -2,11 +2,12 @@ import { changeDealStatus } from '@/axioscalls/apiServices';
 import { DealStatus } from '@/constants/dealsConstant';
 import { AppEnums } from '@/constants/enums';
 import { QueryEnums } from '@/queryEnums';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { useMutation, useQueryClient } from 'react-query';
 
 export const useDealStatusChange = () => {
   const queryClient = useQueryClient();
+  const notification = useNotification();
   const subadminDetailsRaw = sessionStorage.getItem(AppEnums.SUBADMIN_SESSION);
   const { subadmin_id } = subadminDetailsRaw
     ? JSON.parse(subadminDetailsRaw)
@@ -16,7 +17,7 @@ export const useDealStatusChange = () => {
       changeDealStatus(deal_id, status),
     {
       onSuccess: () => {
-        toast.success('Deal Status changed successfully');
+        notification.success('Status Updated', 'Deal status changed successfully');
         queryClient.invalidateQueries({
           queryKey: [QueryEnums.Deals, subadmin_id],
         });
@@ -25,7 +26,7 @@ export const useDealStatusChange = () => {
         });
       },
       onError: (error: Error) => {
-        toast.error(`Failed to Change status: ${error.message}`);
+        notification.error('Status Change Failed', `Failed to change status: ${error.message}`);
       },
     }
   );

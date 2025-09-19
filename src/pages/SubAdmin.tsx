@@ -7,17 +7,17 @@ function SubAdmin() {
     <Dialog>
       <header className="flex justify-between items-center">
         <div>
-          <h2 className="text-4xl">Admin</h2>
+          <h2 className="fundos-dashboard-title text-gray-900">Admin</h2>
         </div>
         <DialogTrigger asChild>
-          <button className="bg-white text-black px-4 py-2 rounded-none cursor-pointer">
-            Add a sub admin
+          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors cursor-pointer">
+            Add Sub Admin
           </button>
         </DialogTrigger>
       </header>
       <div className="mb-8">
-        <small className="text-gray-500">
-          Track how your managers are performing
+        <small className="fundos-dashboard-subtitle">
+          Track how your managers are performing and manage your portfolio
         </small>
       </div>
       <SubAdminTable />

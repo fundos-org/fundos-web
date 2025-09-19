@@ -26,7 +26,8 @@ import { Input } from '@/components/ui/input';
 import ChartControls from './ChartControls';
 import { exportToCSV, exportToExcel, exportToPDF, formatChartDataForExport } from '@/utils/exportUtils';
 import { analyticsApi, AllTransactionsParams } from '@/axioscalls/analyticsApi';
-import toast from 'react-hot-toast';
+import { useNotification } from './NotificationProvider';
+import { formatEnumToText } from '@/lib/formatUtils';
 
 interface AllTransactionItem {
   payment_status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'ON_HOLD';
@@ -42,10 +43,10 @@ interface AllTransactionItem {
 }
 
 const statusColors = {
-  COMPLETED: 'text-green-400',
-  PENDING: 'text-yellow-400',
-  FAILED: 'text-red-400',
-  'ON_HOLD': 'text-orange-400',
+  COMPLETED: 'text-green-600',
+  PENDING: 'text-yellow-600',
+  FAILED: 'text-red-600',
+  'ON_HOLD': 'text-orange-600',
 };
 
 export default function AllTransactionsTable() {
@@ -60,6 +61,8 @@ export default function AllTransactionsTable() {
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
   const [perPage] = useState(10);
   const [remindingItems, setRemindingItems] = useState<Set<string>>(new Set());
+  
+  const notification = useNotification();
 
   // Fetch data from API
   const fetchAllTransactions = async () => {
@@ -84,7 +87,7 @@ export default function AllTransactionsTable() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch all transactions data';
       setError(errorMessage);
-      toast.error(`Error loading transactions: ${errorMessage}`);
+      notification.error('Error Loading Data', `Error loading transactions: ${errorMessage}`);
       setData([]);
     } finally {
       setLoading(false);
@@ -118,10 +121,10 @@ export default function AllTransactionsTable() {
         )
       );
       
-      toast.success('Reminder sent successfully!');
+      notification.success('Reminder Sent', 'Reminder sent successfully!');
     } catch (error) {
       console.error('Failed to send reminder:', error);
-      toast.error('Failed to send reminder. Please try again.');
+      notification.error('Reminder Failed', 'Failed to send reminder. Please try again.');
     } finally {
       setRemindingItems(prev => {
         const newSet = new Set(prev);
@@ -171,9 +174,9 @@ export default function AllTransactionsTable() {
   // Loading state
   if (loading && data.length === 0) {
     return (
-      <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="all-transactions-table">
+      <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="all-transactions-table">
         <CardContent className="flex items-center justify-center h-[400px]">
-          <div className="text-gray-400">Loading all transactions data...</div>
+          <div className="text-gray-600">Loading all transactions data...</div>
         </CardContent>
       </Card>
     );
@@ -182,13 +185,13 @@ export default function AllTransactionsTable() {
   // Error state
   if (error && data.length === 0) {
     return (
-      <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="all-transactions-table">
+      <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="all-transactions-table">
         <CardContent className="flex items-center justify-center h-[400px]">
           <div className="text-center">
-            <div className="text-red-400 mb-2">Error loading data</div>
+            <div className="text-red-600 mb-2">Error loading data</div>
             <button 
               onClick={fetchAllTransactions}
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="text-blue-600 hover:text-blue-800 underline"
             >
               Try again
             </button>
@@ -199,12 +202,12 @@ export default function AllTransactionsTable() {
   }
 
   return (
-    <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="all-transactions-table">
-      <CardHeader>
+    <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="all-transactions-table">
+      <CardHeader className="border-b border-gray-200 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl text-gray-400">ALL TRANSACTIONS</CardTitle>
-            <CardDescription className="text-gray-500">
+            <CardTitle className="text-xl font-semibold text-gray-900">All Transactions</CardTitle>
+            <CardDescription className="text-gray-600">
               Comprehensive transaction data for all users ({totalCount} total)
             </CardDescription>
           </div>
@@ -214,20 +217,20 @@ export default function AllTransactionsTable() {
               placeholder="Search by phone, email, or deal..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-64 bg-[#2A2A2B] border-gray-600 text-white rounded-none"
+              className="w-64 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             
             {/* Status Filter */}
             <Select value={statusFilter} onValueChange={handleStatusFilter}>
-              <SelectTrigger className="w-40 bg-[#2A2A2B] border-gray-600 text-white rounded-none">
+              <SelectTrigger className="w-40 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1f1f1f] border-gray-600 rounded-none">
-                <SelectItem value="all" className="text-white hover:bg-[#2A2A2B]">All Status</SelectItem>
-                <SelectItem value="COMPLETED" className="text-white hover:bg-[#2A2A2B]">Completed</SelectItem>
-                <SelectItem value="PENDING" className="text-white hover:bg-[#2A2A2B]">Pending</SelectItem>
-                <SelectItem value="FAILED" className="text-white hover:bg-[#2A2A2B]">Failed</SelectItem>
-                <SelectItem value="ON_HOLD" className="text-white hover:bg-[#2A2A2B]">On Hold</SelectItem>
+              <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
+                <SelectItem value="all" className="text-gray-900 hover:bg-gray-50 cursor-pointer">All Status</SelectItem>
+                <SelectItem value="COMPLETED" className="text-gray-900 hover:bg-gray-50 cursor-pointer">Completed</SelectItem>
+                <SelectItem value="PENDING" className="text-gray-900 hover:bg-gray-50 cursor-pointer">Pending</SelectItem>
+                <SelectItem value="FAILED" className="text-gray-900 hover:bg-gray-50 cursor-pointer">Failed</SelectItem>
+                <SelectItem value="ON_HOLD" className="text-gray-900 hover:bg-gray-50 cursor-pointer">On Hold</SelectItem>
               </SelectContent>
             </Select>
 
@@ -243,23 +246,23 @@ export default function AllTransactionsTable() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto custom-scrollbar-table">
           <Table>
             <TableHeader>
-              <TableRow className="border-gray-600 hover:bg-[#2A2A2B]">
-                <TableHead className="text-gray-400">Investor Name</TableHead>
-                <TableHead className="text-gray-400">Deal Name</TableHead>
-                <TableHead className="text-gray-400">Phone Number</TableHead>
-                <TableHead className="text-gray-400">Email</TableHead>
-                <TableHead className="text-gray-400">Amount</TableHead>
-                <TableHead className="text-gray-400">Payment Status</TableHead>
-                <TableHead className="text-gray-400">Remind</TableHead>
+              <TableRow className="border-b border-gray-200 hover:bg-gray-50">
+                <TableHead className="text-gray-900 font-semibold">Investor Name</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Deal Name</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Phone Number</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Email</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Amount</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Payment Status</TableHead>
+                <TableHead className="text-gray-900 font-semibold">Remind</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-gray-400 py-8">
+                  <TableCell colSpan={7} className="text-center text-gray-600 py-8">
                     No transactions found for the selected criteria
                   </TableCell>
                 </TableRow>
@@ -270,28 +273,28 @@ export default function AllTransactionsTable() {
                   const canRemind = transaction.remind_status === 'REMIND';
                   
                   return (
-                    <TableRow key={transaction.transaction_id} className="border-gray-600 hover:bg-[#2A2A2B]">
-                      <TableCell className="text-white font-medium">{transaction.investor_name}</TableCell>
-                      <TableCell className="text-white">{transaction.deal_name}</TableCell>
-                      <TableCell className="text-white">{transaction.phone_number}</TableCell>
-                      <TableCell className="text-white">{transaction.email}</TableCell>
-                      <TableCell className="text-white">
-                        {transaction.amount.toLocaleString('en-IN')} {transaction.currency}
+                    <TableRow key={transaction.transaction_id} className="border-b border-gray-200 hover:bg-gray-50">
+                      <TableCell className="text-gray-900 font-medium">{transaction.investor_name}</TableCell>
+                      <TableCell className="text-gray-900">{transaction.deal_name}</TableCell>
+                      <TableCell className="text-gray-900">{transaction.phone_number}</TableCell>
+                      <TableCell className="text-gray-900">{transaction.email}</TableCell>
+                      <TableCell className="text-gray-900">
+                        ₹{transaction.amount.toLocaleString('en-IN')}
                       </TableCell>
                       <TableCell className={`font-medium ${statusColors[transaction.payment_status]}`}>
-                        {transaction.payment_status}
+                        {formatEnumToText(transaction.payment_status)}
                       </TableCell>
                       <TableCell>
                         {transaction.remind_status !== null ? (
                           <button
                             onClick={() => handleRemind(transaction.transaction_id)}
                             disabled={!canRemind || isReminding}
-                            className={`px-3 py-1 text-xs font-medium rounded-none border transition-colors ${
+                            className={`px-3 py-1 text-xs font-medium rounded-lg border transition-colors ${
                               isReminded 
-                                ? 'bg-[#1f1f1f] border-green-600 text-green-400 cursor-default' 
+                                ? 'bg-green-50 border-green-200 text-green-700 cursor-default' 
                                 : canRemind 
-                                  ? 'bg-[#1f1f1f] border-yellow-600 text-yellow-400 hover:bg-[#2A2A2B] hover:border-yellow-500 cursor-pointer' 
-                                  : 'bg-[#1f1f1f] border-gray-600 text-gray-500 cursor-not-allowed'
+                                  ? 'bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100 hover:border-yellow-300 cursor-pointer' 
+                                  : 'bg-gray-50 border-gray-200 text-gray-500 cursor-not-allowed'
                             }`}
                           >
                             {isReminding ? 'Sending...' : isReminded ? 'Reminded' : 'Remind'}
@@ -310,8 +313,8 @@ export default function AllTransactionsTable() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-gray-400 text-sm">
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+            <div className="text-gray-600 text-sm">
               Showing {((currentPage - 1) * perPage) + 1} to {Math.min(currentPage * perPage, totalCount)} of {totalCount} entries
             </div>
             <div className="flex items-center space-x-2">
@@ -320,11 +323,11 @@ export default function AllTransactionsTable() {
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1 || loading}
-                className="bg-[#2A2A2B] border-gray-600 text-white hover:bg-[#3A3A3B] rounded-none"
+                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg"
               >
                 Previous
               </Button>
-              <div className="text-white text-sm">
+              <div className="text-gray-900 text-sm">
                 Page {currentPage} of {totalPages}
               </div>
               <Button
@@ -332,7 +335,7 @@ export default function AllTransactionsTable() {
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages || loading}
-                className="bg-[#2A2A2B] border-gray-600 text-white hover:bg-[#3A3A3B] rounded-none"
+                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg"
               >
                 Next
               </Button>

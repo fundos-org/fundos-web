@@ -6,20 +6,16 @@ import TransactionSummaryTable from '@/components/custom/TransactionSummaryTable
 export default function Insights() {
   return (
     <>
-      <header className="flex justify-between items-center">
+      <header className="flex justify-between items-center mb-2">
         <div>
-          <h2 className="text-4xl">Insights</h2>
+          <h1 className="fundos-dashboard-title">Insights</h1>
+          <p className="fundos-dashboard-subtitle">Comprehensive analytics and insights dashboard</p>
         </div>
       </header>
-      <div className="mb-8">
-        <small className="text-gray-500">
-          Comprehensive analytics and insights dashboard
-        </small>
-      </div>
 
       {/* Analytics Section - Full Width Vertical */}
       <div className="mb-10">
-        <h3 className="text-2xl text-white mb-6">Analytics</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">Analytics</h3>
         <div className="w-full space-y-8">
           <div className="w-full">
             <SubadminTimeAnalyticsChart />
@@ -32,7 +28,7 @@ export default function Insights() {
 
       {/* Transaction Tables Section */}
       <div className="mb-10">
-        <h3 className="text-2xl text-white mb-6">Transaction Details</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">Transaction Details</h3>
         <div className="w-full space-y-8">
           <div className="w-full">
             <AllTransactionsTable />
