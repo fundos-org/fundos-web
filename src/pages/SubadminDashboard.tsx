@@ -1,10 +1,12 @@
 import StatisticCardList from '@/components/custom/StatisticCardList';
 import TransactionTable from '@/components/custom/tables/TransactionDetailsTable';
 import { useSubadminDashboardMetadata } from '@/hooks/customhooks/SubAdminsHooks/useSubadminDashboardMetadata';
+import { useSubadminTransactions } from '@/hooks/customhooks/SubAdminsHooks/useSubadminTransactions';
 import { useState } from 'react';
 
 const SubadminDashboard = () => {
   const { data: stats } = useSubadminDashboardMetadata();
+  const { data: transactionsData } = useSubadminTransactions(1, 10);
   const [name] = useState(
     JSON.parse(sessionStorage.getItem('subadmindetails') || '{}').name || ''
   );
@@ -14,11 +16,20 @@ const SubadminDashboard = () => {
   void success;
   void subadmin_name;
 
+  // Transform API data to match the transaction table interface
+  const transactions = transactionsData?.data?.map(transaction => ({
+    transaction_id: transaction.transaction_id,
+    investor: transaction.investor_name,
+    invested_in: transaction.deal_name,
+    amount: transaction.amount,
+    transaction_date: transaction.transaction_date,
+  })) || [];
+
   return (
     <>
-      <h2 className="text-4xl">Welcome Back, {name}</h2>
+      <h2 className="fundos-dashboard-title text-gray-900">Welcome Back, {name}</h2>
       <div className="mb-8">
-        <small className="text-gray-500">
+        <small className="fundos-dashboard-subtitle">
           Measure your advertising ROI and report website traffic
         </small>
       </div>
@@ -29,7 +40,7 @@ const SubadminDashboard = () => {
         {/* <OverViewChart /> */}
         {/* <ActivitesList /> */}
       </div>
-      <TransactionTable header="Recent" transactions={[]} />
+      <TransactionTable header="Recent" transactions={transactions} />
     </>
   );
 };

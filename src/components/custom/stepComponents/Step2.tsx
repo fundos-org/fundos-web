@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
@@ -23,21 +22,21 @@ const Step2: React.FC = () => {
   const industry = watch('industry');
 
   return (
-    <div className="h-[50vh] overflow-auto grid gap-4">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="industry" className="text-right text-white">
+    <div className="space-y-6 w-full">
+      <div className="space-y-3">
+        <label htmlFor="industry" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Industry
-        </Label>
+        </label>
         <Select
           onValueChange={value =>
             setValue('industry', value, { shouldValidate: true })
           }
           defaultValue={industry}
         >
-          <SelectTrigger className="w-full rounded-none text-white">
+          <SelectTrigger className="w-full bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg">
             <SelectValue placeholder="Select Industry" />
           </SelectTrigger>
-          <SelectContent className="rounded-none text-white bg-[#1a1a1a]">
+          <SelectContent className="bg-white border border-gray-200 rounded-lg">
             <SelectGroup>
               {industryType.map(({ name, value }) => (
                 <SelectItem key={name} value={value} className="rounded-none">
@@ -48,33 +47,33 @@ const Step2: React.FC = () => {
           </SelectContent>
         </Select>
         {errors.industry && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.industry.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="problemStatement" className="text-right text-white">
+      <div className="space-y-3">
+        <label htmlFor="problemStatement" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Problem Statement
-        </Label>
+        </label>
         <Textarea
           id="problemStatement"
           {...register('problemStatement', {
             required: 'Problem statement is required',
           })}
           placeholder="Describe problem statement"
-          className="rounded-none text-white"
+          className="bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg min-h-[80px]"
         />
         {errors.problemStatement && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.problemStatement.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2 mb-10">
-        <Label htmlFor="businessModel" className="text-right text-white">
+      <div className="space-y-3">
+        <label htmlFor="businessModel" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Business Model
-        </Label>
+        </label>
         <CustomToggleGroup
           array={businessModels}
           value={watch('businessModel')}
@@ -83,7 +82,7 @@ const Step2: React.FC = () => {
           }
         />
         {errors.businessModel && (
-          <p className="text-red-500 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.businessModel.message)}
           </p>
         )}

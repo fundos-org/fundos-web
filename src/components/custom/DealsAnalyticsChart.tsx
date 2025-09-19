@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import {
   Card,
   CardContent,
@@ -21,7 +21,7 @@ import { exportToCSV, exportToExcel, exportToPDF, formatChartDataForExport } fro
 import { analyticsApi, DealsAnalyticsParams } from '@/axioscalls/analyticsApi';
 import { useState, useMemo, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useNotification } from './NotificationProvider';
 
 interface ChartDataItem {
   deal: string;
@@ -46,6 +46,8 @@ export default function DealsAnalyticsChart() {
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const notification = useNotification();
 
   // Fetch data from API
   const fetchDealsAnalyticsData = async () => {
@@ -72,7 +74,7 @@ export default function DealsAnalyticsChart() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch deals analytics data';
       setError(errorMessage);
-      toast.error(`Error loading ${metricLabels[selectedMetric]}: ${errorMessage}`);
+      notification.error('Error Loading Data', `Error loading ${metricLabels[selectedMetric]}: ${errorMessage}`);
       setChartData([]);
     } finally {
       setLoading(false);
@@ -137,23 +139,23 @@ export default function DealsAnalyticsChart() {
 
 
   return (
-    <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="deals-analytics-chart">
-      <CardHeader>
+    <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="deals-analytics-chart">
+      <CardHeader className="border-b border-gray-200 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl text-gray-400">DEALS ANALYTICS</CardTitle>
-            <CardDescription className="text-gray-500">
+            <CardTitle className="text-xl font-semibold text-gray-900">Deals Analytics</CardTitle>
+            <CardDescription className="text-gray-600">
               {metricLabels[selectedMetric]} analysis across deals
             </CardDescription>
           </div>
           <div className="flex items-center gap-4">
             <Select value={selectedMetric} onValueChange={(value: MetricType) => setSelectedMetric(value)}>
-              <SelectTrigger className="w-40 bg-[#2A2A2B] border-gray-600 text-white rounded-none">
+              <SelectTrigger className="w-48 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1f1f1f] border-gray-600 rounded-none">
+              <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
                 {Object.entries(metricLabels).map(([key, label]) => (
-                  <SelectItem key={key} value={key} className="text-white hover:bg-[#2A2A2B]">
+                  <SelectItem key={key} value={key} className="text-gray-900 hover:bg-gray-50 cursor-pointer">
                     {label}
                   </SelectItem>
                 ))}
@@ -173,8 +175,8 @@ export default function DealsAnalyticsChart() {
         <div className="relative">
           {/* Loading Overlay */}
           {loading && (
-            <div className="absolute inset-0 bg-[#1f1f1f] bg-opacity-80 flex items-center justify-center z-10 rounded-md">
-              <div className="flex items-center gap-3 text-gray-300">
+            <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10 rounded-md">
+              <div className="flex items-center gap-3 text-gray-600">
                 <RefreshCw className="h-5 w-5 animate-spin" />
                 <span className="text-sm font-medium">Loading deals analytics data...</span>
               </div>
@@ -183,11 +185,11 @@ export default function DealsAnalyticsChart() {
 
           {/* Error State */}
           {error && !loading && (
-            <div className="flex items-center justify-center h-[280px] text-gray-400 flex-col gap-2">
-              <p className="text-red-400 mb-2">Error loading data: {error}</p>
+            <div className="flex items-center justify-center h-[280px] text-gray-600 flex-col gap-2">
+              <p className="text-red-600 mb-2">Error loading data: {error}</p>
               <button 
                 onClick={fetchDealsAnalyticsData}
-                className="text-blue-400 hover:text-blue-300 underline text-sm"
+                className="text-blue-600 hover:text-blue-800 underline text-sm"
               >
                 Try again
               </button>
@@ -198,7 +200,7 @@ export default function DealsAnalyticsChart() {
           {!error && (
             <>
               {processedData.length === 0 && !loading ? (
-                <div className="flex items-center justify-center h-[280px] text-gray-400">
+                <div className="flex items-center justify-center h-[280px] text-gray-600">
                   No data available for the selected period
                 </div>
               ) : (
@@ -215,17 +217,12 @@ export default function DealsAnalyticsChart() {
                       barCategoryGap={5}
                       maxBarSize={80}
                     >
-                    <CartesianGrid 
-                      vertical={false} 
-                      stroke="hsl(var(--border))" 
-                      opacity={0.3}
-                    />
                     <XAxis
                       dataKey="deal"
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
-                      className="text-gray-400"
+                      className="text-gray-600"
                       angle={-45}
                       textAnchor="end"
                       height={40}
@@ -236,7 +233,7 @@ export default function DealsAnalyticsChart() {
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
-                      className="text-gray-400"
+                      className="text-gray-600"
                       tickFormatter={(value) => 
                         selectedMetric === 'CURRENT_VALUATION' ? `₹${value}M` : value.toString()
                       }
@@ -252,10 +249,10 @@ export default function DealsAnalyticsChart() {
                           const label = selectedMetric === 'CURRENT_VALUATION' ? 'Valuation' : 'Count';
                           
                           return (
-                            <div className="bg-[#2A2A2B] border border-gray-600 rounded-md p-3 shadow-lg">
-                              <p className="text-gray-300 text-sm font-medium">Deal: {data.deal}</p>
-                              <p className="text-white text-sm">
-                                <span className="text-gray-400">{label}: </span>
+                            <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+                              <p className="text-gray-600 text-sm font-medium">Deal: {data.deal}</p>
+                              <p className="text-gray-900 text-sm">
+                                <span className="text-gray-600">{label}: </span>
                                 <span className="font-semibold">{displayValue}</span>
                               </p>
                             </div>
@@ -266,7 +263,7 @@ export default function DealsAnalyticsChart() {
                     />
                     <Bar
                       dataKey="value"
-                      fill="hsl(var(--chart-3))"
+                      fill="#3b82f6"
                       radius={[4, 4, 0, 0]}
                       fillOpacity={0.8}
                       minPointSize={2}

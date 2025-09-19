@@ -1,4 +1,4 @@
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import {
   Card,
   CardContent,
@@ -21,7 +21,7 @@ import { exportToCSV, exportToExcel, exportToPDF, formatChartDataForExport } fro
 import { analyticsApi, SubadminMetricsParams } from '@/axioscalls/analyticsApi';
 import { useState, useMemo, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useNotification } from './NotificationProvider';
 
 interface ChartDataItem {
   subadmin: string;
@@ -47,6 +47,7 @@ export default function SubadminMetricsChart() {
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const notification = useNotification();
 
   // Fetch data from API
   const fetchMetricsData = async () => {
@@ -73,7 +74,7 @@ export default function SubadminMetricsChart() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch subadmin metrics data';
       setError(errorMessage);
-      toast.error(`Error loading ${metricLabels[selectedMetric]}: ${errorMessage}`);
+      notification.error('Error Loading Data', `Error loading ${metricLabels[selectedMetric]}: ${errorMessage}`);
       setChartData([]);
     } finally {
       setLoading(false);
@@ -121,23 +122,23 @@ export default function SubadminMetricsChart() {
 
 
   return (
-    <Card className="w-full border-0 rounded-none bg-[#1f1f1f] text-white" id="subadmin-metrics-chart">
-      <CardHeader>
+    <Card className="w-full bg-white border border-gray-200 rounded-lg shadow-sm" id="subadmin-metrics-chart">
+      <CardHeader className="border-b border-gray-200 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl text-gray-400">SUBADMIN METRICS</CardTitle>
-            <CardDescription className="text-gray-500">
-              {metricLabels[selectedMetric]} analysis by subadmin
+            <CardTitle className="text-xl font-semibold text-gray-900">Sub Admin Metrics</CardTitle>
+            <CardDescription className="text-gray-600">
+              {metricLabels[selectedMetric]} analysis by sub admin
             </CardDescription>
           </div>
           <div className="flex items-center gap-4">
             <Select value={selectedMetric} onValueChange={(value: MetricType) => setSelectedMetric(value)}>
-              <SelectTrigger className="w-40 bg-[#2A2A2B] border-gray-600 text-white rounded-none">
+              <SelectTrigger className="w-48 bg-gray-50 border border-gray-200 text-gray-900 rounded-lg">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#1f1f1f] border-gray-600 rounded-none">
+              <SelectContent className="bg-white border border-gray-200 rounded-lg shadow-lg">
                 {Object.entries(metricLabels).map(([key, label]) => (
-                  <SelectItem key={key} value={key} className="text-white hover:bg-[#2A2A2B]">
+                  <SelectItem key={key} value={key} className="text-gray-900 hover:bg-gray-50 cursor-pointer">
                     {label}
                   </SelectItem>
                 ))}
@@ -157,21 +158,21 @@ export default function SubadminMetricsChart() {
         <div className="relative">
           {/* Loading Overlay */}
           {loading && (
-            <div className="absolute inset-0 bg-[#1f1f1f] bg-opacity-80 flex items-center justify-center z-10 rounded-md">
-              <div className="flex items-center gap-3 text-gray-300">
+            <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10 rounded-md">
+              <div className="flex items-center gap-3 text-gray-600">
                 <RefreshCw className="h-5 w-5 animate-spin" />
-                <span className="text-sm font-medium">Loading subadmin metrics data...</span>
+                <span className="text-sm font-medium">Loading metrics data...</span>
               </div>
             </div>
           )}
 
           {/* Error State */}
           {error && !loading && (
-            <div className="flex items-center justify-center h-[250px] text-gray-400 flex-col gap-2">
-              <p className="text-red-400 mb-2">Error loading data: {error}</p>
+            <div className="flex items-center justify-center h-[250px] text-gray-600 flex-col gap-2">
+              <p>Error loading data: {error}</p>
               <button 
                 onClick={fetchMetricsData}
-                className="text-blue-400 hover:text-blue-300 underline text-sm"
+                className="text-blue-600 hover:text-blue-800 underline text-sm"
               >
                 Try again
               </button>
@@ -182,7 +183,7 @@ export default function SubadminMetricsChart() {
           {!error && (
             <>
               {filteredData.length === 0 && !loading ? (
-                <div className="flex items-center justify-center h-[250px] text-gray-400">
+                <div className="flex items-center justify-center h-[250px] text-gray-600">
                   No data available for the selected period
                 </div>
               ) : (
@@ -199,17 +200,12 @@ export default function SubadminMetricsChart() {
                       barCategoryGap={5}
                       maxBarSize={80}
                     >
-                    <CartesianGrid 
-                      vertical={false} 
-                      stroke="hsl(var(--border))" 
-                      opacity={0.3}
-                    />
                     <XAxis
                       dataKey="subadmin"
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
-                      className="text-gray-400"
+                      className="text-gray-600"
                       angle={-45}
                       textAnchor="end"
                       height={40}
@@ -219,7 +215,7 @@ export default function SubadminMetricsChart() {
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
-                      className="text-gray-400"
+                      className="text-gray-600"
                     />
                     <ChartTooltip
                       cursor={false}
@@ -227,10 +223,10 @@ export default function SubadminMetricsChart() {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div className="bg-[#2A2A2B] border border-gray-600 rounded-md p-3 shadow-lg">
-                              <p className="text-gray-300 text-sm font-medium">Subadmin: {data.subadmin}</p>
-                              <p className="text-white text-sm">
-                                <span className="text-gray-400">{metricLabels[selectedMetric]}: </span>
+                            <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+                              <p className="text-gray-600 text-sm font-medium">Sub Admin: {data.subadmin}</p>
+                              <p className="text-gray-900 text-sm">
+                                <span className="text-gray-600">{metricLabels[selectedMetric]}: </span>
                                 <span className="font-semibold">{Math.round(Number(data.value))}</span>
                               </p>
                             </div>
@@ -241,7 +237,7 @@ export default function SubadminMetricsChart() {
                     />
                     <Bar
                       dataKey="value"
-                      fill="hsl(var(--chart-2))"
+                      fill="#3b82f6"
                       radius={[4, 4, 0, 0]}
                       fillOpacity={0.8}
                       minPointSize={2}

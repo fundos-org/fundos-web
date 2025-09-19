@@ -55,28 +55,36 @@ const DealsTable: FC<{
     setPageNumber(1);
   };
   return (
-    <>
-      {deals?.map((deal: DC) => <Dealcard deal={deal} key={deal.deal_id} />)}
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        {deals?.map((deal: DC) => <Dealcard deal={deal} key={deal.deal_id} />)}
+      </div>
       {deals.length > 0 && (
-        <Pagination className="bg-[#2A2A2B] p-2 flex justify-between items-center">
-          <span>Total records: {pagination.total_records}</span>
-          <PaginationContent className="gap-10">
+        <Pagination className="bg-white border border-gray-200 rounded-lg p-4 flex justify-between items-center mt-6">
+          <span className="text-sm font-medium text-gray-700">
+            Total records: <span className="font-semibold text-gray-900">{pagination.total_records}</span>
+          </span>
+          <PaginationContent className="gap-2">
             <PaginationItem
-              className={`${!pagination?.has_prev ? 'hidden' : null} cursor-pointer`}
+              className={`${!pagination?.has_prev ? 'opacity-50' : 'cursor-pointer'}`}
             >
               <PaginationPrevious
-                className="rounded-none"
+                className="rounded-lg hover:bg-gray-50"
                 onClick={handlePrev}
                 aria-disabled={!pagination?.has_prev}
               />
             </PaginationItem>
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               {Array.from(
                 { length: pagination?.total_pages || 1 },
                 (_, idx) => (
                   <PaginationItem key={idx + 1} className="cursor-pointer">
                     <PaginationLink
-                      className={`${pageNumber === idx + 1 ? 'text-black' : 'text-white'} rounded-none`}
+                      className={`rounded-lg hover:bg-gray-50 ${
+                        pageNumber === idx + 1 
+                          ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                          : 'text-gray-700 hover:text-gray-900'
+                      }`}
                       isActive={pageNumber === idx + 1}
                       onClick={e => {
                         e.preventDefault();
@@ -90,23 +98,23 @@ const DealsTable: FC<{
               )}
             </div>
             <PaginationItem
-              className={`${!pagination?.has_next ? 'hidden' : null} cursor-pointer`}
+              className={`${!pagination?.has_next ? 'opacity-50' : 'cursor-pointer'}`}
             >
-              <PaginationNext className="rounded-none" onClick={handleNext} />
+              <PaginationNext className="rounded-lg hover:bg-gray-50" onClick={handleNext} />
             </PaginationItem>
           </PaginationContent>
-          <div className="flex items-center">
-            <label htmlFor="pageSizeSelect" className="text-sm font-medium">
-              Records per page:&nbsp;
+          <div className="flex items-center gap-2">
+            <label htmlFor="pageSizeSelect" className="text-sm font-medium text-gray-700">
+              Show:
             </label>
             <Select
               onValueChange={handlePageSizeChange}
               defaultValue={String(pageSize)}
             >
-              <SelectTrigger className="rounded-none w-[100px]">
-                <SelectValue placeholder="Select Page Size" />
+              <SelectTrigger className="w-20 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg">
+                <SelectValue />
               </SelectTrigger>
-              <SelectContent className="rounded-none">
+              <SelectContent className="bg-white border-gray-200 rounded-lg">
                 {pageSizesList.map(ps => (
                   <SelectItem key={ps} value={String(ps)}>
                     {ps}
@@ -117,7 +125,7 @@ const DealsTable: FC<{
           </div>
         </Pagination>
       )}
-    </>
+    </div>
   );
 };
 

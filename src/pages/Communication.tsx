@@ -4,9 +4,18 @@ import { FC } from 'react';
 const Communication: FC = () => {
   return (
     <>
-      <h2 className="text-4xl">Communication</h2>
-      <div className="mb-8"></div>
-      <CommunicationEmails />
+      <header className="flex justify-between items-center mb-2">
+        <div>
+          <h1 className="fundos-dashboard-title text-gray-900">Communications</h1>
+          <p className="fundos-dashboard-subtitle">
+            Manage email templates and communication settings
+          </p>
+        </div>
+      </header>
+
+      <div className="mb-8">
+        <CommunicationEmails />
+      </div>
     </>
   );
 };

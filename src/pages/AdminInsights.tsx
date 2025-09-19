@@ -4,20 +4,18 @@ import SubadminMetricsChart from '@/components/custom/SubadminMetricsChart';
 export default function AdminInsights() {
   return (
     <>
-      <header className="flex justify-between items-center">
+      <header className="flex justify-between items-center mb-2">
         <div>
-          <h2 className="text-4xl">Admin Insights</h2>
+          <h1 className="fundos-dashboard-title text-gray-900">Admin Insights</h1>
+          <p className="fundos-dashboard-subtitle">
+            Comprehensive analytics and insights for administrative oversight
+          </p>
         </div>
       </header>
-      <div className="mb-8">
-        <small className="text-gray-500">
-          Comprehensive analytics and insights for administrative oversight
-        </small>
-      </div>
 
-      {/* Metrics Analytics Section - Full Width Vertical */}
+      {/* Analytics Section - Full Width Vertical */}
       <div className="mb-10">
-        <h3 className="text-2xl text-white mb-6">Metrics Analytics</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">Analytics</h3>
         <div className="w-full space-y-8">
           <div className="w-full">
             <TimeMetricsChart />

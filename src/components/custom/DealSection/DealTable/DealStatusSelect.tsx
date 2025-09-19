@@ -17,32 +17,32 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { DealStatus } from '@/constants/dealsConstant';
-import toast from 'react-hot-toast';
 import { useDealStatusChange } from '@/hooks/customhooks/DealsHooks/useDealStatusChange';
+import { useNotification } from '@/components/custom/NotificationProvider';
 
 function getStatusColor(status: DealStatus): string {
   switch (status) {
     case 'OPEN':
-      return 'bg-green-400';
+      return 'bg-green-600';
     case 'CLOSED':
-      return 'bg-red-400';
+      return 'bg-red-600';
     case 'ON_HOLD':
-      return 'bg-yellow-400';
+      return 'bg-yellow-600';
     default:
-      return 'bg-gray-400';
+      return 'bg-gray-600';
   }
 }
 
 function getStatusBgColor(status: DealStatus): string {
   switch (status) {
     case 'OPEN':
-      return 'bg-[#00fb5745]';
+      return 'bg-green-100 text-green-800 border-green-200';
     case 'CLOSED':
-      return 'bg-[#fd888845]';
+      return 'bg-red-100 text-red-800 border-red-200';
     case 'ON_HOLD':
-      return 'bg-[#fbbf2450]';
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200';
     default:
-      return 'bg-[#6b728045]';
+      return 'bg-gray-100 text-gray-800 border-gray-200';
   }
 }
 
@@ -58,16 +58,25 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
   const [status, setStatus] = useState<DealStatus>(initialStatus || 'open');
   const [open, setOpen] = useState(false);
   const { mutateAsync: changeDealStatus } = useDealStatusChange();
+  const notification = useNotification();
 
   const handleChangeStatus = async (status: DealStatus) => {
     if (status !== 'CLOSED' && !open) {
       const response = await changeDealStatus({ deal_id, status });
       if (!response) {
-        toast.error('Failed to change deal status');
+        notification.error(
+          'Failed to Update Status',
+          'Unable to change deal status. Please try again.',
+          { duration: 5000 }
+        );
         return;
       }
       if (response.message) {
-        toast.success(response.message);
+        notification.success(
+          'Status Updated',
+          response.message,
+          { duration: 3000 }
+        );
       }
       setStatus(status);
     } else if (status === 'CLOSED' && !open) {
@@ -75,11 +84,19 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
     } else if (status === 'CLOSED' && open) {
       const response = await changeDealStatus({ deal_id, status });
       if (!response) {
-        toast.error('Failed to change deal status');
+        notification.error(
+          'Failed to Close Deal',
+          'Unable to close the deal. Please try again.',
+          { duration: 5000 }
+        );
         return;
       }
       if (response.message) {
-        toast.success(response.message);
+        notification.success(
+          'Deal Closed',
+          response.message,
+          { duration: 3000 }
+        );
       }
       setStatus(status);
       setOpen(false);
@@ -99,7 +116,7 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
         onValueChange={handleChangeStatus}
       >
         <SelectTrigger
-          className={`rounded-none border-0 text-white ${getStatusBgColor(status)} cursor-pointer`}
+          className={`rounded-lg border ${getStatusBgColor(status)} cursor-pointer font-medium px-3 py-1`}
         >
           <SelectValue>
             <span
@@ -110,38 +127,47 @@ const DealStatusSelect: React.FC<DealStatusSelectProps> = ({
             {status === 'ON_HOLD' ? 'On Hold' : null}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="bg-[#1a1a1a] text-white border rounded-none">
-          <SelectItem className="rounded-none" value="OPEN">
-            Active
+        <SelectContent className="bg-white text-gray-900 border border-gray-200 rounded-lg shadow-lg">
+          <SelectItem className="rounded-md hover:bg-gray-50 cursor-pointer" value="OPEN">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-green-600"></span>
+              Active
+            </div>
           </SelectItem>
-          <SelectItem className="rounded-none" value="CLOSED">
-            Closed
+          <SelectItem className="rounded-md hover:bg-gray-50 cursor-pointer" value="CLOSED">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-red-600"></span>
+              Closed
+            </div>
           </SelectItem>
-          <SelectItem className="rounded-none" value="ON_HOLD">
-            On Hold
+          <SelectItem className="rounded-md hover:bg-gray-50 cursor-pointer" value="ON_HOLD">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-yellow-600"></span>
+              On Hold
+            </div>
           </SelectItem>
         </SelectContent>
       </Select>
       <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent className="bg-gray-900 text-white border-gray-700 rounded-none">
+        <AlertDialogContent className="bg-white text-gray-900 border-gray-200 rounded-lg shadow-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl">
+            <AlertDialogTitle className="text-2xl font-semibold text-gray-900">
               Are you closing this deal?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-500">
+            <AlertDialogDescription className="text-gray-600 mt-2">
               Closing the deal will mark it as closed and it cannot be
               reactivated.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="gap-3 mt-6">
             <AlertDialogCancel
               onClick={handleClose}
-              className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none"
+              className="bg-gray-100 px-6 text-gray-700 hover:bg-gray-200 border-gray-300 rounded-lg"
             >
-              Close
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              className="bg-red-600 text-white hover:bg-red-700 rounded-none"
+              className="bg-red-600 text-white hover:bg-red-700 rounded-lg px-6"
               onClick={() => handleChangeStatus('CLOSED' as DealStatus)}
             >
               Close Deal

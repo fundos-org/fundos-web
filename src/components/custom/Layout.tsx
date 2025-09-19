@@ -5,8 +5,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <SideBarNav />
-      <main className="p-10 w-full">
-        <SidebarTrigger className="md:hidden" />
+      <main className="fundos-dashboard-container w-full fundos-main-content-admin">
+        <SidebarTrigger className="md:hidden mb-4" />
         {children}
       </main>
     </SidebarProvider>

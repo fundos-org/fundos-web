@@ -18,8 +18,8 @@ import {
   useState,
 } from 'react';
 import { z } from 'zod';
-import { toast } from 'react-hot-toast';
 import { BulkOnboardingUserData } from '@/constants/dashboardConstant';
+import { useNotification } from '../NotificationProvider';
 import { useBulkOnboarding } from '@/hooks/customhooks/AdminHooks/useBulkOnboarding';
 import {
   Tooltip,
@@ -51,20 +51,22 @@ interface Props {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const fintechTable = 'min-w-full divide-y divide-[#232A36] text-sm';
+const fintechTable = 'min-w-full text-sm';
 const fintechTh =
-  'px-4 py-2 bg-[#232A36] text-left font-semibold text-[#B5B5B5]';
-const fintechTd = 'px-4 py-2 bg-[#181C23]';
+  'px-4 py-2 bg-gray-50 text-left font-semibold text-gray-900';
+const fintechTd = 'px-4 py-2 bg-white';
 
 const borderDanger =
-  'text-[#F87171] border border-red-500 focus-visible:ring-0 focus-visible:border-red-400';
+  'text-red-600 border border-red-500 focus-visible:ring-0 focus-visible:border-red-400';
 const borderNormal =
-  'text-white border-[#383739] focus-visible:ring-0 focus-visible:border-blue-400';
+  'text-gray-900 border-gray-200 focus-visible:ring-0 focus-visible:border-blue-400';
 
 const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
   const [rows, setRows] = useState<BulkOnboardingUserData[]>([]);
   const [selected, setSelected] = useState<boolean[]>([]);
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
+  
+  const notification = useNotification();
   const { mutateAsync } = useBulkOnboarding();
 
   useEffect(() => {
@@ -207,7 +209,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     });
 
     if (invalidRows.length > 0) {
-      toast.error('Please fix all invalid entries before confirming.');
+      notification.error('Invalid Entries', 'Please fix all invalid entries before confirming.');
       return;
     }
     const data = rows.map(({ remark, ...row }) => {
@@ -223,44 +225,47 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         hideCloseButton={true}
-        className="border border-[#393738] rounded-none bg-[#181C23] text-white sm:max-w-8xl"
+        className="bg-white border border-gray-200 rounded-lg shadow-xl sm:max-w-7xl max-h-[90vh] p-0 overflow-hidden"
         aria-describedby={undefined}
         onInteractOutside={e => e.preventDefault()}
       >
-        <DialogHeader>
-          <DialogTitle className="text-xl text-white flex items-center justify-between">
-            <div className="flex gap-4 items-baseline-last">
-              <div>Bulk Onboarding</div>
-              <div className="flex flex-wrap gap-4 items-center justify-start mt-2 border-l border-[#383739]">
-                <div className="flex items-center gap-2 px-4 py-1 text-gray-400 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" />
-                  Total entries:{' '}
-                  <span className="text-white">{summary.total}</span>
+        <DialogHeader className="border-b border-gray-200 p-6">
+          <DialogTitle className="text-2xl font-semibold text-gray-900 flex items-center justify-between">
+            <div className="flex flex-col gap-3">
+              <div>Bulk Onboarding Review</div>
+              <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
+                  <span className="w-3 h-3 rounded-full bg-gray-600 inline-block" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Total entries: <span className="font-bold text-gray-900">{summary.total}</span>
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-1 text-green-400 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
-                  Valid: <span className="text-white">{summary.ready}</span>
+                <div className="flex items-center gap-2 px-3 py-2 bg-green-100 rounded-lg">
+                  <span className="w-3 h-3 rounded-full bg-green-600 inline-block" />
+                  <span className="text-sm font-medium text-green-700">
+                    Valid: <span className="font-bold text-green-800">{summary.ready}</span>
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-1 text-red-400 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-red-400 inline-block" />
-                  Invalid entries:{' '}
-                  <span className="text-white">{summary.invalid}</span>
+                <div className="flex items-center gap-2 px-3 py-2 bg-red-100 rounded-lg">
+                  <span className="w-3 h-3 rounded-full bg-red-600 inline-block" />
+                  <span className="text-sm font-medium text-red-700">
+                    Invalid entries: <span className="font-bold text-red-800">{summary.invalid}</span>
+                  </span>
                 </div>
               </div>
             </div>
             <DialogClose
               asChild
-              className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+              className="border border-gray-300 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
             >
-              <span className="p-1">
-                <X />
+              <span className="p-2">
+                <X className="w-5 h-5 text-gray-600" />
               </span>
             </DialogClose>
           </DialogTitle>
-          <hr className="border-[#232A36] my-2" />
         </DialogHeader>
 
-        <div className="overflow-x-auto h-auto max-h-[50vh]">
+        <div className="flex-1 p-6 bg-white overflow-y-auto">
           {rows.length > 0 ? (
             <table className={fintechTable}>
               <thead className="sticky top-[-1px] z-10">
@@ -293,7 +298,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                   return (
                     <tr
                       key={idx}
-                      className="rounded-none shadow border border-[#232A36]"
+                      className="border-b border-gray-200 hover:bg-gray-50"
                     >
                       <td className={fintechTd + ' text-center'}>
                         <Checkbox
@@ -306,7 +311,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                           <div className="flex items-center gap-2">
                             <Input
                               autoFocus
-                              className={`rounded-none bg-[#232A36] ${
+                              className={`bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded-lg ${
                                 emailInvalid ? borderDanger : borderNormal
                               }`}
                               value={user.email ?? ''}
@@ -323,7 +328,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                           <div className="flex items-center gap-2">
                             <Input
                               autoFocus
-                              className={`rounded-none bg-[#232A36] ${
+                              className={`bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded-lg ${
                                 panInvalid ? borderDanger : borderNormal
                               }`}
                               value={user.pan_number ?? ''}
@@ -342,7 +347,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                               autoFocus
                               minLength={10}
                               maxLength={10}
-                              className={`rounded-none bg-[#232A36] ${
+                              className={`bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded-lg ${
                                 phoneInvalid ? borderDanger : borderNormal
                               }`}
                               data-idx={idx}
@@ -359,7 +364,7 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
                           <div className="flex items-center gap-2">
                             <Input
                               autoFocus
-                              className={`rounded-none bg-[#232A36] ${
+                              className={`bg-gray-50 border border-gray-200 text-gray-900 px-3 py-2 rounded-lg ${
                                 capitalInvalid ? borderDanger : borderNormal
                               }`}
                               data-idx={idx}
@@ -413,23 +418,22 @@ const BulkOnboardingDialog = memo(({ data, open, setOpen }: Props) => {
               </tbody>
             </table>
           ) : (
-            <p className="text-gray-400">No valid users to display.</p>
+            <p className="text-gray-500 text-center py-8">No valid users to display.</p>
           )}
-          <p className="text-gray-500 text-sm mt-2">
-            Showing {rows.length} users records
+          <p className="text-gray-600 text-sm mt-4">
+            Showing {rows.length} user records
           </p>
         </div>
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
           <Button
-            className="rounded-none text-black"
+            className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
             variant="outline"
             onClick={handleAddRow}
           >
             Add New Row
           </Button>
           <Button
-            className="rounded-none text-black"
-            variant="outline"
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-2.5 font-medium transition-colors"
             onClick={handleConfirm}
           >
             Confirm Onboarding

@@ -16,38 +16,37 @@ const SupportPopover = () => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <button
-          aria-label="Log out"
-          className="flex gap-3 hover:underline cursor-pointer"
+          aria-label="Support"
+          className="flex items-center gap-3 text-gray-600 hover:text-blue-600 cursor-pointer transition-colors"
         >
-          <HelpCircle className="text-gray-400 hover:text-white" />
+          <HelpCircle className="w-5 h-5" />
           Support
         </button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-gray-900 text-white border-gray-700 rounded-none">
+      <AlertDialogContent className="bg-white border border-gray-200 rounded-lg shadow-xl max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-2xl">
-            fundos.services.com
+          <AlertDialogTitle className="text-2xl font-semibold text-gray-900">
+            Need Help?
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-gray-500">
-            If you have any questions or concerns, please contact us via
-            Whatsapp.
+          <AlertDialogDescription className="text-gray-600">
+            If you have any questions or concerns, please contact us via WhatsApp. We're here to help!
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="bg-gray-800 px-10 text-white hover:bg-gray-700 border-gray-700 rounded-none">
+        <AlertDialogFooter className="gap-3">
+          <AlertDialogCancel className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className="text-white hover:bg-slate-600 border border-[#383739] rounded-none cursor-pointer"
+            className="bg-green-600 hover:bg-green-700 text-white rounded-lg px-6 py-2.5 font-medium transition-colors cursor-pointer"
             asChild
           >
-            {/* <a href="mailto:user.email.com">Send Email</a> */}
             <a
               href="https://wa.me/917406095777"
               target="_blank"
               rel="noopener noreferrer"
+              className="flex items-center gap-2"
             >
-              Whatsapp us
+              WhatsApp Us
             </a>
           </AlertDialogAction>
         </AlertDialogFooter>

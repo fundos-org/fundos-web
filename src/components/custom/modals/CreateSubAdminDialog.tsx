@@ -17,7 +17,7 @@ import {
   createProfile,
   shareDetails,
 } from '@/axioscalls/apiServices';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { useQueryClient } from 'react-query';
 import { QueryEnums } from '@/queryEnums';
 
@@ -41,6 +41,7 @@ function CreateSubAdminDialog() {
     Partial<Record<number, Partial<FormData>>>
   >({});
   const queryClient = useQueryClient();
+  const notification = useNotification();
   const methods = useForm<FormData>({
     defaultValues: {
       logo: null,
@@ -57,12 +58,65 @@ function CreateSubAdminDialog() {
     mode: 'onChange',
   });
 
+  // Watch form values to enable/disable Next button
+  const watchedValues = methods.watch();
+
+  // Define required fields for each step
+  const stepRequiredFields: Record<number, (keyof FormData)[]> = {
+    0: ['logo', 'subadminname', 'subadminmail', 'subadmincontact', 'about'],
+    1: ['username', 'password', 'reenterpassword', 'appname', 'invitecode'],
+  };
+
+  // Check if current step is valid
+  const isCurrentStepValid = () => {
+    const requiredFields = stepRequiredFields[activeStep] || [];
+    
+    // Check if all required fields are filled
+    const allFieldsFilled = requiredFields.every(field => {
+      const value = watchedValues[field];
+      if (typeof value === 'string') {
+        return value.trim() !== '';
+      }
+      return value !== null && value !== undefined;
+    });
+
+    if (!allFieldsFilled) return false;
+
+    // Additional validation for step 1 (password matching)
+    if (activeStep === 1) {
+      const password = watchedValues.password;
+      const reenterpassword = watchedValues.reenterpassword;
+      
+      // Check if passwords match
+      if (password !== reenterpassword) {
+        return false;
+      }
+
+      // Check minimum password length
+      if (typeof password === 'string' && password.length < 8) {
+        return false;
+      }
+
+      // Check username minimum length
+      const username = watchedValues.username;
+      if (typeof username === 'string' && username.length < 3) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleClose = () => {
     try {
       setActiveStep(0);
       methods.reset();
     } catch (error) {
-      toast.error(String(error));
+      notification.error(
+        'Error',
+        'Failed to reset form. Please try again.',
+        { duration: 3000 }
+      );
     }
   };
 
@@ -84,6 +138,9 @@ function CreateSubAdminDialog() {
   };
 
   const handleNext = async () => {
+    // Check if current step is valid before proceeding
+    if (!isCurrentStepValid()) return;
+    
     const isValid = await methods.trigger();
     if (!isValid) return;
 
@@ -166,48 +223,56 @@ function CreateSubAdminDialog() {
   return (
     <DialogContent
       hideCloseButton={true}
-      className="rounded-none bg-[#1a1a1a] text-white border-none sm:max-w-3xl"
+      className="bg-white border border-gray-200 rounded-lg shadow-xl sm:max-w-4xl max-h-[90vh] p-0"
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >
-      <DialogHeader>
-        <DialogTitle className="text-3xl text-white flex items-center justify-between">
-          Create a Sub-Admin
+      <DialogHeader className="border-b border-gray-200 p-6">
+        <DialogTitle className="text-2xl font-semibold text-gray-900 flex items-center justify-between">
+          Create Sub Admin
           <DialogClose
             asChild
-            className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+            className="border border-gray-300 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
           >
-            <span className="p-1" onClick={handleClose}>
-              <X />
+            <span className="p-2" onClick={handleClose}>
+              <X className="w-5 h-5 text-gray-600" />
             </span>
           </DialogClose>
         </DialogTitle>
-        <hr />
       </DialogHeader>
-      <FormProvider {...methods}>
-        <div className="grid gap-4">{renderStep()}</div>
-      </FormProvider>
-      {activeStep < 2 && (
-        <DialogFooter>
-          <div className="w-full flex justify-between items-center">
-            <Button
-              type="button"
-              className="bg-white rounded-none py-5"
-              disabled={activeStep === 0}
-              onClick={() => setActiveStep(prev => prev - 1)}
-            >
-              <div className="flex gap-2 mx-10 text-black">Back</div>
-            </Button>
-            <Button
-              type="button"
-              className="bg-white rounded-none py-5 hover:bg-zinc-300"
-              onClick={handleNext}
-            >
-              <div className="flex gap-2 mx-10 text-black">Next</div>
-            </Button>
+      <div className="flex flex-col h-[calc(90vh-120px)]">
+        <FormProvider {...methods}>
+          <div className="overflow-y-auto flex-1 p-6">
+            {renderStep()}
           </div>
-        </DialogFooter>
-      )}
+        </FormProvider>
+        {activeStep < 2 && (
+          <DialogFooter className="border-t border-gray-200 bg-gray-50 p-4">
+            <div className="w-full flex justify-between gap-3 items-center">
+              <Button
+                type="button"
+                className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
+                disabled={activeStep === 0}
+                onClick={() => setActiveStep(prev => prev - 1)}
+              >
+                Back
+              </Button>
+              <Button
+                type="button"
+                className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+                  isCurrentStepValid()
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+                onClick={handleNext}
+                disabled={!isCurrentStepValid()}
+              >
+                {activeStep === 1 ? 'Create Sub Admin' : 'Next'}
+              </Button>
+            </div>
+          </DialogFooter>
+        )}
+      </div>
     </DialogContent>
   );
 }

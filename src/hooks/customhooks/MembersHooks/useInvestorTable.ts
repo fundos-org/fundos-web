@@ -5,7 +5,6 @@ import {
   KycStatus,
 } from '@/constants/investorsConstant';
 import { QueryEnums } from '@/queryEnums';
-import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 
 export const useInvestors = ({
@@ -16,6 +15,7 @@ export const useInvestors = ({
   onboarding_status,
   investor_type,
   kyc_status,
+  onError,
 }: Partial<{
   pageNumber: number;
   pageSize: number;
@@ -24,6 +24,7 @@ export const useInvestors = ({
   onboarding_status?: OnboardingStatus;
   investor_type?: InvestorType;
   kyc_status?: KycStatus;
+  onError?: (error: Error) => void;
 }>) => {
   return useQuery(
     [
@@ -48,9 +49,7 @@ export const useInvestors = ({
       enabled: (!!subAdminId || isSubadmin) && !!pageNumber && !!pageSize,
       refetchOnWindowFocus: false,
       retry: 2,
-      onError: (error: Error) => {
-        toast.error(`Fetch investors failed: ${error.message}`);
-      },
+      onError,
     }
   );
 };

@@ -16,7 +16,7 @@ const NewCustomRadioGroup = ({
     <RadioGroup.Root
       value={value}
       onValueChange={setValue}
-      className="w-full grid grid-cols-2 gap-4 bg-[#1a1a1a]"
+      className="w-full grid grid-cols-2 gap-4"
     >
       {stages.map(stage => (
         <RadioGroup.Item
@@ -24,8 +24,8 @@ const NewCustomRadioGroup = ({
           value={stage.value}
           id={stage.value}
           className={cn(
-            'cursor-pointer relative group ring-[1px] ring-[#2a2a2a] py-2 px-3 text-start bg-[#1a1a1a] border border-[#404040]',
-            'data-[state=checked]:ring-1 data-[state=checked]:bg-[#38373970] data-[state=checked]:ring-zinc-400'
+            'cursor-pointer relative group py-3 px-4 text-start bg-gray-50 border border-gray-200 rounded-lg transition-colors hover:bg-gray-100',
+            'data-[state=checked]:bg-blue-50 data-[state=checked]:border-blue-300 data-[state=checked]:ring-1 data-[state=checked]:ring-blue-200'
           )}
         >
           <CircleCheck
@@ -34,10 +34,10 @@ const NewCustomRadioGroup = ({
               'group-data-[state=unchecked]:hidden'
             )}
           />
-          <span className="font-semibold tracking-tight text-white text-lg">
+          <span className="font-semibold tracking-tight text-gray-900 text-lg">
             {stage.title}
           </span>
-          <p className="text-zinc-500 text-sm">{stage.description}</p>
+          <p className="text-gray-600 text-sm">{stage.description}</p>
         </RadioGroup.Item>
       ))}
     </RadioGroup.Root>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
 import CustomToggleGroup from '../CustomToggleGroup';
 import { stages, targetCustomers } from '@/constants/dealsConstant';
 import NewCustomRadioGroup from '../NewCustomRadioGroup';
@@ -13,11 +12,11 @@ const Step3: React.FC = () => {
   } = useFormContext();
 
   return (
-    <div className="h-[50vh] overflow-auto grid gap-4">
-      <div className="flex flex-col gap-2 mr-3">
-        <Label htmlFor="companyStage" className="text-right text-white">
+    <div className="space-y-6 w-full">
+      <div className="space-y-3">
+        <label htmlFor="companyStage" className="text-xs font-medium text-gray-600 uppercase tracking-wide">
           Company Stage
-        </Label>
+        </label>
         <NewCustomRadioGroup
           value={watch('companyStage')}
           setValue={(value: string) =>
@@ -26,18 +25,18 @@ const Step3: React.FC = () => {
           stages={stages}
         />
         {errors.companyStage?.message && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.companyStage.message)}
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-2">
-        <Label
+      <div className="space-y-3">
+        <label
           htmlFor="targetCustomerSegment"
-          className="text-right text-white"
+          className="text-xs font-medium text-gray-600 uppercase tracking-wide"
         >
           Target Customer Segment
-        </Label>
+        </label>
         <CustomToggleGroup
           value={watch('targetCustomerSegment')}
           array={targetCustomers}
@@ -46,7 +45,7 @@ const Step3: React.FC = () => {
           }
         />
         {errors.targetCustomerSegment && (
-          <p className="text-red-400 text-sm">
+          <p className="text-red-600 text-sm">
             {String(errors.targetCustomerSegment.message)}
           </p>
         )}

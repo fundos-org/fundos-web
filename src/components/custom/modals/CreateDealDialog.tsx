@@ -21,7 +21,7 @@ import Step3 from '../stepComponents/Step3';
 import Step4 from '../stepComponents/Step4';
 import Step5 from '../stepComponents/Step5';
 import { X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoader } from '@/hooks/useLoader';
 import StepperDemo from './StepperDemo';
@@ -61,6 +61,7 @@ export default function CreateDealDialog({
   const [isSubadmin] = useState<boolean>(isThisSubadmin);
   const [activeStep, setActiveStep] = useState(0);
   const { showLoader, hideLoader } = useLoader();
+  const notification = useNotification();
   const [submittedData, setSubmittedData] = useState<
     Partial<Record<number, Partial<FormData>>>
   >({});
@@ -90,6 +91,31 @@ export default function CreateDealDialog({
     },
     mode: 'onChange',
   });
+
+  // Define required fields for each step
+  const stepRequiredFields: Record<number, (keyof FormData)[]> = {
+    0: ['companyName', 'aboutCompany', 'investmentSchemeAppendix', 'logo'],
+    1: ['industry', 'problemStatement', 'businessModel'],
+    2: ['companyStage', 'targetCustomerSegment'],
+    3: ['currentValuation', 'roundSize', 'syndicateCommitment', 'minimumInvestment', 'pitchDeck', 'pitchVideo', 'investmentSchemeAppendixFile'],
+    4: ['instrumentType', 'conversionTerms', 'managementFee', 'carryPercentage'],
+  };
+
+  // Watch all form values to trigger re-validation
+  const watchedValues = methods.watch();
+
+  // Check if current step is valid
+  const isCurrentStepValid = () => {
+    const requiredFields = stepRequiredFields[activeStep] || [];
+    
+    return requiredFields.every(field => {
+      const value = watchedValues[field];
+      if (typeof value === 'string') {
+        return value.trim() !== '';
+      }
+      return value !== null && value !== undefined;
+    });
+  };
   // const dispatch = useAppDispatch();
   const { data: dealData, refetch } = useDealDraftId(isSubadmin);
 
@@ -230,36 +256,37 @@ export default function CreateDealDialog({
       setActiveStep(prev => prev + 1);
     } catch (error) {
       hideLoader();
-      toast.error(`Error submitting step ${activeStep + 1}: ${error}`);
+      notification.error(`Step ${activeStep + 1} Error`, `Error submitting step ${activeStep + 1}: ${error}`);
     }
   };
 
   return (
     <DialogContent
       hideCloseButton={true}
-      className="border-0 rounded-none bg-[#1a1a1a] text-white sm:max-w-3xl max-h-[90vh]"
+      className="bg-white border border-gray-200 rounded-lg shadow-xl sm:max-w-4xl max-h-[90vh] p-0"
       aria-describedby={undefined}
       onInteractOutside={e => e.preventDefault()}
     >
-      <DialogHeader>
-        <DialogTitle className="text-3xl text-white flex items-center justify-between">
+      <DialogHeader className="border-b border-gray-200 p-6">
+        <DialogTitle className="text-2xl font-semibold text-gray-900 flex items-center justify-between">
           Create a new deal
           <DialogClose
             asChild
-            className="border-[1px] border-[#383739] bg-[#242325] cursor-pointer"
+            className="border border-gray-300 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors"
           >
-            <span className="p-1">
-              <X />
+            <span className="p-2">
+              <X className="w-5 h-5 text-gray-600" />
             </span>
           </DialogClose>
         </DialogTitle>
-        <hr />
       </DialogHeader>
-      <div className="flex">
-        <StepperDemo activeStep={activeStep} setActiveStep={setActiveStep} />
+      <div className="flex h-[calc(90vh-120px)]">
+        <div className="border-r border-gray-200 bg-gray-50">
+          <StepperDemo activeStep={activeStep} setActiveStep={setActiveStep} />
+        </div>
         <div className="flex flex-col w-full">
           <FormProvider {...methods}>
-            <div className="grid gap-4 overflow-hidden w-full pl-6 mb-10">
+            <div className="grid gap-4 overflow-y-auto w-full p-6 flex-1">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeStep}
@@ -274,26 +301,27 @@ export default function CreateDealDialog({
             </div>
           </FormProvider>
           {activeStep < 5 && (
-            <DialogFooter>
-              <div className="w-full flex justify-end-safe gap-3 items-center">
+            <DialogFooter className="border-t border-gray-200 bg-gray-50 p-4">
+              <div className="w-full flex justify-between gap-3 items-center">
                 <Button
                   type="button"
-                  className="border border-zinc-700 rounded-none py-5 hover:bg-[#38373990] cursor-pointer"
+                  className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
                   disabled={activeStep === 0}
                   onClick={() => setActiveStep(prev => prev - 1)}
                 >
-                  <div className="flex gap-2 mx-10 text-white hover:text-zinc-300">
-                    Back
-                  </div>
+                  Back
                 </Button>
                 <Button
                   type="button"
-                  className="bg-white rounded-none py-5 hover:bg-zinc-300 cursor-pointer"
+                  className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+                    isCurrentStepValid()
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
                   onClick={handleNext}
+                  disabled={!isCurrentStepValid()}
                 >
-                  <div className="flex gap-2 mx-10 text-black">
-                    {activeStep === 4 ? 'Submit' : 'Next'}
-                  </div>
+                  {activeStep === 4 ? 'Submit' : 'Next'}
                 </Button>
               </div>
             </DialogFooter>

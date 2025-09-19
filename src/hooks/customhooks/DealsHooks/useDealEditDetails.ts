@@ -1,17 +1,18 @@
 import { Files, updateDealDetails } from '@/axioscalls/apiServices';
 import { DealDetails } from '@/constants/dealsConstant';
 import { QueryEnums } from '@/queryEnums';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 import { useMutation, useQueryClient } from 'react-query';
 
 export const useDealEditDetails = (deal_id: string | null) => {
   const queryClient = useQueryClient();
+  const notification = useNotification();
 
   return useMutation({
     mutationFn: (details: Partial<DealDetails>, files?: Partial<Files>) =>
       updateDealDetails(deal_id!, details, files),
-    onSuccess: response => {
-      toast.success(response?.message && 'Deal Details updated successfully');
+    onSuccess: _ => {
+      notification.success('Deal Updated', 'Deal details updated successfully');
       queryClient.invalidateQueries({
         queryKey: [QueryEnums.DealDetails, deal_id],
       });
@@ -27,7 +28,7 @@ export const useDealEditDetails = (deal_id: string | null) => {
       });
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed updating details.');
+      notification.error('Update Failed', error.message || 'Failed updating details.');
     },
   });
 };

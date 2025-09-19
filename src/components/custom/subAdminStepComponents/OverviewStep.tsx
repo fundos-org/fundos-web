@@ -3,15 +3,35 @@ import { Button } from '@/components/ui/button';
 import { AWS_BUCKET_NAME } from '@/constants/enums';
 import { useSubadminDetails } from '@/hooks/customhooks/SubAdminsHooks/useSubadminDetails';
 import { useAwsFileObjectKey } from '@/hooks/useAwsFileObjectKey';
-import toast from 'react-hot-toast';
+import { useNotification } from '@/components/custom/NotificationProvider';
 
 const OverviewStep = ({ subAdminId }: { subAdminId: string }) => {
   const { data } = useSubadminDetails(subAdminId);
   const { data: logo } = useAwsFileObjectKey(AWS_BUCKET_NAME, data?.logo ?? '');
+  const notification = useNotification();
+  
   const handleClick = async () => {
-    const response = await shareDetails(subAdminId);
-    if (!response) {
-      toast.error('Failed to send invite');
+    try {
+      const response = await shareDetails(subAdminId);
+      if (!response) {
+        notification.error(
+          'Share Failed',
+          'Failed to send invite details. Please try again.',
+          { duration: 4000 }
+        );
+      } else {
+        notification.success(
+          'Details Shared',
+          'Sub admin details have been shared successfully!',
+          { duration: 4000 }
+        );
+      }
+    } catch (error) {
+      notification.error(
+        'Share Failed',
+        'An error occurred while sharing details. Please try again.',
+        { duration: 4000 }
+      );
     }
   };
 

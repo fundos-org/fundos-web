@@ -33,23 +33,54 @@ const Switch = React.forwardRef<
 });
 Switch.displayName = 'Switch';
 
-const SwitchCustom: React.FC = () => {
-  const [checked, setChecked] = React.useState(false);
+interface SwitchCustomProps {
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
+  label?: string;
+}
+
+const SwitchCustom: React.FC<SwitchCustomProps> = ({ 
+  checked = false, 
+  onCheckedChange,
+  disabled = false,
+  label 
+}) => {
+  const [internalChecked, setInternalChecked] = React.useState(checked);
+  
+  const handleChange = (newChecked: boolean) => {
+    setInternalChecked(newChecked);
+    onCheckedChange?.(newChecked);
+  };
+
+  const isChecked = onCheckedChange ? checked : internalChecked;
 
   return (
-    <Switch
-      icon={
-        checked ? (
-          <Check className="h-4 w-4 text-black" />
-        ) : (
-          <X className="h-4 w-4 text-black" />
-        )
-      }
-      checked={checked}
-      onCheckedChange={setChecked}
-      className="h-7 w-14 border border-[#383739]"
-      thumbClassName="h-6 w-7 data-[state=checked]:translate-x-6"
-    />
+    <div className="flex items-center gap-2">
+      <Switch
+        icon={
+          isChecked ? (
+            <Check className="h-3 w-3 text-white" />
+          ) : (
+            <X className="h-3 w-3 text-gray-600" />
+          )
+        }
+        checked={isChecked}
+        onCheckedChange={handleChange}
+        disabled={disabled}
+        className={`h-6 w-11 border border-gray-300 rounded-full transition-colors ${
+          isChecked 
+            ? 'bg-green-600 border-green-600' 
+            : 'bg-gray-200 border-gray-300'
+        } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        thumbClassName={`h-4 w-4 rounded-full data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0 ${
+          isChecked ? 'bg-white' : 'bg-white'
+        }`}
+      />
+      {label && (
+        <span className="text-sm text-gray-700 font-medium">{label}</span>
+      )}
+    </div>
   );
 };
 

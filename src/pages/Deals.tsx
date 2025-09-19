@@ -21,18 +21,18 @@ function Deals() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <header className="flex justify-between items-center">
           <div>
-            <h2 className="text-4xl">Deals</h2>
+            <h2 className="fundos-dashboard-title text-gray-900">Deals</h2>
           </div>
           {isSubadmin && (
             <DialogTrigger asChild>
-              <button className="bg-white text-black px-4 py-2 rounded-none cursor-pointer">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors cursor-pointer">
                 Create New Deal
               </button>
             </DialogTrigger>
           )}
         </header>
         <div className="mb-8">
-          <small className="text-gray-500">
+          <small className="fundos-dashboard-subtitle">
             Track how your deals are performing and manage your portfolio
           </small>
         </div>

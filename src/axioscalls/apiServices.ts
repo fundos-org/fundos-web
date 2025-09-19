@@ -351,12 +351,18 @@ export const resetPasswordRequest = async (
     const response = await axiosInstance.post(
       `${baseUrl}/v1/subadmin/password/reset/request?email=${email}`
     );
-    return response.data;
+    return { ...response.data, success: true };
   } catch (error: unknown) {
     if (isAxiosError(error)) {
-      throw new Error(error.message);
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.response?.data?.message || error.message || 'Failed to send OTP. Please check your email address.'
+      };
     } else {
-      throw new Error('An unexpected error occurred');
+      return {
+        success: false,
+        message: 'An unexpected error occurred'
+      };
     }
   }
 };
@@ -367,7 +373,7 @@ export const resetPasswordVerify = async (
 ): Promise<{
   message: string;
   success: boolean;
-  tokens: {
+  tokens?: {
     access_token: string;
     refresh_token: string;
     token_type: string;
@@ -377,12 +383,18 @@ export const resetPasswordVerify = async (
     const response = await axiosInstance.post(
       `${baseUrl}/v1/subadmin/password/reset/verify?email=${email}&otp_code=${otp}`
     );
-    return response.data;
+    return { ...response.data, success: true };
   } catch (error: unknown) {
     if (isAxiosError(error)) {
-      throw new Error(error.message);
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.response?.data?.message || error.message || 'Invalid OTP. Please try again.'
+      };
     } else {
-      throw new Error('An unexpected error occurred');
+      return {
+        success: false,
+        message: 'An unexpected error occurred'
+      };
     }
   }
 };
@@ -403,12 +415,18 @@ export const resetPasswordAssign = async (
 
     const response = await axiosInstance.post(url.toString(), {}, config);
 
-    return response.data;
+    return { ...response.data, success: true };
   } catch (error: unknown) {
     if (isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || error.message);
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.response?.data?.message || error.message || 'Failed to reset password. Please try again.'
+      };
     } else {
-      throw new Error('An unexpected error occurred');
+      return {
+        success: false,
+        message: 'An unexpected error occurred'
+      };
     }
   }
 };
@@ -417,7 +435,7 @@ export const appLogin = async (
   data: LoginFormData,
   role: 'admin' | 'subadmin' | 'kyc'
 ): Promise<
-  AdminLoginResponse | SubadminLoginResponse | { success: boolean }
+  AdminLoginResponse | SubadminLoginResponse | { success: boolean; message?: string }
 > => {
   try {
     const url = new URL(`${baseUrl}/v1/${role}/signin`);
@@ -425,8 +443,18 @@ export const appLogin = async (
     url.searchParams.set('password', data.password);
     const response = await axiosInstance.post(url.toString());
     return response.data;
-  } catch {
-    return { success: false };
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      return { 
+        success: false, 
+        message: error.response?.data?.detail || error.response?.data?.message || 'Invalid username or password. Please check your credentials and try again.' 
+      };
+    } else {
+      return { 
+        success: false, 
+        message: 'An unexpected error occurred. Please try again.' 
+      };
+    }
   }
 };
 

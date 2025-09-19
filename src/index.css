@@ -42,38 +42,63 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.147 0.004 49.25);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.147 0.004 49.25);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.147 0.004 49.25);
-  --primary: oklch(0.216 0.006 56.043);
-  --primary-foreground: oklch(0.985 0.001 106.423);
-  --secondary: oklch(0.97 0.001 106.424);
-  --secondary-foreground: oklch(0.216 0.006 56.043);
-  --muted: oklch(0.97 0.001 106.424);
-  --muted-foreground: oklch(0.553 0.013 58.071);
-  --accent: oklch(0.97 0.001 106.424);
-  --accent-foreground: oklch(0.216 0.006 56.043);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.923 0.003 48.717);
-  --input: oklch(0.923 0.003 48.717);
-  --ring: oklch(0.709 0.01 56.259);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.001 106.423);
-  --sidebar-foreground: oklch(0.147 0.004 49.25);
-  --sidebar-primary: oklch(0.216 0.006 56.043);
-  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-accent: oklch(0.97 0.001 106.424);
-  --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
-  --sidebar-border: oklch(0.923 0.003 48.717);
-  --sidebar-ring: oklch(0.709 0.01 56.259);
+  --radius: 0.75rem;
+  
+  /* FundOS Blue Theme - Primary Colors */
+  --fundos-blue-primary: #4F9CF9;
+  --fundos-blue-secondary: #5C85F4;
+  --fundos-blue-light: #E6F3FF;
+  --fundos-blue-dark: #2563EB;
+  
+  /* Neutral Colors */
+  --fundos-neutral-50: #F8FAFC;
+  --fundos-neutral-100: #F1F5F9;
+  --fundos-neutral-200: #E2E8F0;
+  --fundos-neutral-300: #CBD5E1;
+  --fundos-neutral-400: #94A3B8;
+  --fundos-neutral-500: #64748B;
+  --fundos-neutral-600: #475569;
+  --fundos-neutral-700: #334155;
+  --fundos-neutral-800: #1E293B;
+  --fundos-neutral-900: #0F172A;
+  
+  /* Semantic Colors */
+  --fundos-success: #22C55E;
+  --fundos-warning: #F59E0B;
+  --fundos-error: #EF4444;
+  
+  /* Updated Theme Variables */
+  --background: 255 255 255;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --popover: 255 255 255;
+  --popover-foreground: 15 23 42;
+  --primary: 79 156 249;
+  --primary-foreground: 255 255 255;
+  --secondary: 248 250 252;
+  --secondary-foreground: 51 65 85;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 230 243 255;
+  --accent-foreground: 51 65 85;
+  --destructive: 239 68 68;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 79 156 249;
+  --chart-1: 79 156 249;
+  --chart-2: 92 133 244;
+  --chart-3: 34 197 94;
+  --chart-4: 245 158 11;
+  --chart-5: 239 68 68;
+  --sidebar: 248 250 252;
+  --sidebar-foreground: 51 65 85;
+  --sidebar-primary: 79 156 249;
+  --sidebar-primary-foreground: 255 255 255;
+  --sidebar-accent: 241 245 249;
+  --sidebar-accent-foreground: 51 65 85;
+  --sidebar-border: 226 232 240;
+  --sidebar-ring: 79 156 249;
 }
 
 .dark {
@@ -137,8 +162,12 @@
 }
 
 body {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @keyframes twinkle {
@@ -195,19 +224,443 @@ body {
   cursor: pointer;
 }
 
+/* FundOS Custom Gradients */
 .gradient-bg-fundos {
-  background:
-    radial-gradient(
-      circle at 0% 0%,
-      rgba(255, 182, 193, 0.8) 0%,
-      rgba(255, 182, 193, 0.3) 10%,
-      transparent 25%
-    ),
-    radial-gradient(
-      circle at 100% 100%,
-      rgba(92, 133, 244, 0.9) 0%,
-      rgba(171, 193, 255, 0.3) 10%,
-      transparent 25%
-    ),
-    #000000;
+  background: linear-gradient(135deg, var(--fundos-blue-primary) 0%, var(--fundos-blue-secondary) 100%);
+}
+
+.gradient-bg-fundos-light {
+  background: linear-gradient(135deg, var(--fundos-blue-light) 0%, #ffffff 100%);
+}
+
+.gradient-bg-welcome {
+  background: linear-gradient(135deg, var(--fundos-blue-primary) 0%, var(--fundos-blue-secondary) 100%);
+}
+
+/* Modern Card Styles */
+.fundos-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--fundos-neutral-200);
+}
+
+.fundos-card-elevated {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--fundos-neutral-100);
+}
+
+/* Mobile-First Responsive Utilities */
+.fundos-container {
+  width: 100%;
+  max-width: 28rem; /* 448px */
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .fundos-container {
+    max-width: 32rem; /* 512px */
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .fundos-container {
+    max-width: 36rem; /* 576px */
+    padding: 2rem;
+  }
+}
+
+/* Button Styles */
+.fundos-btn-primary {
+  background: linear-gradient(135deg, var(--fundos-blue-primary) 0%, var(--fundos-blue-secondary) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.fundos-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 156, 249, 0.4);
+}
+
+/* Input Styles */
+.fundos-input {
+  background: var(--fundos-neutral-50);
+  border: 1px solid var(--fundos-neutral-200);
+  border-radius: var(--radius);
+  color: var(--fundos-neutral-900);
+  transition: all 0.2s ease-in-out;
+}
+
+.fundos-input:focus {
+  outline: none;
+  border-color: var(--fundos-blue-primary);
+  box-shadow: 0 0 0 3px rgba(79, 156, 249, 0.1);
+}
+
+/* Progress Bar */
+.fundos-progress {
+  background: var(--fundos-neutral-200);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.fundos-progress-bar {
+  background: linear-gradient(135deg, var(--fundos-blue-primary) 0%, var(--fundos-blue-secondary) 100%);
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Two-Card Layout Styles */
+.login-container {
+  display: grid;
+  min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  .login-container {
+    grid-template-columns: 1fr 1fr;
+    max-width: 96rem;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+}
+
+/* Enhanced shadows for desktop */
+@media (min-width: 1024px) {
+  .fundos-card-desktop {
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom scrollbar for desktop */
+@media (min-width: 1024px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--fundos-neutral-100);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--fundos-neutral-300);
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--fundos-neutral-400);
+  }
+}
+
+/* Modular Component Classes */
+.fundos-login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--fundos-neutral-50) 0%, #dbeafe 100%);
+}
+
+.fundos-mobile-header {
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .fundos-mobile-header {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.fundos-desktop-layout {
+  min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  .fundos-desktop-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+}
+
+.fundos-two-card-grid {
+  width: 100%;
+  max-width: 96rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .fundos-two-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    background: white;
+  }
+}
+
+.fundos-info-card {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .fundos-info-card {
+    display: block;
+    background: linear-gradient(135deg, var(--fundos-blue-primary) 0%, var(--fundos-blue-secondary) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+.fundos-login-card {
+  background: white;
+}
+
+@media (min-width: 1024px) {
+  .fundos-login-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.fundos-login-form-container {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .fundos-login-form-container {
+    max-width: 28rem;
+    padding: 3rem;
+  }
+}
+
+.fundos-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.fundos-label {
+  display: block;
+  font-weight: 500;
+  color: var(--fundos-neutral-700);
+  margin-bottom: 0.5rem;
+}
+
+.fundos-error-text {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--fundos-error);
+}
+
+/* Animation Classes */
+.animate-slide-in {
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modern Notification Styles */
+/* Dashboard specific styles */
+.fundos-dashboard-container {
+  @apply p-4 lg:p-8 max-w-full;
+}
+
+.fundos-dashboard-header {
+  @apply mb-8 space-y-2;
+}
+
+.fundos-dashboard-title {
+  @apply text-3xl lg:text-4xl font-bold;
+}
+
+.fundos-dashboard-subtitle {
+  @apply text-base text-gray-600 dark:text-gray-400;
+}
+
+.fundos-stats-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8;
+}
+
+.fundos-stat-card {
+  @apply bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-200;
+}
+
+.fundos-stat-card-admin {
+  @apply bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700;
+}
+
+
+.fundos-stat-label {
+  @apply text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2;
+}
+
+.fundos-stat-value {
+  @apply text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white;
+}
+
+.fundos-stat-icon {
+  @apply w-8 h-8 text-blue-600 dark:text-blue-400 mb-3;
+}
+
+.fundos-sidebar-admin {
+  @apply bg-white border-r border-gray-200;
+}
+
+.fundos-main-content {
+  @apply flex-1 min-h-screen bg-gray-50;
+}
+
+.fundos-main-content-admin {
+  @apply bg-gray-50;
+}
+
+/* Dashboard cards and sections */
+.fundos-dashboard-section {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 mb-6;
+}
+
+.fundos-dashboard-section-admin {
+  @apply bg-white border-gray-100;
+}
+
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .fundos-dashboard-container {
+    @apply p-4;
+  }
+  
+  .fundos-dashboard-title {
+    @apply text-2xl lg:text-4xl;
+  }
+  
+  .fundos-stats-grid {
+    @apply grid-cols-1 sm:grid-cols-2 gap-4;
+  }
+  
+  .fundos-stat-card {
+    @apply p-4;
+  }
+  
+  .fundos-stat-value {
+    @apply text-xl lg:text-3xl;
+  }
+}
+
+.fundos-notification {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  /* Background and border colors are handled by the component itself */
+}
+
+/* Notification animations */
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Notification container positioning */
+.notification-container {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.notification-container > * {
+  pointer-events: auto;
+}
+
+.fundos-notification {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+/* Mobile responsive notifications */
+@media (max-width: 640px) {
+  .fundos-notification {
+    max-width: calc(100vw - 2rem);
+    margin: 0 1rem;
+  }
+}
+
+/* Custom scrollbar styling for light theme */
+.custom-scrollbar-table {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(209 213 219) rgb(249 250 251);
+}
+
+.custom-scrollbar-table::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-track {
+  background: rgb(249 250 251);
+  border-radius: 6px;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-thumb {
+  background: rgb(209 213 219);
+  border-radius: 6px;
+  border: 2px solid rgb(249 250 251);
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-thumb:hover {
+  background: rgb(156 163 175);
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-corner {
+  background: rgb(249 250 251);
 }

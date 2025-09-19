@@ -29,7 +29,7 @@ const BankDetails: React.FC<{
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -39,7 +39,11 @@ const BankDetails: React.FC<{
     },
   });
 
+  // Check if any fields have been modified
+  const hasChanges = Object.keys(dirtyFields).length > 0;
+
   const onSubmit = (data: FormData) => {
+    if (!hasChanges) return;
     console.log(data);
   };
 
@@ -48,9 +52,9 @@ const BankDetails: React.FC<{
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 px-10 py-5 h-full flex flex-col justify-between gap-2"
     >
-      <div className="flex flex-col gap-5">
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Bank Account Number
           </label>
           <Controller
@@ -59,8 +63,8 @@ const BankDetails: React.FC<{
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Bank Account Number"
-                className={`${errors.bank_account_number ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter bank account number"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.bank_account_number ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -71,9 +75,9 @@ const BankDetails: React.FC<{
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
-            Bank IFSC
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+            Bank IFSC Code
           </label>
           <Controller
             name="bank_ifsc"
@@ -81,8 +85,8 @@ const BankDetails: React.FC<{
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Bank IFSC"
-                className={`${errors.bank_ifsc ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter IFSC code"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.bank_ifsc ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -91,8 +95,8 @@ const BankDetails: React.FC<{
           )}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-gray-600 uppercase tracking-wide">
             Account Holder Name
           </label>
           <Controller
@@ -101,8 +105,8 @@ const BankDetails: React.FC<{
             render={({ field }) => (
               <Input
                 {...field}
-                placeholder="Account Holder Name"
-                className={`${errors.account_holder_name ? 'border-red-500' : null} rounded-none`}
+                placeholder="Enter account holder name"
+                className={`bg-gray-50 border border-gray-200 text-gray-900 px-4 py-3 rounded-lg ${errors.account_holder_name ? 'border-red-500' : ''}`}
               />
             )}
           />
@@ -114,17 +118,22 @@ const BankDetails: React.FC<{
         </div>
       </div>
 
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end mt-8 pt-6 border-t border-gray-200">
         <button
           type="button"
           onClick={() => setDialogOpen(false)}
-          className="bg-[#383739] text-white hover:opacity-50 px-10 py-2 cursor-pointer"
+          className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg px-6 py-2.5 font-medium transition-colors"
         >
           Close
         </button>
         <button
           type="submit"
-          className="bg-white text-black hover:opacity-50 px-10 py-2 cursor-pointer"
+          disabled={!hasChanges}
+          className={`rounded-lg px-6 py-2.5 font-medium transition-colors ${
+            hasChanges
+              ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
         >
           Submit
         </button>
